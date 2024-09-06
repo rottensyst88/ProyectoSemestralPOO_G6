@@ -1,5 +1,4 @@
 public class Nombre {
-
     private Tratamiento tratamiento;
     private String nombre;
     private String ApellidoPaterno;
