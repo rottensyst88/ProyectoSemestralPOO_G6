@@ -56,3 +56,4 @@ public class Persona {
         }
     }
 }
+//falta revisar el to string, equals.
