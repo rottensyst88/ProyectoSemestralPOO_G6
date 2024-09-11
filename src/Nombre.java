@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Nombre {
 
     private Tratamiento tratamiento;
@@ -42,10 +44,16 @@ public class Nombre {
 
     }
 
-    public boolean equals(Nombre otro) {
-        if (this == otro) {
-            return true;
-        }
-        return this.nombre.equals(otro.nombre) && this.ApellidoPaterno.equals(otro.ApellidoPaterno) && this.ApellidoMaterno.equals(otro.ApellidoMaterno);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Nombre nombre1 = (Nombre) o;
+        return tratamiento == nombre1.tratamiento && Objects.equals(nombre, nombre1.nombre) && Objects.equals(ApellidoPaterno, nombre1.ApellidoPaterno) && Objects.equals(ApellidoMaterno, nombre1.ApellidoMaterno);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tratamiento, nombre, ApellidoPaterno, ApellidoMaterno);
     }
 }
