@@ -8,13 +8,12 @@ public class Bus {
     private String modelo;
     private int nroAsientos;
 
-    ArrayList<Viaje> viajes = new ArrayList();
+    ArrayList<Viaje> viajes;
 
     public Bus(String patente, int nroAsientos){
         this.patente = patente;
         this.nroAsientos = nroAsientos;
-        marca = "NN";
-        modelo = "NN";
+        viajes = new ArrayList<>();
     }
 
     public String getPatente(){
@@ -44,5 +43,4 @@ public class Bus {
     public void addViaje(Viaje viaje){
         viajes.add(viaje);
     }
-
 }
