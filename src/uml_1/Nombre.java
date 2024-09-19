@@ -1,3 +1,5 @@
+package uml_1;
+
 import java.util.Objects;
 
 public class Nombre {
@@ -40,7 +42,7 @@ public class Nombre {
         ApellidoMaterno = apellidoMaterno;
     }
     public String toString() {
-        return "Tratamiento=" + tratamiento + ", Nombre=" + nombre + ", ApelldidoPaterno=" + ApellidoPaterno + ",ApellidoMaterno=" + ApellidoMaterno;
+        return "uml_1.Tratamiento=" + tratamiento + ", uml_1.Nombre=" + nombre + ", ApelldidoPaterno=" + ApellidoPaterno + ",ApellidoMaterno=" + ApellidoMaterno;
 
     }
 

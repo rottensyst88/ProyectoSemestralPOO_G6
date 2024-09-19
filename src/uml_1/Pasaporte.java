@@ -1,3 +1,5 @@
+package uml_1;
+
 public class Pasaporte implements IdPersona { // CLASE TERMINADA!
     private String numero;
     private String nacionalidad;

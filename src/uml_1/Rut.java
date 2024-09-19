@@ -1,3 +1,5 @@
+package uml_1;
+
 public class Rut implements IdPersona { // CLASE TERMINADA!
     private int numero;
     private char dv;

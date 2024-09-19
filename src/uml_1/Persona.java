@@ -1,3 +1,5 @@
+package uml_1;
+
 public class Persona {
     // Atributos
     private IdPersona idPersona;
@@ -38,7 +40,7 @@ public class Persona {
     // Método toString
     @Override
     public String toString() {
-        return "Persona[idPersona=" + idPersona + ", nombreCompleto=" + nombreCompleto + ", telefono=" + telefono + "]";
+        return "uml_1.Persona[idPersona=" + idPersona + ", nombreCompleto=" + nombreCompleto + ", telefono=" + telefono + "]";
     }
 
     // Método equals
