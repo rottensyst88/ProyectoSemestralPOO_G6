@@ -61,6 +61,14 @@ public class sistemaVentaPasajes {
 
     public String[]listAsientosDeViaje(LocalDate fecha, LocalTime hora,
                                        String patBus) {
+        // creo los foramteadores para darle los parametros en string y como los necesito al metodo findViaje
+        DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
+
+        String fechaFormateada = fecha.format(formateadorFecha);
+        String horaFormateada = hora.format(formateadorHora);
+
+
         //ocupo toString(), para poder utilizar el metodo findViaje el cual solo recibe string
         //aun no se si esta bien aplicado el tostring lo debo revisar
         Viaje viaje = findViaje(fecha.toString(), hora.toString(), patBus);
@@ -126,9 +134,8 @@ public class sistemaVentaPasajes {
 
         Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, venta);
 
-        //no se como asociarlo a venta
-        //venta.addPasaje(nuevoPasaje);
-        //venta.pasajes.add(nuevoPasaje);
+
+        venta.add(nuevoPasaje);
         return true;
 
     }
@@ -155,9 +162,20 @@ public class sistemaVentaPasajes {
         //accediento  a los datos que me piden mediante viajesfecha.get(i)
         for (int i = 0; i < viajesFecha.size(); i++) {
             Viaje viaje = viajesFecha.get(i);
+            Bus bus = viaje.getBus();
+            // Formateo de la fecha
+            DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String fechaFormateada = viaje.getFecha().format(formateadorFecha);
 
-            fechaFormateada =
-            // aun me falta llenar el arreglo bidimensional con los datos requeridos
+            // Formateo de la hora
+            DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm"); // Formato 24 horas
+            String horaFormateada = viaje.getHora().format(formateadorHora);
+
+
+            horariosDisponibles[i][0] = bus.getPatente();
+            horariosDisponibles[i][1] = horaFormateada;
+            horariosDisponibles[i][2] = String.valueOf(viaje.getPrecio());
+            horariosDisponibles[i][3] = String.valueOf(viaje.getAsientosDisponibles());
 
         }
 
