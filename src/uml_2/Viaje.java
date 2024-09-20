@@ -1,3 +1,5 @@
+package uml_2;
+import uml_1.*;
 import java.time.*;
 
 public class Viaje {
