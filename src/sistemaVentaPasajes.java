@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,17 +60,12 @@ public class sistemaVentaPasajes {
 
     public String[]listAsientosDeViaje(LocalDate fecha, LocalTime hora,
                                        String patBus) {
-        // creo los foramteadores para darle los parametros en string y como los necesito al metodo findViaje
-        DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
-
-        String fechaFormateada = fecha.format(formateadorFecha);
-        String horaFormateada = hora.format(formateadorHora);
-
 
         //ocupo toString(), para poder utilizar el metodo findViaje el cual solo recibe string
-        //aun no se si esta bien aplicado el tostring lo debo revisar
-        Viaje viaje = findViaje(fecha.toString(), hora.toString(), patBus);
+
+        String horaComoString = hora.toString();
+        String fechaComoString = fecha.toString();
+        Viaje viaje = findViaje(fechaComoString, horaComoString, patBus);
 
         if (viaje == null) {
             return new String[0];
@@ -119,8 +113,9 @@ public class sistemaVentaPasajes {
         }
 
         //ocupo toString(), para poder utilizar el metodo findViaje el cual solo recibe string
-        //aun no se si esta bien aplicado el tostring lo debo revisar
-        Viaje viaje = findViaje(fecha.toString(), hora.toString(), patBus);
+        String horaComoString = hora.toString();
+        String fechaComoString = fecha.toString();
+        Viaje viaje = findViaje(fechaComoString, horaComoString, patBus);
         if(viaje == null){
             return false;
             //no existe un viaje
@@ -163,17 +158,12 @@ public class sistemaVentaPasajes {
         for (int i = 0; i < viajesFecha.size(); i++) {
             Viaje viaje = viajesFecha.get(i);
             Bus bus = viaje.getBus();
-            // Formateo de la fecha
-            DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String fechaFormateada = viaje.getFecha().format(formateadorFecha);
 
-            // Formateo de la hora
-            DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm"); // Formato 24 horas
-            String horaFormateada = viaje.getHora().format(formateadorHora);
 
+            String horaComoString = viaje.getHora().toString();
 
             horariosDisponibles[i][0] = bus.getPatente();
-            horariosDisponibles[i][1] = horaFormateada;
+            horariosDisponibles[i][1] = horaComoString;
             horariosDisponibles[i][2] = String.valueOf(viaje.getPrecio());
             horariosDisponibles[i][3] = String.valueOf(viaje.getAsientosDisponibles());
 
