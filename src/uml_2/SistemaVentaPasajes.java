@@ -1,4 +1,6 @@
-package uml_1;
+package uml_2;
+
+import uml_1.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
