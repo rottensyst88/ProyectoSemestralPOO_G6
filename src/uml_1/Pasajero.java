@@ -7,7 +7,6 @@ public class Pasajero extends Persona{
 
     public Pasajero(IdPersona id, Nombre nom, String fonoContacto){ // REVISAR CON EL PROFESOR!
         super(id, nom);
-        this.nomContacto = nom;
         this.fonoContacto = fonoContacto;
     }
 

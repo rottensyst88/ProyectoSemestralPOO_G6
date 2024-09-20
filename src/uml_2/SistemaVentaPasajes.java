@@ -1,5 +1,4 @@
 package uml_2;
-
 import uml_1.*;
 
 import java.time.LocalDate;
@@ -61,7 +60,8 @@ public class SistemaVentaPasajes {
 
     public boolean createCliente(IdPersona id, Nombre nom, String fono, String email) {
 
-        Cliente c = new Cliente(id, nom, fono, email);
+        Cliente c = new Cliente(id, nom, email);
+        c.setTelefono(fono);
 
         if (findCliente(id) == null) {
             clientes.add(c);
@@ -77,8 +77,11 @@ public class SistemaVentaPasajes {
     public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
             fonoContacto) {
 
-        Pasajero p = new Pasajero(id, nom, fono, nomContacto, fonoContacto);
-        if (findPasajero(IdPersona) == null) {
+        Pasajero p = new Pasajero(id, nom, fonoContacto);
+        p.setNomContacto(nomContacto);
+        p.setTelefono(fono);
+
+        if (findPasajero(id) == null) {
             pasajeros.add(p);
             return true;
         }
