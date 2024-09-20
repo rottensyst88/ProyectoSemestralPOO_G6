@@ -37,10 +37,10 @@ public class SistemaVentaPasajes {
         }
         return null;
     }
-
+    //arreglar
     public Viaje findViaje(String fecha, String hora, String patenteBus) {
         for (Viaje viaje : viajes) {
-            if (viaje.getFecha().equals(fecha) && viaje.getHora().equals(hora) && viaje.getPatente.equals(patBus)) {
+            if (viaje.getFecha().toString().equals(fecha) && viaje.getHora().toString().equals(hora) && viaje.getBus().getPatente().equals(patenteBus)) {
                 return viaje;
             }
         }
