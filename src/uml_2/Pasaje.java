@@ -1,3 +1,6 @@
+package uml_2;
+import uml_1.*;
+
 public class Pasaje {
     private long numero;
     private int asiento;
@@ -5,7 +8,7 @@ public class Pasaje {
     private Venta venta;
     private Pasajero pasajero;
 
-    public Pasaje2(int asiento, Viaje viaje, Pasajero pasajero, Venta venta) {
+    public Pasaje(int asiento, Viaje viaje, Pasajero pasajero, Venta venta) {
         this.numero = 0;
         this.asiento = asiento;
         this.viaje = viaje;
