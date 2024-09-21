@@ -10,6 +10,7 @@ public class SistemaVentaPasajes {
     ArrayList<Pasajero> pasajeros = new ArrayList<>();
     ArrayList<Viaje> viajes = new ArrayList<>();
     ArrayList<Bus> buses = new ArrayList<>();
+    ArrayList<Venta> ventas = new ArrayList<>(); // REVISAR!
 
     public Cliente findCliente(IdPersona id) {
         for (Cliente cliente : clientes) {
@@ -47,11 +48,9 @@ public class SistemaVentaPasajes {
         return null;
     }
 
-
-    //revisar luego de la creacion de la clase Venta
     public Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
         for (Venta venta : ventas) {
-            if (venta.getidDocumento().equals(idDocumento) && venta.gettipoDocumento().equals(tipoDocumento)) {
+            if (venta.getIdDocumento().equals(idDocumento) && venta.getTipoDocumento().equals(tipoDocumento)) {
                 return venta;
             }
         }
@@ -100,7 +99,10 @@ public class SistemaVentaPasajes {
 
 
     public boolean createBus(String patente, String marca, String modelo, int nroAsientos) {
-        Bus bus = new bus(patente, marca, modelo, nroAsientos);
+        Bus bus = new Bus(patente, nroAsientos);
+        bus.setMarca(marca);
+        bus.setModelo(modelo);
+
         if (findBus(patente) == null) {
             buses.add(bus);
             return true;
@@ -109,7 +111,7 @@ public class SistemaVentaPasajes {
     }
     //revisar cuando esté la clase ventas
     private String[][] listVentas(){
-        Object[][] arregloVentas = new Object[Ventas.size()][7];
+        Object[][] arregloVentas = new Object[ventas.size()][7];
         for (int i=0; i<ventas.size(); i++) {
 
 
