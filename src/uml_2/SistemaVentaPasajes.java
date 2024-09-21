@@ -3,6 +3,7 @@ import uml_1.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class SistemaVentaPasajes {
@@ -12,6 +13,8 @@ public class SistemaVentaPasajes {
     ArrayList<Bus> buses = new ArrayList<>();
     ArrayList<Venta> ventas = new ArrayList<>(); // REVISAR!
 
+    DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH/mm");
 
     public Cliente findCliente(IdPersona id) {
         for (Cliente cliente : clientes) {
@@ -115,14 +118,47 @@ public class SistemaVentaPasajes {
         return false;
     }
     //revisar cuando esté la clase ventas
-
-    /*
-    private String[][] listVentas(){
-        Object[][] arregloVentas = new Object[ventas.size()][7];
+    public String[][] listVentas(){
+        //Dado que el metodo devuelve un ARREGLO BIDIMENSIONAL, el mensaje apropiado en caso de n existir ventas se debe desplegar desde el main
+        String[][] arregloVentas = new String[ventas.size()][7];
         for (int i=0; i<ventas.size(); i++) {
+            Venta venta = ventas.get(i);
+            arregloVentas[i][0] = venta.getIdDocumento();
+            arregloVentas[i][1] = venta.getTipo().toString();
+            //DEBE SER EN FORMATO DD/MM/AAAA
 
+
+            arregloVentas[i][2] = fechaFormateada.format(venta.getFecha());
+            //REVISAR ID PERSONA debería dar RUT/PASAPORTE
+            arregloVentas[i][3] = venta.getCliente().getIdPersona().toString();
+            //REVISAR SI TRAE TRATAMIENTO
+            arregloVentas[i][4] = venta.getCliente().getNombreCompleto().toString();
+            //pasando int a String
+            String stringCantBoletos =""+ venta.getPasajes().length;
+            arregloVentas[i][5] = stringCantBoletos;
+            //convertir monto INT a String
+            String stringTotalVenta = "" + venta.getMonto();
+            arregloVentas[i][6] = stringTotalVenta;
 
         }
-    }*/
+        return arregloVentas;
+    }
+    public String[][] listViajes(){
+        String[][] arregloViajes = new String[viajes.size()][5];
+        for (int i=0; i<viajes.size(); i++) {
+            Viaje viaje = viajes.get(i);
+            arregloViajes[i][0] = fechaFormateada.format(viaje.getFecha());
+
+            arregloViajes[i][1] = horaFormateada.format(viaje.getHora());
+            String stringPrecio = "" + viaje.getPrecio();
+            arregloViajes[i][2] = stringPrecio;
+            arregloViajes[i][3] = viaje.getAsientos().toString();
+            arregloViajes[i][4] = viaje.getBus().getPatente();
+
+        }
+
+        return arregloViajes;
+    }
+    public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus){
 
 }
