@@ -89,8 +89,12 @@ public class SistemaVentaPasajes {
 
     //No estoy del to do seguro de si  viaje.getPatente está bien usado, se verá cuando esté la clase Viaje
     public boolean createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) {
-        Viaje viaje = new Viaje(fecha, hora, precio, );
-        if (findViaje(fecha, hora, patenteBus) == null) {
+        Bus bus = findBus(patBus);
+        if (bus == null){
+            return false;
+        }
+        Viaje viaje = new Viaje(fecha, hora, precio, bus);
+        if (findViaje(fecha.toString(), hora.toString(), patBus) == null) {
             viajes.add(viaje);
             return true;
         }
