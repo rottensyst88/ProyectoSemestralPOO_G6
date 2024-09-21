@@ -160,5 +160,7 @@ public class SistemaVentaPasajes {
         return arregloViajes;
     }
     public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus){
-
+    String[][] arregloPasajeros = new String[pasajeros.size()][5];
+    return arregloPasajeros;
+}
 }
