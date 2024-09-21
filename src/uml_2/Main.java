@@ -1,5 +1,4 @@
 package uml_2;
-
 import uml_1.*;
 
 import java.util.Scanner;
@@ -10,12 +9,11 @@ import java.time.format.DateTimeFormatter;
 public class Main {
 
     private Scanner sc = new Scanner(System.in);
-    private SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
+    private final SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
 
     public static void main(String[] args) {
         Main mainInstance = new Main();
         mainInstance.menu();
-
     }
 
     private void menu() {
@@ -125,7 +123,7 @@ public class Main {
         System.out.print("Apellido Materno : ");
         String apMaterno = sc.next();
 
-        System.out.print("Telefono movil : ");
+        System.out.print("Teléfono movil : ");
         String telefono = sc.next();
 
         System.out.print("Email : ");
@@ -205,7 +203,6 @@ public class Main {
         String fechaVenta = sc.next();
 
         // sistemaCentral.vendePasajes(idDocumento, tipoDocumento, fechaVenta);
-
 
     }
 
