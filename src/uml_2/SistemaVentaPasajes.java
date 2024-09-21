@@ -1,4 +1,5 @@
 package uml_2;
+
 import uml_1.*;
 
 import java.time.LocalDate;
@@ -42,7 +43,7 @@ public class SistemaVentaPasajes {
         }
         return null;
     }
-    //arreglar
+
     public Viaje findViaje(String fecha, String hora, String patenteBus) {
         for (Viaje viaje : viajes) {
             if (viaje.getFecha().toString().equals(fecha) && viaje.getHora().toString().equals(hora) && viaje.getBus().getPatente().equals(patenteBus)) {
@@ -73,9 +74,6 @@ public class SistemaVentaPasajes {
 
         return clientes.add(c);
     }
-    //no estoy seguro de donde agregar el ArrayList donde van los clientes y pasajeros, dado que no sé si esta implementda por el otro lado la asociacion
-    //NO ESTOY SEGURO si los errores por parametros de los objetos cliente y psajeros son error mio o está mal implementada la herencia en sus respectivas clases
-
 
     public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
             fonoContacto) {
@@ -91,10 +89,9 @@ public class SistemaVentaPasajes {
         return false;
     }
 
-    //No estoy del to do seguro de si  viaje.getPatente está bien usado, se verá cuando esté la clase Viaje
     public boolean createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) {
         Bus bus = findBus(patBus);
-        if (bus == null){
+        if (bus == null) {
             return false;
         }
         Viaje viaje = new Viaje(fecha, hora, precio, bus);
@@ -104,7 +101,6 @@ public class SistemaVentaPasajes {
         }
         return false;
     }
-
 
     public boolean createBus(String patente, String marca, String modelo, int nroAsientos) {
         Bus bus = new Bus(patente, nroAsientos);
@@ -117,11 +113,11 @@ public class SistemaVentaPasajes {
         }
         return false;
     }
-    //revisar cuando esté la clase ventas
-    public String[][] listVentas(){
+
+    public String[][] listVentas() {
         //Dado que el metodo devuelve un ARREGLO BIDIMENSIONAL, el mensaje apropiado en caso de n existir ventas se debe desplegar desde el main
         String[][] arregloVentas = new String[ventas.size()][7];
-        for (int i=0; i<ventas.size(); i++) {
+        for (int i = 0; i < ventas.size(); i++) {
             Venta venta = ventas.get(i);
             arregloVentas[i][0] = venta.getIdDocumento();
             arregloVentas[i][1] = venta.getTipo().toString();
@@ -134,7 +130,7 @@ public class SistemaVentaPasajes {
             //REVISAR SI TRAE TRATAMIENTO
             arregloVentas[i][4] = venta.getCliente().getNombreCompleto().toString();
             //pasando int a String
-            String stringCantBoletos =""+ venta.getPasajes().length;
+            String stringCantBoletos = "" + venta.getPasajes().length;
             arregloVentas[i][5] = stringCantBoletos;
             //convertir monto INT a String
             String stringTotalVenta = "" + venta.getMonto();
@@ -143,9 +139,10 @@ public class SistemaVentaPasajes {
         }
         return arregloVentas;
     }
-    public String[][] listViajes(){
+
+    public String[][] listViajes() {
         String[][] arregloViajes = new String[viajes.size()][5];
-        for (int i=0; i<viajes.size(); i++) {
+        for (int i = 0; i < viajes.size(); i++) {
             Viaje viaje = viajes.get(i);
             arregloViajes[i][0] = fechaFormateada.format(viaje.getFecha());
 
@@ -159,8 +156,8 @@ public class SistemaVentaPasajes {
 
         return arregloViajes;
     }
-    public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus){
-    String[][] arregloPasajeros = new String[pasajeros.size()][5];
-    return arregloPasajeros;
-}
+
+    public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus) {
+        return new String[pasajeros.size()][5];
+    }
 }
