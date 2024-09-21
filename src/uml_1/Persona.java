@@ -1,18 +1,15 @@
 package uml_1;
 
 public class Persona {
-    // Atributos
     private IdPersona idPersona;
     private Nombre nombreCompleto;
     private String telefono;
 
-    // Constructor
     public Persona(IdPersona id, Nombre nombre) {
         this.idPersona = id;
         this.nombreCompleto = nombre;
     }
 
-    // Getters y Setters
     public IdPersona getIdPersona() {
         return idPersona;
     }
@@ -37,24 +34,16 @@ public class Persona {
         this.telefono = telefono;
     }
 
-    // Método toString
     @Override
     public String toString() {
-        return "uml_1.Persona[idPersona=" + idPersona + ", nombreCompleto=" + nombreCompleto + ", telefono=" + telefono + "]";
+        return (idPersona + ", " + nombreCompleto + ", " + telefono);
     }
 
-    // Método equals
     @Override
     public boolean equals(Object otro) {
-        if (this == otro) {
-            return true;
+        if (otro instanceof Persona otraPersona) {
+            return this.idPersona.equals(otraPersona.idPersona);
         }
-        if (otro == null || getClass() != otro.getClass()) {
-            return false;
-        }
-        Persona persona = (Persona) otro;
-        return idPersona.equals(persona.idPersona);
+        return false;
     }
 }
-
-//falta revisar el to string, equals.

@@ -1,19 +1,25 @@
 package uml_2;
+
 import uml_1.*;
+
+import java.lang.Math;
 
 public class Pasaje {
     private long numero;
     private int asiento;
+
     private Viaje viaje;
     private Venta venta;
     private Pasajero pasajero;
 
     public Pasaje(int asiento, Viaje viaje, Pasajero pasajero, Venta venta) {
-        this.numero = 0;
+        this.numero = (long) (Math.random() * Math.pow(10, 12));
         this.asiento = asiento;
         this.viaje = viaje;
         this.venta = venta;
+        this.pasajero = pasajero;
     }
+
     public int getAsiento() {
         return asiento;
     }

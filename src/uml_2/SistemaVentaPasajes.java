@@ -1,5 +1,4 @@
 package uml_2;
-
 import uml_1.*;
 
 import java.time.LocalDate;
@@ -11,6 +10,7 @@ public class SistemaVentaPasajes {
     ArrayList<Pasajero> pasajeros = new ArrayList<>();
     ArrayList<Viaje> viajes = new ArrayList<>();
     ArrayList<Bus> buses = new ArrayList<>();
+    ArrayList<Venta> ventas = new ArrayList<>(); // REVISAR!
 
     public Cliente findCliente(IdPersona id) {
         for (Cliente cliente : clientes) {
@@ -48,11 +48,9 @@ public class SistemaVentaPasajes {
         return null;
     }
 
-
-    //revisar luego de la creacion de la clase Venta
     public Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
         for (Venta venta : ventas) {
-            if (venta.getidDocumento().equals(idDocumento) && venta.gettipoDocumento().equals(tipoDocumento)) {
+            if (venta.getIdDocumento().equals(idDocumento) && venta.getTipo().equals(tipoDocumento)) {
                 return venta;
             }
         }
@@ -61,7 +59,8 @@ public class SistemaVentaPasajes {
 
     public boolean createCliente(IdPersona id, Nombre nom, String fono, String email) {
 
-        Cliente c = new Cliente(id, nom, fono, email);
+        Cliente c = new Cliente(id, nom, email);
+        c.setTelefono(fono);
 
         if (findCliente(id) == null) {
             clientes.add(c);
@@ -77,8 +76,11 @@ public class SistemaVentaPasajes {
     public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
             fonoContacto) {
 
-        Pasajero p = new Pasajero(id, nom, fono, nomContacto, fonoContacto);
-        if (findPasajero(IdPersona) == null) {
+        Pasajero p = new Pasajero(id, nom, fonoContacto);
+        p.setNomContacto(nomContacto);
+        p.setTelefono(fono);
+
+        if (findPasajero(id) == null) {
             pasajeros.add(p);
             return true;
         }
@@ -87,7 +89,7 @@ public class SistemaVentaPasajes {
 
     //No estoy del to do seguro de si  viaje.getPatente está bien usado, se verá cuando esté la clase Viaje
     public boolean createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) {
-        Viaje viaje = new Viaje(fecha, hora, precio, patBus);
+        Viaje viaje = new Viaje(fecha, hora, precio, );
         if (findViaje(fecha, hora, patenteBus) == null) {
             viajes.add(viaje);
             return true;
@@ -97,7 +99,10 @@ public class SistemaVentaPasajes {
 
 
     public boolean createBus(String patente, String marca, String modelo, int nroAsientos) {
-        Bus bus = new bus(patente, marca, modelo, nroAsientos);
+        Bus bus = new Bus(patente, nroAsientos);
+        bus.setMarca(marca);
+        bus.setModelo(modelo);
+
         if (findBus(patente) == null) {
             buses.add(bus);
             return true;
@@ -106,7 +111,7 @@ public class SistemaVentaPasajes {
     }
     //revisar cuando esté la clase ventas
     private String[][] listVentas(){
-        Object[][] arregloVentas = new Object[Ventas.size()][7];
+        Object[][] arregloVentas = new Object[ventas.size()][7];
         for (int i=0; i<ventas.size(); i++) {
 
 
