@@ -1,3 +1,5 @@
+package uml_2;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -5,10 +7,10 @@ import java.util.List;
 
 public class sistemaVentaPasajes {
 
-    private List<Cliente> clientes ;
+    private List<Cliente> clientes;
     private List<Venta> ventas;
     private List<Viaje> viajes;
-    private List<Pasajero> pasajeros ;
+    private List<Pasajero> pasajeros;
     private List<Bus> buses;
 
     public sistemaVentaPasajes() {
@@ -19,35 +21,34 @@ public class sistemaVentaPasajes {
         buses = new ArrayList<>();
     }
 
-
-    public int getMontoVenta(String idDocumento, TipoDocumento tipo){
+    public int getMontoVenta(String idDocumento, TipoDocumento tipo) {
 
         Venta venta = findVenta(idDocumento, tipo);
-        if(venta != null){
+        if (venta != null) {
             return venta.getMonto();
-        } else  return 0;
+        } else return 0;
     }
 
-    public String getNombrePasajero(idPersona idPasajero){
+    public String getNombrePasajero(idPersona idPasajero) {
 
         Pasajero pasajero = findPasajero(idPasajero);
-        if(pasajero != null){
+        if (pasajero != null) {
             return pasajero.getNomContacto();
         } else return null;
     }
 
-    public boolean iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, idPersona idCliente){
+    public boolean iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, idPersona idCliente) {
         //primero debo verificar si es que el cliente existe con su id
         //luego verificar si es que existe la venta con esa idDocumento
 
         Venta venta = findVenta(idDocumento, tipo);
-        if(venta != null){
+        if (venta != null) {
             return false;
             //ya existe una venta con esos datos
         }
 
         Cliente cliente = findCliente(idCliente);
-        if(cliente == null){
+        if (cliente == null) {
             return false;
             // no existe un cliente con este id
         }
@@ -56,10 +57,8 @@ public class sistemaVentaPasajes {
         return true;
     }
 
-
-
-    public String[]listAsientosDeViaje(LocalDate fecha, LocalTime hora,
-                                       String patBus) {
+    public String[] listAsientosDeViaje(LocalDate fecha, LocalTime hora,
+                                        String patBus) {
 
         //ocupo toString(), para poder utilizar el metodo findViaje el cual solo recibe string
 
@@ -92,22 +91,21 @@ public class sistemaVentaPasajes {
 
     }
 
-
     public boolean vendePasaje(String idDoc, TipoDocumento tipo, LocalTime hora, LocalDate fecha,
-                               String patBus, int asiento, idPersona idPasajero){
+                               String patBus, int asiento, idPersona idPasajero) {
         /*
         -Se debe verificar si existe una venta con el idDoc y tipo dados
         -Verificar si existe un viaje
         -Verificar si existe el pasajero
          */
         Venta venta = findVenta(idDoc, tipo);
-        if(venta == null){
+        if (venta == null) {
             return false;
             //No existe venta
         }
 
         Pasajero pasajero = findPasajero(idPasajero);
-        if(pasajero == null){
+        if (pasajero == null) {
             return false;
             // no existe un cliente con este id
         }
@@ -116,13 +114,13 @@ public class sistemaVentaPasajes {
         String horaComoString = hora.toString();
         String fechaComoString = fecha.toString();
         Viaje viaje = findViaje(fechaComoString, horaComoString, patBus);
-        if(viaje == null){
+        if (viaje == null) {
             return false;
             //no existe un viaje
         }
 
         Bus bus = findBus(patBus);
-        if(bus == null){
+        if (bus == null) {
             return false;
             //no existe un Bus
         }
@@ -135,7 +133,7 @@ public class sistemaVentaPasajes {
 
     }
 
-    public String[][] getHorariosDisponibles(LocalDate fecha){
+    public String[][] getHorariosDisponibles(LocalDate fecha) {
         List<Viaje> viajesFecha = new ArrayList<>();
 
         //aqui busco si es que hay algun viaje con esa fecha en la lista de viajes
@@ -168,10 +166,6 @@ public class sistemaVentaPasajes {
             horariosDisponibles[i][3] = String.valueOf(viaje.getAsientosDisponibles());
 
         }
-
         return horariosDisponibles;
     }
-
-
-
 }
