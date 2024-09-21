@@ -204,7 +204,7 @@ public class Main {
         System.out.println("Fecha de venta[dd/mm/yyyy] : ");
         String fechaVenta = sc.next();
 
-        sistemaCentral.vendePasajes(idDocumento, tipoDocumento, fechaVenta);
+        // sistemaCentral.vendePasajes(idDocumento, tipoDocumento, fechaVenta);
 
 
     }
