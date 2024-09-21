@@ -173,6 +173,8 @@ public class Main {
         String fechaSN = sc.next();
         LocalDate fecha = LocalDate.parse(fechaSN, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
+
+
         System.out.print("Hora[hh:mm] : ");
         String horaSN = sc.next();
         LocalTime hora = LocalTime.parse(horaSN, DateTimeFormatter.ofPattern("HH:mm"));
