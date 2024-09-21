@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class sistemaVentaPasajes {
+public class SistemaVentaPasajes {
 
     private List<Cliente> clientes;
     private List<Venta> ventas;
@@ -13,7 +13,7 @@ public class sistemaVentaPasajes {
     private List<Pasajero> pasajeros;
     private List<Bus> buses;
 
-    public sistemaVentaPasajes() {
+    public SistemaVentaPasajes() {
         clientes = new ArrayList<>();
         ventas = new ArrayList<>();
         viajes = new ArrayList<>();
