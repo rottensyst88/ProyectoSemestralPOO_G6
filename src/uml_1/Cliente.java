@@ -1,9 +1,9 @@
 package uml_1;
 
-public class Cliente extends Persona{
+public class Cliente extends Persona {
     private String email;
 
-    public Cliente(IdPersona id, Nombre nom, String email){
+    public Cliente(IdPersona id, Nombre nom, String email) {
         super(id, nom);
         this.email = email;
     }

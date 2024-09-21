@@ -1,7 +1,9 @@
 package uml_1;
 
-public interface IdPersona { // CLASE TERMINADA!
+public interface IdPersona {
+    @Override
     String toString();
 
+    @Override
     boolean equals(Object otro);
 }
