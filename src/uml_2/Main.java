@@ -3,6 +3,9 @@ package uml_2;
 import uml_1.*;
 
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Main {
 
@@ -141,14 +144,66 @@ public class Main {
     }
 
     private void createBus() {
+        System.out.println("...:::: Creación de un nuevo BUS ::::...\n");
 
+        System.out.print("Patente : ");
+        String patente = sc.next();
+
+        sc.nextLine();
+        System.out.print("Marca : ");
+        String marca = sc.nextLine();
+
+        System.out.print("Modelo : ");
+        String modelo = sc.next();
+
+        System.out.print("Numero de asientos : ");
+        int nroAsientos = sc.nextInt();
+
+        if(sistemaCentral.createBus(patente, marca, modelo, nroAsientos)){
+            System.out.println("\n...:::: Bus guardado exitosamente ::::...");
+        } else {
+            System.out.println("\n...:::: Error al guardar bus ::::...");
+        }
     }
 
     private void createViaje() {
+        System.out.println("...:::: Creación de un nuevo Viaje ::::...\n");
 
+        System.out.print("Fecha[dd/mm/yyyy] : ");
+        String fechaSN = sc.next();
+        LocalDate fecha = LocalDate.parse(fechaSN, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        System.out.print("Hora[hh:mm] : ");
+        String horaSN = sc.next();
+        LocalTime hora = LocalTime.parse(horaSN, DateTimeFormatter.ofPattern("HH:mm"));
+
+        System.out.print("Precio : ");
+        int precio = sc.nextInt();
+
+        System.out.print("Patente Bus : ");
+        String patente = sc.next();
+
+        if(sistemaCentral.createViaje(fecha, hora, precio, patente)){
+            System.out.println("\n...:::: Viaje guardado exitosamente ::::...");
+        } else {
+            System.out.println("\n...:::: Error al guardar viaje ::::...");
+        }
     }
 
     private void vendePasajes() {
+        System.out.println("....:::: Venta de pasajes ::::....\n\n");
+        System.out.println(":::: Datos de la Venta");
+        System.out.print("ID Documento : ");
+        String idDocumento = sc.next();
+
+        System.out.print("Tipo documento: [1] Boleta [2] Factura : ");
+        int tipoDocumento = sc.nextInt();
+
+        System.out.println("Fecha de venta[dd/mm/yyyy] : ");
+        String fechaVenta = sc.next();
+
+        //sistemaCentral.vendePasajes(idDocumento, tipoDocumento, fechaVenta);
+
 
     }
 
