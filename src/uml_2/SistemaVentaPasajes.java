@@ -12,6 +12,7 @@ public class SistemaVentaPasajes {
     ArrayList<Bus> buses = new ArrayList<>();
     ArrayList<Venta> ventas = new ArrayList<>(); // REVISAR!
 
+
     public Cliente findCliente(IdPersona id) {
         for (Cliente cliente : clientes) {
             if (cliente.getIdPersona().equals(id)) {
@@ -114,12 +115,14 @@ public class SistemaVentaPasajes {
         return false;
     }
     //revisar cuando esté la clase ventas
+
+    /*
     private String[][] listVentas(){
         Object[][] arregloVentas = new Object[ventas.size()][7];
         for (int i=0; i<ventas.size(); i++) {
 
 
         }
-    }
+    }*/
 
 }

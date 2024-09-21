@@ -30,7 +30,7 @@ public class Pasaporte implements IdPersona {
         return false;
     }
 
-    final public Pasaporte of(String num, String nacionalidad) {
+    static public Pasaporte of(String num, String nacionalidad) {
         if (num != null && nacionalidad != null) {
             return new Pasaporte(num, nacionalidad);
         }
