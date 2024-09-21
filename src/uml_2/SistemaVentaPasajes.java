@@ -50,7 +50,7 @@ public class SistemaVentaPasajes {
 
     public Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
         for (Venta venta : ventas) {
-            if (venta.getIdDocumento().equals(idDocumento) && venta.getTipoDocumento().equals(tipoDocumento)) {
+            if (venta.getIdDocumento().equals(idDocumento) && venta.getTipo().equals(tipoDocumento)) {
                 return venta;
             }
         }
@@ -89,7 +89,7 @@ public class SistemaVentaPasajes {
 
     //No estoy del to do seguro de si  viaje.getPatente está bien usado, se verá cuando esté la clase Viaje
     public boolean createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) {
-        Viaje viaje = new Viaje(fecha, hora, precio, patBus);
+        Viaje viaje = new Viaje(fecha, hora, precio, );
         if (findViaje(fecha, hora, patenteBus) == null) {
             viajes.add(viaje);
             return true;
