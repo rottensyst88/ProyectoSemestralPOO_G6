@@ -1,5 +1,5 @@
 package uml_2;
-import uml_1.*;
+
 import java.util.ArrayList;
 
 public class Bus {
@@ -8,39 +8,39 @@ public class Bus {
     private String modelo;
     private int nroAsientos;
 
-    ArrayList<Viaje> viajes;
+    private ArrayList<Viaje> viajes;
 
-    public Bus(String patente, int nroAsientos){
+    public Bus(String patente, int nroAsientos) {
         this.patente = patente;
         this.nroAsientos = nroAsientos;
         viajes = new ArrayList<>();
     }
 
-    public String getPatente(){
+    public String getPatente() {
         return patente;
     }
 
-    public String getMarca(){
+    public String getMarca() {
         return marca;
     }
 
-    public void setMarca(String marca){
+    public void setMarca(String marca) {
         this.marca = marca;
     }
 
-    public String getModelo(){
+    public String getModelo() {
         return modelo;
     }
 
-    public void setModelo(String modelo){
+    public void setModelo(String modelo) {
         this.modelo = modelo;
     }
 
-    public int getNroAsientos(){
+    public int getNroAsientos() {
         return nroAsientos;
     }
 
-    public void addViaje(Viaje viaje){
+    public void addViaje(Viaje viaje) {
         viajes.add(viaje);
     }
 }

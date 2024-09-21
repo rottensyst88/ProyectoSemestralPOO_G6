@@ -1,19 +1,23 @@
 package uml_2;
+
 import uml_1.*;
 
 import java.time.LocalDate;
+
 public class Venta {
-    private TipoDocumento idDocumento;
+    private String idDocumento;
+    private TipoDocumento tipo;
     private LocalDate fecha;
     private Cliente cliente;
 
-    public Venta(TipoDocumento idDocumento, LocalDate fecha, Cliente cliente) {
-        this.idDocumento = idDocumento;
-        this.fecha = fecha;
-        this.cliente = cliente;
+    public Venta(String id, TipoDocumento tipo, LocalDate fec, Cliente cli) {
+        idDocumento = id;
+        this.tipo = tipo;
+        fecha = fec;
+        cliente = cli;
     }
 
-    public TipoDocumento getIdDocumento() {
+    public String getIdDocumento() {
         return idDocumento;
     }
 
@@ -25,5 +29,3 @@ public class Venta {
         return cliente;
     }
 }
-
-//clase prueba
