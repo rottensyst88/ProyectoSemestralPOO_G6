@@ -1,5 +1,4 @@
 package uml_2;
-
 import uml_1.*;
 
 import java.util.Scanner;
@@ -193,8 +192,12 @@ public class Main {
             }
         } while (tipo == null);
 
-        System.out.print("Fecha de venta[dd/mm/yyyy] : ");
+        System.out.print("Fecha de venta_lista[dd/mm/yyyy] : ");
         String fechaVenta = sc.next();
+        LocalDate fec = LocalDate.parse(fechaVenta, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+
+        // DATOS DEL CLIENTE!
 
         System.out.println("\n:::: Datos del cliente\n");
 
@@ -203,7 +206,24 @@ public class Main {
         } while (id == null);
 
         System.out.print("Nombre Cliente : ");
-        String nombreCliente = sc.next();
+        sc.nextLine();
+        String cliente = sc.nextLine();
+
+        Nombre nombreCliente = new Nombre();
+
+        String[] nombres = cliente.split(" ");
+        if (nombres[0].equals("Sr.")) {
+            nombreCliente.setTratamiento(Tratamiento.SR);
+        } else {
+            nombreCliente.setTratamiento(Tratamiento.SRA);
+        }
+        nombreCliente.setNombre(nombres[1]);
+        nombreCliente.setApellidoPaterno(nombres[2]);
+        nombreCliente.setApellidoMaterno(nombres[3]);
+
+        System.out.println(sistemaCentral.iniciaVenta(idDocumento, tipo, fec, id)); // INICIA LA VENTA!
+
+        Venta venta = sistemaCentral.findVenta(idDocumento, tipo);
 
         // IMPRESION DE LOS PASAJES DISPONIBLES!
 
@@ -217,9 +237,10 @@ public class Main {
 
         System.out.println("::::Listado de horarios disponibles");
 
-        String[][] horariosDisponibles = sistemaCentral.getHorariosDisponibles(fechaViaje);
+        String[][] horariosDisponibles = sistemaCentral.getHorariosDisponibles(fechaViaje); // RETORNA ARREGLO CON DATOS SOBRE VIAJES DE BUS
 
         Viaje viajeAbordar = impresoraListadoViajes(new String[]{"|BUS", "|SALIDA", "|VALOR", "|ASIENTOS"}, horariosDisponibles, fechaViaje);
+        sistemaCentral.createViaje(viajeAbordar.getFecha(), viajeAbordar.getHora(), viajeAbordar.getPrecio(), viajeAbordar.getBus().getPatente());
 
         impresoraListadoAsientos(viajeAbordar.getAsientos());
 
@@ -227,35 +248,38 @@ public class Main {
         String asientos = sc.next();
 
         String[] split = asientos.split(",");
-        for (int i = 0; i < split.length; i++) {
+
+        for (int i = 0; i < cantidadPasajes; i++) {
+
             String asiento = split[i];
-            System.out.println(":::: Datos del pasajero " + (i+1));
+            System.out.println(":::: Datos del pasajero " + (i + 1));
 
-            IdPersona id_pasajes = SelectorRut_Pasaporte();
+            IdPersona id_pasajero = SelectorRut_Pasaporte();
 
-            if (sistemaCentral.findPasajero(id_pasajes) == null) {
+            if (sistemaCentral.findPasajero(id_pasajero) == null) {
+                sistemaCentral.createPasajero(id_pasajero, null, null, null, null);
                 System.out.print("Nombre : ");
 
                 sc.nextLine();
                 String nombre = sc.nextLine();
                 Nombre nombrePasajero = new Nombre();
 
-                String[] nombres = nombre.split(" ");
+                String[] nombres_1 = nombre.split(" ");
 
-                System.out.println(nombres[0]);
-                System.out.println(nombres[1]);
-                System.out.println(nombres[2]);
-                System.out.println(nombres[3]);
+                System.out.println(nombres_1[0]);
+                System.out.println(nombres_1[1]);
+                System.out.println(nombres_1[2]);
+                System.out.println(nombres_1[3]);
 
-                if (nombres[0].equals("Sr.")) {
+                if (nombres_1[0].equals("Sr.")) {
                     nombrePasajero.setTratamiento(Tratamiento.SR);
                 } else {
                     nombrePasajero.setTratamiento(Tratamiento.SRA);
                 }
 
-                nombrePasajero.setNombre(nombres[1]);
-                nombrePasajero.setApellidoPaterno(nombres[2]);
-                nombrePasajero.setApellidoMaterno(nombres[3]);
+                nombrePasajero.setNombre(nombres_1[1]);
+                nombrePasajero.setApellidoPaterno(nombres_1[2]);
+                nombrePasajero.setApellidoMaterno(nombres_1[3]);
 
                 System.out.print("Telefono : ");
                 String telefono = sc.next();
@@ -281,45 +305,42 @@ public class Main {
                 System.out.print("Telefono de contacto : ");
                 String telefonoContacto = sc.next();
 
-                if (sistemaCentral.createPasajero(id_pasajes, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto)) {
-                    System.out.println(":::: Pasaje agregado exitosamente!");
-                    sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento),id_pasajes);
-                } else{
-                    System.out.println(":::: Error al agregar pasaje!");
-                }
+                sistemaCentral.findPasajero(id_pasajero).setNombreCompleto(nombrePasajero);
+                sistemaCentral.findPasajero(id_pasajero).setTelefono(telefono);
+                sistemaCentral.findPasajero(id_pasajero).setNomContacto(nombreContactoPasajero);
+                sistemaCentral.findPasajero(id_pasajero).setFonoContacto(telefonoContacto);
+
 
             } else {
-                sistemaCentral.pasajeros.get(i).setNombreCompleto(sistemaCentral.findPasajero(id).getNombreCompleto());
-                sistemaCentral.pasajeros.get(i).setFonoContacto(sistemaCentral.findPasajero(id).getFonoContacto());
-                sistemaCentral.pasajeros.get(i).setNomContacto(sistemaCentral.findPasajero(id).getNomContacto());
+                sistemaCentral.findPasajero(id_pasajero).setNombreCompleto(sistemaCentral.findPasajero(id).getNombreCompleto());
+                sistemaCentral.findPasajero(id_pasajero).setTelefono(sistemaCentral.findPasajero(id_pasajero).getTelefono());
+                sistemaCentral.findPasajero(id_pasajero).setNomContacto(sistemaCentral.findPasajero(id_pasajero).getNomContacto());
 
-                if (sistemaCentral.createPasajero(id_pasajes, sistemaCentral.findPasajero(id_pasajes).getNombreCompleto(),
-                        sistemaCentral.findPasajero(id_pasajes).getFonoContacto(), sistemaCentral.findPasajero(id_pasajes).getNomContacto(), sistemaCentral.findPasajero(id_pasajes).getFonoContacto())){
-                    System.out.println(":::: Pasaje agregado exitosamente!");
-                    sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento),id_pasajes);
-                }else{
-                    System.out.println(":::: Error al agregar pasaje!");
-                }
+            }
+            if (sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento), id_pasajero)) {
+                venta.createPasaje(Integer.parseInt(asiento), viajeAbordar, sistemaCentral.findPasajero(id_pasajero));
+                System.out.println(":::: Pasaje agregado exitosamente!");
+            } else {
+                System.out.println(":::: Error al agregar pasaje!");
             }
         }
-        sistemaCentral.ventas.add(new Venta(idDocumento, tipo, LocalDate.parse(fechaVenta, DateTimeFormatter.ofPattern("dd/MM/yyyy")), sistemaCentral.findCliente(id)));
 
-        Venta venta = sistemaCentral.findVenta(idDocumento, tipo);
+        System.out.println(venta);
 
-        System.out.println(":::: Monto total de la venta : " + sistemaCentral.getMontoVenta(idDocumento,tipo));
+        System.out.println(":::: Monto total de la venta_lista : " + venta.getMonto());
 
         System.out.println(":::: Venta realizada exitosamente!");
 
         System.out.println(":::: Imprimiendo los pasajes");
 
-        for(int f = 0; f < split.length;f++){
+        for (int f = 0; f < cantidadPasajes; f++) {
             System.out.println("------------------- PASAJE -------------------");
             System.out.println("NUMERO DE PASAJE : " + venta.getPasajes()[f].getNumero());
             System.out.println("FECHA DEL VIAJE : " + venta.getPasajes()[f].getViaje().getFecha());
             System.out.println("HORA DEL VIAJE : " + venta.getPasajes()[f].getViaje().getHora());
             System.out.println("PATENTE BUS : " + venta.getPasajes()[f].getViaje().getBus().getPatente());
             System.out.println("ASIENTO : " + venta.getPasajes()[f].getAsiento());
-            System.out.println("RUT / PASAPORTE : " + venta.getPasajes()[f].getPasajero().getIdPersona());
+            System.out.println("RUT - PASAPORTE : " + venta.getPasajes()[f].getPasajero().getIdPersona());
             System.out.println("NOMBRE PASAJERO : " + venta.getPasajes()[f].getPasajero().getNombreCompleto());
             System.out.println("-----------------------------------------------");
         }
@@ -470,18 +491,18 @@ public class Main {
 
         System.out.println(listadoBuses.length);
 
-        if(listadoBuses.length % 4 == 0){
+        if (listadoBuses.length % 4 == 0) {
             contador_f = listadoBuses.length;
-        }else{
-            do{
+        } else {
+            do {
                 contador_f = 4 * h;
                 h++;
 
-            } while(contador_f < listadoBuses.length);
+            } while (contador_f < listadoBuses.length);
         }
 
         for (z = 0; z < contador_f; z++) {
-            if(z < listadoBuses.length){
+            if (z < listadoBuses.length) {
                 if (z == 0) {
 
                     // ESTA WEA IMPRIME LOS CONTENEDORES DE LA TABLA!
@@ -531,9 +552,9 @@ public class Main {
                 y++;
                 q++;
 
-            } else{
+            } else {
                 if (y != 5) {
-                    System.out.print("| * " );
+                    System.out.print("| * ");
                 } else {
                     System.out.print("|   ");
                     y = 0;

@@ -41,6 +41,8 @@ public class Venta {
     }
 
     public Pasaje[] getPasajes(){
+        // System.out.println(pasajes.size()); USADO PARA DEBUG!
+
         Pasaje[] arregloPasajes = new Pasaje[pasajes.size()];
         return pasajes.toArray(arregloPasajes);
     }
