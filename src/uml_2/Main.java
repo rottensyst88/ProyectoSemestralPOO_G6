@@ -1,4 +1,5 @@
 package uml_2;
+
 import uml_1.*;
 
 import java.util.Scanner;
@@ -74,28 +75,7 @@ public class Main {
         System.out.println("...:::: Crear un nuevo Cliente ::::...\n");
 
         do {
-            System.out.print("Rut[1] o Pasaporte[2] : ");
-            int rut_o_pasaporte = sc.nextInt();
-
-            if (rut_o_pasaporte == 1 || rut_o_pasaporte == 2) {
-                if (rut_o_pasaporte == 1) {
-                    System.out.print("R.U.T : ");
-                    String rutConDV = sc.next();
-
-                    id = Rut.of(rutConDV);
-
-                } else {
-                    System.out.print("Numero de pasaporte : ");
-                    String nroPasaporte = sc.next();
-
-                    System.out.print("Nacionalidad : ");
-                    String nacionalidad = sc.next();
-
-                    id = Pasaporte.of(nroPasaporte, nacionalidad);
-                }
-            } else {
-                System.out.println("Error! Valor invalido!");
-            }
+            id = SelectorRut_Pasaporte();
         } while (id == null);
 
         do {
@@ -157,7 +137,7 @@ public class Main {
         System.out.print("Numero de asientos : ");
         int nroAsientos = sc.nextInt();
 
-        if(sistemaCentral.createBus(patente, marca, modelo, nroAsientos)){
+        if (sistemaCentral.createBus(patente, marca, modelo, nroAsientos)) {
             System.out.println("\n...:::: Bus guardado exitosamente ::::...");
         } else {
             System.out.println("\n...:::: Error al guardar bus ::::...");
@@ -171,8 +151,6 @@ public class Main {
         String fechaSN = sc.next();
         LocalDate fecha = LocalDate.parse(fechaSN, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-
-
         System.out.print("Hora[hh:mm] : ");
         String horaSN = sc.next();
         LocalTime hora = LocalTime.parse(horaSN, DateTimeFormatter.ofPattern("HH:mm"));
@@ -183,7 +161,7 @@ public class Main {
         System.out.print("Patente Bus : ");
         String patente = sc.next();
 
-        if(sistemaCentral.createViaje(fecha, hora, precio, patente)){
+        if (sistemaCentral.createViaje(fecha, hora, precio, patente)) {
             System.out.println("\n...:::: Viaje guardado exitosamente ::::...");
         } else {
             System.out.println("\n...:::: Error al guardar viaje ::::...");
@@ -191,18 +169,59 @@ public class Main {
     }
 
     private void vendePasajes() {
+        IdPersona id = null;
+        TipoDocumento tipo = null;
+
         System.out.println("....:::: Venta de pasajes ::::....\n\n");
         System.out.println(":::: Datos de la Venta");
+
         System.out.print("ID Documento : ");
         String idDocumento = sc.next();
 
-        System.out.print("Tipo documento: [1] Boleta [2] Factura : ");
-        int tipoDocumento = sc.nextInt();
+        do {
+            System.out.print("Tipo documento: [1] Boleta [2] Factura : ");
 
-        System.out.println("Fecha de venta[dd/mm/yyyy] : ");
+            int tipoDoc = sc.nextInt();
+            if (tipoDoc == 1 || tipoDoc == 2) {
+                if (tipoDoc == 1) {
+                    tipo = TipoDocumento.BOLETA;
+                } else {
+                    tipo = TipoDocumento.FACTURA;
+                }
+            } else {
+                System.out.println("Error! Valor invalido!");
+            }
+        } while (tipo == null);
+
+        System.out.print("Fecha de venta[dd/mm/yyyy] : ");
         String fechaVenta = sc.next();
 
-        // sistemaCentral.vendePasajes(idDocumento, tipoDocumento, fechaVenta);
+        System.out.println("\n:::: Datos del cliente\n");
+
+        do {
+            id = SelectorRut_Pasaporte();
+        } while (id == null);
+
+        System.out.print("Nombre Cliente : ");
+        String nombreCliente = sc.next();
+
+        // IMPRESION DE LOS PASAJES DISPONIBLES!
+
+        System.out.println("\n\n::::Pasajes a vender");
+        System.out.print("Cantidad de pasajes : ");
+        int cantidadPasajes = sc.nextInt();
+
+        System.out.print("Fecha de viaje[dd/mm/yyyy] : ");
+        String fechaViajeSN = sc.next();
+        LocalDate fechaViaje = LocalDate.parse(fechaViajeSN, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        System.out.println("::::Listado de horarios disponibles");
+
+        String[][] horariosDisponibles = sistemaCentral.getHorariosDisponibles(fechaViaje);
+        String[] titulos = {"|BUS", "|SALIDA", "|VALOR", "|ASIENTOS"};
+
+        impresora(titulos, horariosDisponibles);
+
 
     }
 
@@ -217,5 +236,82 @@ public class Main {
 
     private void listViajes() {
 
+    }
+
+    // METODO PRIVADOS PARA OPTIMIZAR EL PROCESO!
+
+    private IdPersona SelectorRut_Pasaporte() {
+
+        System.out.print("Rut[1] o Pasaporte[2] : ");
+        int rut_o_pasaporte = sc.nextInt();
+
+        if (rut_o_pasaporte == 1 || rut_o_pasaporte == 2) {
+            if (rut_o_pasaporte == 1) {
+                System.out.print("R.U.T : ");
+                String rutConDV = sc.next();
+
+                return Rut.of(rutConDV);
+
+            } else {
+                System.out.print("Numero de pasaporte : ");
+                String nroPasaporte = sc.next();
+
+                System.out.print("Nacionalidad : ");
+                String nacionalidad = sc.next();
+
+                return Pasaporte.of(nroPasaporte, nacionalidad);
+            }
+        } else {
+            System.out.println("Error! Valor invalido!");
+            return null;
+        }
+    }
+
+    private void impresora(String[] cabeceras, String[][] arregloImpresora){
+        int contador_letras = 0;
+        int contador_for;
+        int contador_todo = 0;
+
+        // CALCULA LONGITUD DE LA CABECERA!
+        for (String cabecera : cabeceras) {
+            if (cabecera.length() > contador_letras) {
+                contador_letras = cabecera.length();
+            }
+        }
+
+        contador_for = contador_letras;
+
+        // SE CUENTA TODO EL STRING, JUNTO A SUS ESPACIOS!
+        for (String cabecera : cabeceras) {
+            int espacios = contador_letras - cabecera.length();
+            contador_todo += (espacios + cabecera.length());
+        }
+
+        for(int z = 0; z <= arregloImpresora.length;z++){
+            if (z == 0 || z == arregloImpresora.length){
+                for(int x = 0; x < contador_todo;x++ ){
+                    if(contador_todo / cabeceras.length == contador_for){
+                        System.out.print("*");
+                        contador_for = 0;
+                    }else{
+                        System.out.print("-");
+                    }
+                    contador_for++;
+                }
+                System.out.println("*");
+            }
+
+            if(z == 0){
+                for (String cabecera : cabeceras) {
+                    int espacios = contador_letras - cabecera.length();
+                    System.out.print(cabecera + " ".repeat(espacios));
+                }
+
+                System.out.println("|");
+            }
+
+
+
+        }
     }
 }
