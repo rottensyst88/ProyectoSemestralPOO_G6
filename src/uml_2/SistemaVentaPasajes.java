@@ -1,6 +1,6 @@
 package uml_2;
-import uml_1.*;
 
+import uml_1.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -66,6 +66,64 @@ public class SistemaVentaPasajes {
         return null;
     }
 
+    // FIN METODOS FIND, TOTAL DE METODOS -> 5/5
+
+    // METODOS GET
+
+    public int getMontoVenta(String idDocumento, TipoDocumento tipo) {
+        Venta venta = findVenta(idDocumento, tipo);
+        if (venta != null) {
+            return venta.getMonto();
+        } else return 0;
+    }
+
+    public String getNombrePasajero(IdPersona idPasajero) {
+        Pasajero pasajero = findPasajero(idPasajero);
+        if (pasajero != null) {
+            return pasajero.getNomContacto().getNombre();
+        } else return null;
+    }
+
+    public String[][] getHorariosDisponibles(LocalDate fecha) {
+        ArrayList<Viaje> viajesFecha = new ArrayList<>();
+
+        //aquí busco si es que hay algún viaje con esa fecha en la lista de viajes
+        //si es que hay lo agrego a un nuevo arraylist que cree para guardarlos ahi
+        for (Viaje viaje : viajes) {
+            if (viaje.getFecha().equals(fecha)) {
+                viajesFecha.add(viaje);
+            }
+        }
+
+        // si el arraylist esta vacio se retorna un arreglo vacio, segun las instrucciones
+        if (viajesFecha.isEmpty()) {
+            return new String[0][0];
+        }
+
+        String[][] horariosDisponibles = new String[viajesFecha.size()][4];
+
+        //relleno el arreglo bidimensional mediante un ciclo for
+        //accediendo  a los datos que me piden mediante viajesFecha.get(i)
+        for (int i = 0; i < viajesFecha.size(); i++) {
+            Viaje viaje = viajesFecha.get(i);
+            Bus bus = viaje.getBus();
+
+
+            String horaComoString = viaje.getHora().toString();
+
+            horariosDisponibles[i][0] = bus.getPatente();
+            horariosDisponibles[i][1] = horaComoString;
+            horariosDisponibles[i][2] = String.valueOf(viaje.getPrecio());
+            horariosDisponibles[i][3] = String.valueOf(viaje.getNroAsientosDisponibles());
+
+        }
+        return horariosDisponibles;
+    }
+
+    // FIN METODOS GET, TOTAL METODOS -> 3/3
+
+    // METODOS CREATE
+
     public boolean createCliente(IdPersona id, Nombre nom, String fono, String email) {
 
         Cliente c = new Cliente(id, nom, email);
@@ -78,9 +136,6 @@ public class SistemaVentaPasajes {
 
         return clientes.add(c);
     }
-    //no estoy seguro de donde agregar el ArrayList donde van los clientes y pasajeros, dado que no sé si esta implementda por el otro lado la asociacion
-    //NO ESTOY SEGURO si los errores por parametros de los objetos cliente y psajeros son error mio o está mal implementada la herencia en sus respectivas clases
-
 
     public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
             fonoContacto) {
@@ -96,12 +151,12 @@ public class SistemaVentaPasajes {
         return false;
     }
 
-    //No estoy del to do seguro de si  viaje.getPatente está bien usado, se verá cuando esté la clase Viaje
     public boolean createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) {
         Bus bus = findBus(patBus);
-        if (bus == null){
+        if (bus == null) {
             return false;
         }
+
         Viaje viaje = new Viaje(fecha, hora, precio, bus);
         if (findViaje(fecha.toString(), hora.toString(), patBus) == null) {
             viajes.add(viaje);
@@ -109,7 +164,6 @@ public class SistemaVentaPasajes {
         }
         return false;
     }
-
 
     public boolean createBus(String patente, String marca, String modelo, int nroAsientos) {
         Bus bus = new Bus(patente, nroAsientos);
@@ -163,7 +217,7 @@ public class SistemaVentaPasajes {
     public String[][] listVentas() {
         //Dado que el metodo devuelve un ARREGLO BIDIMENSIONAL, el mensaje apropiado en caso de n existir ventas se debe desplegar desde el main
         String[][] arregloVentas = new String[ventas.size()][7];
-        for (int i=0; i<ventas.size(); i++) {
+        for (int i = 0; i < ventas.size(); i++) {
             Venta venta = ventas.get(i);
             arregloVentas[i][0] = venta.getIdDocumento();
             arregloVentas[i][1] = venta.getTipo().toString();
@@ -176,7 +230,7 @@ public class SistemaVentaPasajes {
             //REVISAR SI TRAE TRATAMIENTO
             arregloVentas[i][4] = venta.getCliente().getNombreCompleto().toString();
             //pasando int a String
-            String stringCantBoletos =""+ venta.getPasajes().length;
+            String stringCantBoletos = "" + venta.getPasajes().length;
             arregloVentas[i][5] = stringCantBoletos;
             //convertir monto INT a String
             String stringTotalVenta = "" + venta.getMonto();
@@ -185,9 +239,10 @@ public class SistemaVentaPasajes {
         }
         return arregloVentas;
     }
-    public String[][] listViajes(){
+
+    public String[][] listViajes() {
         String[][] arregloViajes = new String[viajes.size()][5];
-        for (int i=0; i<viajes.size(); i++) {
+        for (int i = 0; i < viajes.size(); i++) {
             Viaje viaje = viajes.get(i);
             arregloViajes[i][0] = fechaFormateada.format(viaje.getFecha());
 
@@ -203,21 +258,8 @@ public class SistemaVentaPasajes {
     }
 
     public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus) {
-        String[][] arregloPasajeros = new String[pasajeros.size()][5];
-        //Recorrer los viajes para encontrar el que busco
-        for (int i = 0; i < pasajeros.size(); i++) {
-            Viaje viaje = viajes.get(i);
-            //Si el viaje es igual, retorna lo requerido
-            if (viaje.getFecha().equals(fecha) && viaje.getHora().equals(hora) && viaje.getBus().getPatente().equals(patBus)) {
-                arregloPasajeros[i][0] =
-                arregloPasajeros[i][1] =
-            }
-
-        }
+        return new String[pasajeros.size()][5];
     }
-
-
-
 
     // FIN METODOS LIST, TOTAL METODOS 4/4
 
