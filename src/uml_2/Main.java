@@ -287,8 +287,13 @@ public class Main {
             contador_todo += (espacios + cabecera.length());
         }
 
-        for(int z = 0; z <= arregloImpresora.length;z++){
-            if (z == 0 || z == arregloImpresora.length){
+        // IMPRESION DE LA TABLA!
+        for(int z = 0; z < arregloImpresora.length;z++){
+            if (z == 0){
+
+                // ESTA WEA IMPRIME LOS CONTENEDORES DE LA TABLA!
+
+                System.out.print("   ");
                 for(int x = 0; x < contador_todo;x++ ){
                     if(contador_todo / cabeceras.length == contador_for){
                         System.out.print("*");
@@ -299,9 +304,8 @@ public class Main {
                     contador_for++;
                 }
                 System.out.println("*");
-            }
 
-            if(z == 0){
+                System.out.print("   ");
                 for (String cabecera : cabeceras) {
                     int espacios = contador_letras - cabecera.length();
                     System.out.print(cabecera + " ".repeat(espacios));
@@ -310,8 +314,39 @@ public class Main {
                 System.out.println("|");
             }
 
+            System.out.print("   ");
+            for(int x = 0; x < contador_todo;x++ ){
+                if(contador_todo / cabeceras.length == contador_for){
+                    System.out.print("+");
+                    contador_for = 0;
+                }else{
+                    System.out.print("-");
+                }
+                contador_for++;
+            }
+            System.out.println("+");
 
+            System.out.print(" " + (z+1) + " |");
 
+            for(int f = 0; f < arregloImpresora[z].length;f++){
+                int espacios = contador_letras - arregloImpresora[z][f].length();
+                System.out.print(arregloImpresora[z][f] + " ".repeat(espacios-1) + "|");
+            }
         }
+
+
+        System.out.print("\n   ");
+        for(int x = 0; x < contador_todo;x++ ){
+            if(contador_todo / cabeceras.length == contador_for){
+                System.out.print("*");
+                contador_for = 0;
+            }else{
+                System.out.print("-");
+            }
+            contador_for++;
+        }
+        System.out.print("*");
+
+        System.out.println("\n");
     }
 }
