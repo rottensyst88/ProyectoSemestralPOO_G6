@@ -260,7 +260,21 @@ public class SistemaVentaPasajes {
     }
 
     public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus) {
-        return new String[pasajeros.size()][5];
+        String[][] arregloPasajeros = new String[pasajeros.size()][];
+        for (int i = 0; i < pasajeros.size(); i++) {
+            Pasajero pasajero = pasajeros.get(i);
+            //dado el problema con relacionar el numero del asiento con los demas datos del pasajero, esa parte estará omitida por el momnto
+            arregloPasajeros[i][0] = "0";
+            arregloPasajeros[i][1] = pasajero.getIdPersona().toString();
+            arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
+            arregloPasajeros[i][3] = pasajero.getNomContacto().toString();
+            arregloPasajeros[i][4] = pasajero.getFonoContacto().toString();
+
+        }
+        return arregloPasajeros;
+
+
+
     }
 
     // FIN METODOS LIST, TOTAL METODOS 4/4
