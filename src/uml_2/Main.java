@@ -218,15 +218,114 @@ public class Main {
         System.out.println("::::Listado de horarios disponibles");
 
         String[][] horariosDisponibles = sistemaCentral.getHorariosDisponibles(fechaViaje);
-        String[] titulos = {"|BUS", "|SALIDA", "|VALOR", "|ASIENTOS"};
 
-        impresora(titulos, horariosDisponibles);
+        Viaje viajeAbordar = impresoraListadoViajes(new String[]{"|BUS", "|SALIDA", "|VALOR", "|ASIENTOS"}, horariosDisponibles, fechaViaje);
 
+        impresoraListadoAsientos(viajeAbordar.getAsientos());
 
+        System.out.print("Seleccione sus asientos [separe por ,] : ");
+        String asientos = sc.next();
+
+        String[] split = asientos.split(",");
+        for (int i = 0; i < split.length; i++) {
+            String asiento = split[i];
+            System.out.println(":::: Datos del pasajero " + (i+1));
+
+            IdPersona id_pasajes = SelectorRut_Pasaporte();
+
+            if (sistemaCentral.findPasajero(id_pasajes) == null) {
+                System.out.print("Nombre : ");
+
+                sc.nextLine();
+                String nombre = sc.nextLine();
+                Nombre nombrePasajero = new Nombre();
+
+                String[] nombres = nombre.split(" ");
+
+                System.out.println(nombres[0]);
+                System.out.println(nombres[1]);
+                System.out.println(nombres[2]);
+                System.out.println(nombres[3]);
+
+                if (nombres[0].equals("Sr.")) {
+                    nombrePasajero.setTratamiento(Tratamiento.SR);
+                } else {
+                    nombrePasajero.setTratamiento(Tratamiento.SRA);
+                }
+
+                nombrePasajero.setNombre(nombres[1]);
+                nombrePasajero.setApellidoPaterno(nombres[2]);
+                nombrePasajero.setApellidoMaterno(nombres[3]);
+
+                System.out.print("Telefono : ");
+                String telefono = sc.next();
+
+                System.out.print("Nombre de contacto : ");
+                sc.nextLine();
+                String nombreContacto = sc.nextLine();
+
+                Nombre nombreContactoPasajero = new Nombre();
+
+                String[] nombresContacto = nombreContacto.split(" ");
+
+                if (nombresContacto[0].equals("Sr.")) {
+                    nombreContactoPasajero.setTratamiento(Tratamiento.SR);
+                } else {
+                    nombreContactoPasajero.setTratamiento(Tratamiento.SRA);
+                }
+
+                nombreContactoPasajero.setNombre(nombresContacto[1]);
+                nombreContactoPasajero.setApellidoPaterno(nombresContacto[2]);
+                nombreContactoPasajero.setApellidoMaterno(nombresContacto[3]);
+
+                System.out.print("Telefono de contacto : ");
+                String telefonoContacto = sc.next();
+
+                if (sistemaCentral.createPasajero(id_pasajes, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto)) {
+                    System.out.println(":::: Pasaje agregado exitosamente!");
+                    sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento),id_pasajes);
+                } else{
+                    System.out.println(":::: Error al agregar pasaje!");
+                }
+
+            } else {
+                sistemaCentral.pasajeros.get(i).setNombreCompleto(sistemaCentral.findPasajero(id).getNombreCompleto());
+                sistemaCentral.pasajeros.get(i).setFonoContacto(sistemaCentral.findPasajero(id).getFonoContacto());
+                sistemaCentral.pasajeros.get(i).setNomContacto(sistemaCentral.findPasajero(id).getNomContacto());
+
+                if (sistemaCentral.createPasajero(id_pasajes, sistemaCentral.findPasajero(id_pasajes).getNombreCompleto(),
+                        sistemaCentral.findPasajero(id_pasajes).getFonoContacto(), sistemaCentral.findPasajero(id_pasajes).getNomContacto(), sistemaCentral.findPasajero(id_pasajes).getFonoContacto())){
+                    System.out.println(":::: Pasaje agregado exitosamente!");
+                    sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento),id_pasajes);
+                }else{
+                    System.out.println(":::: Error al agregar pasaje!");
+                }
+            }
+        }
+        sistemaCentral.ventas.add(new Venta(idDocumento, tipo, LocalDate.parse(fechaVenta, DateTimeFormatter.ofPattern("dd/MM/yyyy")), sistemaCentral.findCliente(id)));
+
+        Venta venta = sistemaCentral.findVenta(idDocumento, tipo);
+
+        System.out.println(":::: Monto total de la venta : " + sistemaCentral.getMontoVenta(idDocumento,tipo));
+
+        System.out.println(":::: Venta realizada exitosamente!");
+
+        System.out.println(":::: Imprimiendo los pasajes");
+
+        for(int f = 0; f < split.length;f++){
+            System.out.println("------------------- PASAJE -------------------");
+            System.out.println("NUMERO DE PASAJE : " + venta.getPasajes()[f].getNumero());
+            System.out.println("FECHA DEL VIAJE : " + venta.getPasajes()[f].getViaje().getFecha());
+            System.out.println("HORA DEL VIAJE : " + venta.getPasajes()[f].getViaje().getHora());
+            System.out.println("PATENTE BUS : " + venta.getPasajes()[f].getViaje().getBus().getPatente());
+            System.out.println("ASIENTO : " + venta.getPasajes()[f].getAsiento());
+            System.out.println("RUT / PASAPORTE : " + venta.getPasajes()[f].getPasajero().getIdPersona());
+            System.out.println("NOMBRE PASAJERO : " + venta.getPasajes()[f].getPasajero().getNombreCompleto());
+            System.out.println("-----------------------------------------------");
+        }
     }
 
     private void listPasajerosViaje() {
-
 
     }
 
@@ -267,10 +366,11 @@ public class Main {
         }
     }
 
-    private void impresora(String[] cabeceras, String[][] arregloImpresora){
+    private Viaje impresoraListadoViajes(String[] cabeceras, String[][] arregloImpresora, LocalDate fecha) {
         int contador_letras = 0;
         int contador_for;
         int contador_todo = 0;
+        int z;
 
         // CALCULA LONGITUD DE LA CABECERA!
         for (String cabecera : cabeceras) {
@@ -288,23 +388,24 @@ public class Main {
         }
 
         // IMPRESION DE LA TABLA!
-        for(int z = 0; z < arregloImpresora.length;z++){
-            if (z == 0){
+        for (z = 0; z < arregloImpresora.length; z++) {
+            if (z == 0) {
 
                 // ESTA WEA IMPRIME LOS CONTENEDORES DE LA TABLA!
 
                 System.out.print("   ");
-                for(int x = 0; x < contador_todo;x++ ){
-                    if(contador_todo / cabeceras.length == contador_for){
+                for (int x = 0; x < contador_todo; x++) {
+                    if (contador_todo / cabeceras.length == contador_for) {
                         System.out.print("*");
                         contador_for = 0;
-                    }else{
+                    } else {
                         System.out.print("-");
                     }
                     contador_for++;
                 }
                 System.out.println("*");
 
+                // ESTA OTRA WEA IMPRIME LA CABECERA!
                 System.out.print("   ");
                 for (String cabecera : cabeceras) {
                     int espacios = contador_letras - cabecera.length();
@@ -314,39 +415,151 @@ public class Main {
                 System.out.println("|");
             }
 
+            // ESTA OTRA WEA IMPRIME LOS SEPARADORES!
             System.out.print("   ");
-            for(int x = 0; x < contador_todo;x++ ){
-                if(contador_todo / cabeceras.length == contador_for){
+            for (int x = 0; x < contador_todo; x++) {
+                if (contador_todo / cabeceras.length == contador_for) {
                     System.out.print("+");
                     contador_for = 0;
-                }else{
+                } else {
                     System.out.print("-");
                 }
                 contador_for++;
             }
             System.out.println("+");
 
-            System.out.print(" " + (z+1) + " |");
+            System.out.print(" " + (z + 1) + " |");
 
-            for(int f = 0; f < arregloImpresora[z].length;f++){
+            int f;
+
+            for (f = 0; f < arregloImpresora[z].length; f++) {
                 int espacios = contador_letras - arregloImpresora[z][f].length();
-                System.out.print(arregloImpresora[z][f] + " ".repeat(espacios-1) + "|");
+                System.out.print(arregloImpresora[z][f] + " ".repeat(espacios - 1) + "|");
             }
+            System.out.println();
         }
 
-
-        System.out.print("\n   ");
-        for(int x = 0; x < contador_todo;x++ ){
-            if(contador_todo / cabeceras.length == contador_for){
+        System.out.print("   ");
+        for (int x = 0; x < contador_todo; x++) {
+            if (contador_todo / cabeceras.length == contador_for) {
                 System.out.print("*");
                 contador_for = 0;
-            }else{
+            } else {
                 System.out.print("-");
             }
             contador_for++;
         }
         System.out.print("*");
-
         System.out.println("\n");
+
+        System.out.print("Seleccione viaje en [1.." + z + "] : ");
+        int seleccion = sc.nextInt();
+
+        return sistemaCentral.findViaje(String.valueOf(fecha), arregloImpresora[seleccion - 1][1], arregloImpresora[seleccion - 1][0]);
+        // return sistemaCentral.listAsientosDeViaje(fecha, LocalTime.of(Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(0, 2)), Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(3, 5))), arregloImpresora[seleccion - 1][0]);
+
+    }
+
+    private void impresoraListadoAsientos(String[][] listadoBuses) {
+        int y = 3;
+        int z;
+        int q = 0;
+        int contador_for = 4;
+        int contador_f;
+        int h = 1;
+
+        System.out.println(listadoBuses.length);
+
+        if(listadoBuses.length % 4 == 0){
+            contador_f = listadoBuses.length;
+        }else{
+            do{
+                contador_f = 4 * h;
+                h++;
+
+            } while(contador_f < listadoBuses.length);
+        }
+
+        for (z = 0; z < contador_f; z++) {
+            if(z < listadoBuses.length){
+                if (z == 0) {
+
+                    // ESTA WEA IMPRIME LOS CONTENEDORES DE LA TABLA!
+                    for (int x = 0; x < 21; x++) {
+                        if (contador_for == 4) {
+                            System.out.print("*");
+                            contador_for = 0;
+                        } else {
+                            System.out.print("-");
+                        }
+                        contador_for++;
+                    }
+                    System.out.println();
+                }
+
+                if (y != 5) {
+                    if (z >= 0 && z < 9) {
+                        System.out.print("| " + (z + 1) + " ");
+                    } else {
+                        System.out.print("| " + (z + 1));
+
+                    }
+                } else {
+                    System.out.print("|   ");
+                    y = 0;
+                    z -= 1;
+                }
+
+                if (q == 4) {
+                    System.out.println("|");
+                    q = -1;
+
+                    contador_for = 4;
+
+                    for (int x = 0; x < 21; x++) {
+                        if (contador_for == 4) {
+                            System.out.print("+");
+                            contador_for = 0;
+                        } else {
+                            System.out.print("-");
+                        }
+                        contador_for++;
+                    }
+                    System.out.println();
+                }
+
+                y++;
+                q++;
+
+            } else{
+                if (y != 5) {
+                    System.out.print("| * " );
+                } else {
+                    System.out.print("|   ");
+                    y = 0;
+                    z -= 1;
+                }
+
+                y++;
+                q++;
+
+            }
+        }
+
+        System.out.print("|\n");
+
+        contador_for = 4;
+
+        for (int x = 0; x < 21; x++) {
+            if (contador_for == 4) {
+                System.out.print("*");
+                contador_for = 0;
+            } else {
+                System.out.print("-");
+            }
+            contador_for++;
+        }
+
+        System.out.print("\n   ");
     }
 }

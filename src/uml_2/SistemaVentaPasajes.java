@@ -1,6 +1,7 @@
 package uml_2;
 
 import uml_1.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -30,9 +31,9 @@ public class SistemaVentaPasajes {
         return null;
     }
 
-    public Pasajero findPasajero(IdPersona IdPersona) {
+    public Pasajero findPasajero(IdPersona id) {
         for (Pasajero pasajero : pasajeros) {
-            if (pasajero.getIdPersona().equals(IdPersona)) {
+            if (pasajero.getIdPersona().equals(id)) {
                 return pasajero;
             }
         }
@@ -58,7 +59,8 @@ public class SistemaVentaPasajes {
     }
 
     public Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
-        for (Venta venta : ventas) {
+        for (int i = 0; i < ventas.size(); i++) {
+            Venta venta = ventas.get(i);
             if (venta.getIdDocumento().equals(idDocumento) && venta.getTipo().equals(tipoDocumento)) {
                 return venta;
             }
@@ -199,17 +201,17 @@ public class SistemaVentaPasajes {
 
         String[] asientos = new String[infoSobreAsientos.length];
 
-        for (int i = 0; i < infoSobreAsientos.length; i++) {
+        for (int i = 0; i < asientos.length; i++) {
             /* Cabe aclarar que no se en que orden esta el arreglo bidimensional
             getAsientos, no se si esta primero el numero o el estado, pero eso se puede
             arreglar luego
             Tampoco entiendo si debo agregar solo el estado o tambien el numero pero eso
             es facil de cambiar
              */
-            String numAsiento = infoSobreAsientos[i][0];
-            String estadoAsiento = infoSobreAsientos[i][1];
+            // String numAsiento = infoSobreAsientos[i][0];
+            // String estadoAsiento = infoSobreAsientos[i][1];
 
-            asientos[i] = "Asiento " + numAsiento + ": " + estadoAsiento;
+            asientos[i] = infoSobreAsientos[i][1];
         }
         return asientos;
     }
