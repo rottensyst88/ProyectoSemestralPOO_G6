@@ -7,10 +7,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Main {
-
     private Scanner sc = new Scanner(System.in);
     private final SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
-
     public static void main(String[] args) {
         Main mainInstance = new Main();
         mainInstance.menu();
@@ -67,11 +65,12 @@ public class Main {
     }
 
     private void createCliente() {
+
         Nombre usuario = new Nombre();
         Tratamiento tratamiento = null;
         IdPersona id = null;
 
-        System.out.println("...:::: Crear un nuevo Cliente ::::...\n");
+        System.out.println("\n...:::: Crear un nuevo Cliente ::::...\n");
 
         do {
             id = SelectorRut_Pasaporte();
@@ -121,7 +120,7 @@ public class Main {
     }
 
     private void createBus() {
-        System.out.println("...:::: Creación de un nuevo BUS ::::...\n");
+        System.out.println("\n...:::: Creación de un nuevo BUS ::::...\n");
 
         System.out.print("Patente : ");
         String patente = sc.next();
@@ -144,7 +143,7 @@ public class Main {
     }
 
     private void createViaje() {
-        System.out.println("...:::: Creación de un nuevo Viaje ::::...\n");
+        System.out.println("\n...:::: Creación de un nuevo Viaje ::::...\n");
 
         System.out.print("Fecha[dd/mm/yyyy] : ");
         String fechaSN = sc.next();
@@ -171,7 +170,7 @@ public class Main {
         IdPersona id = null;
         TipoDocumento tipo = null;
 
-        System.out.println("....:::: Venta de pasajes ::::....\n\n");
+        System.out.println("\n....:::: Venta de pasajes ::::....\n");
         System.out.println(":::: Datos de la Venta");
 
         System.out.print("ID Documento : ");
@@ -192,10 +191,9 @@ public class Main {
             }
         } while (tipo == null);
 
-        System.out.print("Fecha de venta_lista[dd/mm/yyyy] : ");
+        System.out.print("Fecha de venta[dd/mm/yyyy] : ");
         String fechaVenta = sc.next();
         LocalDate fec = LocalDate.parse(fechaVenta, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
 
         // DATOS DEL CLIENTE!
 
@@ -217,11 +215,16 @@ public class Main {
         } else {
             nombreCliente.setTratamiento(Tratamiento.SRA);
         }
+
         nombreCliente.setNombre(nombres[1]);
         nombreCliente.setApellidoPaterno(nombres[2]);
         nombreCliente.setApellidoMaterno(nombres[3]);
 
-        System.out.println(sistemaCentral.iniciaVenta(idDocumento, tipo, fec, id)); // INICIA LA VENTA!
+        if(sistemaCentral.iniciaVenta(idDocumento, tipo, fec, id)){
+            System.out.println(":::: Venta iniciada exitosamente!");
+        } else {
+            System.out.println(":::: Error al iniciar venta!");
+        }
 
         Venta venta = sistemaCentral.findVenta(idDocumento, tipo);
 
@@ -252,7 +255,7 @@ public class Main {
         for (int i = 0; i < cantidadPasajes; i++) {
 
             String asiento = split[i];
-            System.out.println(":::: Datos del pasajero " + (i + 1));
+            System.out.println("\n:::: Datos del pasajero " + (i + 1));
 
             IdPersona id_pasajero = SelectorRut_Pasaporte();
 
@@ -266,10 +269,12 @@ public class Main {
 
                 String[] nombres_1 = nombre.split(" ");
 
+                /*
                 System.out.println(nombres_1[0]);
                 System.out.println(nombres_1[1]);
                 System.out.println(nombres_1[2]);
                 System.out.println(nombres_1[3]);
+                 */
 
                 if (nombres_1[0].equals("Sr.")) {
                     nombrePasajero.setTratamiento(Tratamiento.SR);
@@ -327,7 +332,8 @@ public class Main {
 
         System.out.println(venta);
 
-        System.out.println(":::: Monto total de la venta_lista : " + venta.getMonto());
+        //System.out.println(":::: Monto total de la venta : " + venta.getMonto());
+        System.out.println(":::: Monto total de la venta : " + sistemaCentral.getMontoVenta(idDocumento, tipo));
 
         System.out.println(":::: Venta realizada exitosamente!");
 
@@ -342,7 +348,7 @@ public class Main {
             System.out.println("ASIENTO : " + venta.getPasajes()[f].getAsiento());
             System.out.println("RUT - PASAPORTE : " + venta.getPasajes()[f].getPasajero().getIdPersona());
             System.out.println("NOMBRE PASAJERO : " + venta.getPasajes()[f].getPasajero().getNombreCompleto());
-            System.out.println("-----------------------------------------------");
+            System.out.println("-----------------------------------------------\n\n");
         }
     }
 
@@ -489,7 +495,8 @@ public class Main {
         int contador_f;
         int h = 1;
 
-        System.out.println(listadoBuses.length);
+        // System.out.println(listadoBuses.length);
+        System.out.println();
 
         if (listadoBuses.length % 4 == 0) {
             contador_f = listadoBuses.length;
