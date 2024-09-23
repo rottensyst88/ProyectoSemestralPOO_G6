@@ -268,11 +268,15 @@ public class Main {
         String[] split = asientos.split(",");
 
         for (int i = 0; i < cantidadPasajes; i++) {
+            IdPersona id_pasajero;
 
             String asiento = split[i];
             System.out.println("\n:::: Datos del pasajero " + (i + 1));
 
-            IdPersona id_pasajero = SelectorRut_Pasaporte();
+            do{
+                id_pasajero = SelectorRut_Pasaporte();
+            }while(id_pasajero == null);
+
 
             if (sistemaCentral.findPasajero(id_pasajero) == null) {
                 sistemaCentral.createPasajero(id_pasajero, null, null, null, null);
@@ -360,15 +364,74 @@ public class Main {
     }
 
     private void listPasajerosViaje() {
+        System.out.println("\n...:::: Listado de pasajeros de un viaje ::::...\n");
 
+        System.out.print("Fecha de viaje[dd/mm/yyyy] : ");
+        String fechaViaje = sc.next();
+        LocalDate fecha = LocalDate.parse(fechaViaje, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        System.out.print("Hora de viaje[hh:mm] : ");
+        String horaViaje = sc.next();
+        LocalTime hora = LocalTime.parse(horaViaje, DateTimeFormatter.ofPattern("HH:mm"));
+
+        // FORMATO DE INGRESO DE PATENTE: AA.BB-11
+        System.out.print("Patente del bus : ");
+        String patente = sc.next();
+        patente = patente.substring(0, 2) + patente.substring(3, 5) + patente.substring(6, 8);
+
+        String[][] pasajeros_arreglo = sistemaCentral.listPasajeros(fecha, hora, patente);
+
+        if(pasajeros_arreglo.length == 0){
+            System.out.println(":::: Error! No hay pasajeros para el viaje seleccionado!");
+            return;
+        }
+
+        System.out.println("ASIENTO\tRUT - PASAPORTE\tNOMBRE\tNOMBRE CONTACTO\tTELEFONO CONTACTO");
+        for (String[] pasajero : pasajeros_arreglo) {
+            System.out.print(pasajero[0] + "\t");
+            System.out.print(pasajero[1] + "\t");
+            System.out.print(pasajero[2] + "\t");
+            System.out.print(pasajero[3] + "\t");
+            System.out.print(pasajero[4] + "\n");
+        }
     }
 
     private void listVentas() {
+        System.out.println("\n...:::: Listado de ventas ::::...\n");
 
+        String[][] pasajeros_arreglo = sistemaCentral.listVentas();
+
+        if(pasajeros_arreglo.length == 0){
+            System.out.println(":::: Error! No hay ventas");
+            return;
+        }
+
+        System.out.println("ID DOCUMENT\tTIPO DOCU\tFECHA\tRUT - PASAPORTE\tCLIENTE\tCANT BOLETOS\tTOTAL VENTA");
+        for (String[] pasajero : pasajeros_arreglo) {
+            for(int x = 0; x < 7; x++){
+                System.out.print(pasajero[x] + "\t");
+            }
+            System.out.println();
+        }
     }
 
     private void listViajes() {
+        System.out.println("\n...:::: Listado de viajes ::::...\n");
 
+        String[][] pasajeros_arreglo = sistemaCentral.listViajes();
+
+        if(pasajeros_arreglo.length == 0){
+            System.out.println(":::: Error! No hay viajes");
+            return;
+        }
+
+        System.out.println("FECHA\tHORA\tPRECIO\tDISPONIBLES\tPATENTE");
+        for (String[] pasajero : pasajeros_arreglo) {
+            for(int x = 0; x < 5; x++){
+                System.out.print(pasajero[x] + "\t");
+            }
+            System.out.println();
+        }
     }
 
     // METODO PRIVADOS PARA OPTIMIZAR EL PROCESO!
@@ -433,7 +496,8 @@ public class Main {
 
         contador_for = contador_letras;
 
-        // SE CUENTA TODO EL STRING, JUNTO A SUS ESPACIOS!
+        //SE CUENTA EL TOTAL DE CARACTERES DE LA CABECERA!
+
         for (String cabecera : cabeceras) {
             int espacios = contador_letras - cabecera.length();
             contador_todo += (espacios + cabecera.length());

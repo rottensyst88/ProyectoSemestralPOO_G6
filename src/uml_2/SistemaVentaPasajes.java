@@ -219,13 +219,16 @@ public class SistemaVentaPasajes {
     public String[][] listVentas() {
         //Dado que el metodo devuelve un ARREGLO BIDIMENSIONAL, el mensaje apropiado en caso de n existir ventas se debe desplegar desde el main
         String[][] arregloVentas = new String[ventas.size()][7];
+
+        if(arregloVentas.length == 0){
+            return new String[0][0];
+        }
+
         for (int i = 0; i < ventas.size(); i++) {
             Venta venta = ventas.get(i);
             arregloVentas[i][0] = venta.getIdDocumento();
             arregloVentas[i][1] = venta.getTipo().toString();
             //DEBE SER EN FORMATO DD/MM/AAAA
-
-
             arregloVentas[i][2] = fechaFormateada.format(venta.getFecha());
             //REVISAR ID PERSONA debería dar RUT/PASAPORTE
             arregloVentas[i][3] = venta.getCliente().getIdPersona().toString();
@@ -244,6 +247,11 @@ public class SistemaVentaPasajes {
 
     public String[][] listViajes() {
         String[][] arregloViajes = new String[viajes.size()][5];
+
+        if(arregloViajes.length == 0){
+            return new String[0][0];
+        }
+
         for (int i = 0; i < viajes.size(); i++) {
             Viaje viaje = viajes.get(i);
             arregloViajes[i][0] = fechaFormateada.format(viaje.getFecha());
@@ -253,14 +261,17 @@ public class SistemaVentaPasajes {
             arregloViajes[i][2] = stringPrecio;
             arregloViajes[i][3] = viaje.getAsientos().toString();
             arregloViajes[i][4] = viaje.getBus().getPatente();
-
         }
-
         return arregloViajes;
     }
 
     public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus) {
-        String[][] arregloPasajeros = new String[pasajeros.size()][];
+        String[][] arregloPasajeros = new String[pasajeros.size()][5];
+
+        if(arregloPasajeros.length == 0){
+            return new String[0][0];
+        }
+
         for (int i = 0; i < pasajeros.size(); i++) {
             Pasajero pasajero = pasajeros.get(i);
             //dado el problema con relacionar el numero del asiento con los demas datos del pasajero, esa parte estará omitida por el momnto
@@ -269,12 +280,8 @@ public class SistemaVentaPasajes {
             arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
             arregloPasajeros[i][3] = pasajero.getNomContacto().toString();
             arregloPasajeros[i][4] = pasajero.getFonoContacto().toString();
-
         }
         return arregloPasajeros;
-
-
-
     }
 
     // FIN METODOS LIST, TOTAL METODOS 4/4
