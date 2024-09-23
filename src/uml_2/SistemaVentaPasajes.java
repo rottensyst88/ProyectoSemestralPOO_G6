@@ -135,8 +135,7 @@ public class SistemaVentaPasajes {
             clientes.add(c);
             return true;
         }
-
-        return clientes.add(c);
+        return false;
     }
 
     public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
@@ -164,6 +163,7 @@ public class SistemaVentaPasajes {
             viajes.add(viaje);
             return true;
         }
+
         return false;
     }
 
