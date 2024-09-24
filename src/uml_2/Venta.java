@@ -18,6 +18,7 @@ public class Venta {
         this.tipo = tipo;
         fecha = fec;
         cliente = cli;
+        pasajes = new ArrayList<>();
     }
 
     public String getIdDocumento() {
