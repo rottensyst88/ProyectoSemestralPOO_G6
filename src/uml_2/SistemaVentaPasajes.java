@@ -1,5 +1,4 @@
 package uml_2;
-
 import uml_1.*;
 
 import java.time.LocalDate;
@@ -7,22 +6,22 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class SistemaVentaPasajes {
+public class  SistemaVentaPasajes {
 
     // ATRIBUTOS DE LA CLASE SISTEMA_VENDE_PASAJES
 
-    ArrayList<Cliente> clientes = new ArrayList<>();
-    ArrayList<Pasajero> pasajeros = new ArrayList<>();
-    ArrayList<Viaje> viajes = new ArrayList<>();
-    ArrayList<Bus> buses = new ArrayList<>();
-    ArrayList<Venta> ventas = new ArrayList<>(); // REVISAR!
+    private ArrayList<Cliente> clientes = new ArrayList<>();
+    private ArrayList<Pasajero> pasajeros = new ArrayList<>();
+    private ArrayList<Viaje> viajes = new ArrayList<>();
+    private ArrayList<Bus> buses = new ArrayList<>();
+    private ArrayList<Venta> ventas = new ArrayList<>(); // REVISAR!
 
-    DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH/mm");
+    private DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH/mm");
 
     // METODOS FIND
 
-    public Cliente findCliente(IdPersona id) {
+    private Cliente findCliente(IdPersona id) {
         for (Cliente cliente : clientes) {
             if (cliente.getIdPersona().equals(id)) {
                 return cliente;
@@ -31,7 +30,7 @@ public class SistemaVentaPasajes {
         return null;
     }
 
-    public Pasajero findPasajero(IdPersona id) {
+    private Pasajero findPasajero(IdPersona id) {
         for (Pasajero pasajero : pasajeros) {
             if (pasajero.getIdPersona().equals(id)) {
                 return pasajero;
@@ -40,7 +39,7 @@ public class SistemaVentaPasajes {
         return null;
     }
 
-    public Bus findBus(String patente) {
+    private Bus findBus(String patente) {
         for (Bus bus : buses) {
             if (bus.getPatente().equals(patente)) {
                 return bus;
@@ -49,7 +48,7 @@ public class SistemaVentaPasajes {
         return null;
     }
 
-    public Viaje findViaje(String fecha, String hora, String patenteBus) {
+    private Viaje findViaje(String fecha, String hora, String patenteBus) {
         for (Viaje viaje : viajes) {
             if (viaje.getFecha().toString().equals(fecha) && viaje.getHora().toString().equals(hora) && viaje.getBus().getPatente().equals(patenteBus)) {
                 return viaje;
@@ -58,7 +57,7 @@ public class SistemaVentaPasajes {
         return null;
     }
 
-    public Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
+    private Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
         for (int i = 0; i < ventas.size(); i++) {
             Venta venta = ventas.get(i);
             if (venta.getIdDocumento().equals(idDocumento) && venta.getTipo().equals(tipoDocumento)) {
@@ -354,4 +353,18 @@ public class SistemaVentaPasajes {
     // FIN METODO INICIA_VENTA
 
     //TOTAL METODOS -> 18/18
+
+    public String[] pasajesAlImprimir(String idDocumento, TipoDocumento tipo){
+
+        Venta venta = findVenta(idDocumento, tipo);
+        String[] datos = {String.valueOf(venta.getPasajes()[0].getNumero()),
+                venta.getPasajes()[0].getViaje().getFecha().toString(),
+                venta.getPasajes()[0].getViaje().getHora().toString(),
+                venta.getPasajes()[0].getViaje().getBus().getPatente(),
+                String.valueOf(venta.getPasajes()[0].getAsiento()),
+                venta.getPasajes()[0].getPasajero().getIdPersona().toString(),
+                String.valueOf(venta.getPasajes()[0].getPasajero().getNombreCompleto())};
+
+        return datos;
+    }
 }

@@ -11,7 +11,7 @@ public class Venta {
     private LocalDate fecha;
     private Cliente cliente;
 
-    ArrayList<Pasaje> pasajes = new ArrayList<>();
+    ArrayList<Pasaje> pasajes;
 
     public Venta(String id, TipoDocumento tipo, LocalDate fec, Cliente cli) {
         idDocumento = id;

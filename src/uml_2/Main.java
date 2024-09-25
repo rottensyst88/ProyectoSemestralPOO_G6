@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 @SuppressWarnings({"FieldMayBeFinal", "WriteOnlyObject"})
 public class Main {
     private Scanner sc = new Scanner(System.in);
-    private final SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
+    private static SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
 
     public static void main(String[] args) {
         Main mainInstance = new Main();
@@ -78,11 +78,6 @@ public class Main {
             id = SelectorRut_Pasaporte();
         } while (id == null);
 
-        if(sistemaCentral.findCliente(id) != null){
-            System.out.println("\n:::: Error! Cliente ya existe!");
-            return;
-        }
-
         do {
             tratamiento = SelectorTratamiento();
         }while(tratamiento == null);
@@ -115,11 +110,6 @@ public class Main {
 
         System.out.print("Patente : ");
         String patente = sc.next();
-
-        if(sistemaCentral.findBus(patente) != null){
-            System.out.println("\n:::: Error! Bus ya existe!");
-            return;
-        }
 
         sc.nextLine();
         System.out.print("Marca : ");
@@ -190,10 +180,6 @@ public class Main {
         } while (tipo == null);
 
         // VERIFICACION DE VENTA EXISTENTE!
-        if(sistemaCentral.findVenta(idDocumento, tipo) != null){
-            System.out.println("\n:::: Error! Venta ya existe!");
-            return;
-        }
 
         System.out.print("Fecha de venta[dd/mm/yyyy] : ");
         String fechaVenta = sc.next();
@@ -228,7 +214,7 @@ public class Main {
             return;
         }
 
-        Venta venta = sistemaCentral.findVenta(idDocumento, tipo);
+        // Venta venta = sistemaCentral.findVenta(idDocumento, tipo);
 
         // VENTA DE PASAJES (CANTIDAD Y FECHA DE VIAJE)!
 
@@ -278,8 +264,7 @@ public class Main {
             }while(id_pasajero == null);
 
 
-            if (sistemaCentral.findPasajero(id_pasajero) == null) {
-                sistemaCentral.createPasajero(id_pasajero, null, null, null, null);
+            if ((sistemaCentral.getNombrePasajero(id_pasajero) == null)){
                 System.out.print("Nombre [Sr. * * *] : ");
 
                 sc.nextLine();
@@ -322,20 +307,29 @@ public class Main {
                 System.out.print("Telefono de contacto : ");
                 String telefonoContacto = sc.next();
 
+                sistemaCentral.createPasajero(id_pasajero, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto);
+                /*
                 sistemaCentral.findPasajero(id_pasajero).setNombreCompleto(nombrePasajero);
                 sistemaCentral.findPasajero(id_pasajero).setTelefono(telefono);
                 sistemaCentral.findPasajero(id_pasajero).setNomContacto(nombreContactoPasajero);
                 sistemaCentral.findPasajero(id_pasajero).setFonoContacto(telefonoContacto);
+                */
+
+            }
+            /*
+            else {
 
 
-            } else {
                 sistemaCentral.findPasajero(id_pasajero).setNombreCompleto(sistemaCentral.findPasajero(id).getNombreCompleto());
                 sistemaCentral.findPasajero(id_pasajero).setTelefono(sistemaCentral.findPasajero(id_pasajero).getTelefono());
                 sistemaCentral.findPasajero(id_pasajero).setNomContacto(sistemaCentral.findPasajero(id_pasajero).getNomContacto());
 
-            }
+
+            }*/
+
             if (sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento), id_pasajero)) {
-                venta.createPasaje(Integer.parseInt(asiento), viajeAbordar, sistemaCentral.findPasajero(id_pasajero));
+                //Pasajero pasajero = sistemaCentral.createPasajero()
+                // venta.createPasaje(Integer.parseInt(asiento), viajeAbordar, sistemaCentral.findPasajero(id_pasajero));
                 System.out.println(":::: Pasaje agregado exitosamente!");
             } else {
                 System.out.println(":::: Error al agregar pasaje!");
@@ -350,6 +344,10 @@ public class Main {
 
         System.out.println(":::: Imprimiendo los pasajes");
 
+        String[] datosImpresion = sistemaCentral.pasajesAlImprimir(idDocumento, tipo);
+
+
+        /*
         for (int f = 0; f < cantidadPasajes; f++) {
             System.out.println("------------------- PASAJE -------------------");
             System.out.println("NUMERO DE PASAJE : " + venta.getPasajes()[f].getNumero());
@@ -361,6 +359,8 @@ public class Main {
             System.out.println("NOMBRE PASAJERO : " + venta.getPasajes()[f].getPasajero().getNombreCompleto());
             System.out.println("-----------------------------------------------\n");
         }
+
+         */
     }
 
     private void listPasajerosViaje() {
@@ -571,7 +571,17 @@ public class Main {
         System.out.print("Seleccione viaje en [1.." + z + "] : ");
         int seleccion = sc.nextInt();
 
-        return sistemaCentral.findViaje(String.valueOf(fecha), arregloImpresora[seleccion - 1][1], arregloImpresora[seleccion - 1][0]);
+
+        boolean viaje =  sistemaCentral.createViaje(fecha, LocalTime.of(Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(0, 2)), Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(3, 5))), Integer.parseInt(arregloImpresora[seleccion - 1][2]), arregloImpresora[seleccion - 1][0]);
+
+        if(viaje){
+            return null;
+        }else {
+            Bus bus = new Bus(arregloImpresora[seleccion - 1][0], Integer.parseInt(arregloImpresora[seleccion - 1][3]));
+            return new Viaje(fecha, LocalTime.of(Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(0, 2)), Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(3, 5))), Integer.parseInt(arregloImpresora[seleccion - 1][2]), bus);
+        }
+
+        //return sistemaCentral.findViaje(String.valueOf(fecha), arregloImpresora[seleccion - 1][1], arregloImpresora[seleccion - 1][0]);
         // return sistemaCentral.listAsientosDeViaje(fecha, LocalTime.of(Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(0, 2)), Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(3, 5))), arregloImpresora[seleccion - 1][0]);
 
     }
