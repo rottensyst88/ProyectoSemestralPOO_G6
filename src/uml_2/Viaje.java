@@ -3,6 +3,7 @@ package uml_2;
 import java.time.*;
 import java.util.ArrayList;
 
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Viaje {
     private LocalDate fecha;
     private LocalTime hora;
@@ -15,8 +16,9 @@ public class Viaje {
         this.fecha = fecha;
         this.hora = hora;
         this.precio = precio;
+
         this.bus = bus;
-        bus.addViaje(this);
+        this.bus.addViaje(this);
     }
 
     public LocalDate getFecha() {

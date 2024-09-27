@@ -1,5 +1,6 @@
 package uml_1;
 
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Rut implements IdPersona {
     private int numero;
     private char dv;

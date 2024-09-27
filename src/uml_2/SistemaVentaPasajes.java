@@ -1,4 +1,5 @@
 package uml_2;
+
 import uml_1.*;
 
 import java.time.LocalDate;
@@ -6,7 +7,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class  SistemaVentaPasajes {
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
+public class SistemaVentaPasajes {
 
     // ATRIBUTOS DE LA CLASE SISTEMA_VENDE_PASAJES
 
@@ -137,6 +139,7 @@ public class  SistemaVentaPasajes {
         return false;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
             fonoContacto) { // TODO Implementar!
 
@@ -195,16 +198,16 @@ public class  SistemaVentaPasajes {
             return new String[0];
         }
 
-        //obtengo la información sobre los asientos desde la clase viaje
+        //obtengo la información sobre los asientos desde la clase Viaje
         String[][] infoSobreAsientos = viaje.getAsientos();
 
         String[] asientos = new String[infoSobreAsientos.length];
 
         for (int i = 0; i < asientos.length; i++) {
-            /* Cabe aclarar que no se en que orden esta el arreglo bidimensional
-            getAsientos, no se si esta primero el numero o el estado, pero eso se puede
+            /* Cabe aclarar que no sé en qué orden está el arreglo bidimensional
+            getAsientos, no sé si está primero el número o el estado, pero eso se puede
             arreglar luego
-            Tampoco entiendo si debo agregar solo el estado o tambien el numero pero eso
+            Tampoco entiendo si debo agregar solo el estado o también el número, pero eso
             es facil de cambiar
              */
             // String numAsiento = infoSobreAsientos[i][0];
@@ -216,10 +219,10 @@ public class  SistemaVentaPasajes {
     }
 
     public String[][] listVentas() {
-        //Dado que el metodo devuelve un ARREGLO BIDIMENSIONAL, el mensaje apropiado en caso de n existir ventas se debe desplegar desde el main
+        //Dado que el metodo devuelve un ARREGLO BIDIMENSIONAL, el mensaje apropiado en caso de existir ventas se debe desplegar desde el main
         String[][] arregloVentas = new String[ventas.size()][7];
 
-        if(arregloVentas.length == 0){
+        if (arregloVentas.length == 0) {
             return new String[0][0];
         }
 
@@ -247,7 +250,7 @@ public class  SistemaVentaPasajes {
     public String[][] listViajes() {
         String[][] arregloViajes = new String[viajes.size()][5];
 
-        if(arregloViajes.length == 0){
+        if (arregloViajes.length == 0) {
             return new String[0][0];
         }
 
@@ -267,13 +270,13 @@ public class  SistemaVentaPasajes {
     public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus) {
         String[][] arregloPasajeros = new String[pasajeros.size()][5];
 
-        if(arregloPasajeros.length == 0){
+        if (arregloPasajeros.length == 0) {
             return new String[0][0];
         }
 
         for (int i = 0; i < pasajeros.size(); i++) {
             Pasajero pasajero = pasajeros.get(i);
-            //dado el problema con relacionar el numero del asiento con los demas datos del pasajero, esa parte estará omitida por el momnto
+            //dado el problema con relacionar el número del asiento con los demás datos del pasajero, esa parte estará omitida por el momnto
             arregloPasajeros[i][0] = "0";
             arregloPasajeros[i][1] = pasajero.getIdPersona().toString();
             arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
@@ -291,8 +294,7 @@ public class  SistemaVentaPasajes {
                                String patBus, int asiento, IdPersona idPasajero) {
         /*
         -Se debe verificar si existe una venta con el idDoc y tipo dados
-        -Verificar si existe un viaje
-        -Verificar si existe el pasajero
+        -Verificar si existe un viaje, y si existe el pasajero
          */
         Venta venta = findVenta(idDoc, tipo);
         if (venta == null) {
@@ -354,20 +356,21 @@ public class  SistemaVentaPasajes {
 
     //TOTAL METODOS -> 18/18
 
-    public String[] pasajesAlImprimir(String idDocumento, TipoDocumento tipo){
+    public String[] pasajesAlImprimir(String idDocumento, TipoDocumento tipo) {
 
         Venta venta = findVenta(idDocumento, tipo);
+        Pasaje[] pasajes = venta.getPasajes();
 
-        if(venta == null){
-            return new String[0];
-        }else{
-            return new String[] {String.valueOf(venta.getPasajes()[0].getNumero()),
-                    venta.getPasajes()[0].getViaje().getFecha().toString(),
-                    venta.getPasajes()[0].getViaje().getHora().toString(),
-                    venta.getPasajes()[0].getViaje().getBus().getPatente(),
-                    String.valueOf(venta.getPasajes()[0].getAsiento()),
-                    venta.getPasajes()[0].getPasajero().getIdPersona().toString(),
-                    String.valueOf(venta.getPasajes()[0].getPasajero().getNombreCompleto())};
+        for (Pasaje pasaje : pasajes) {
+            return new String[]{String.valueOf(pasaje.getNumero()),
+                    pasaje.getViaje().getFecha().toString(),
+                    pasaje.getViaje().getHora().toString(),
+                    pasaje.getViaje().getBus().getPatente(),
+                    String.valueOf(pasaje.getAsiento()),
+                    pasaje.getPasajero().getIdPersona().toString(),
+                    String.valueOf(pasaje.getPasajero().getNombreCompleto())};
         }
+
+        return new String[0];
     }
 }

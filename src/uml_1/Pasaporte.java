@@ -1,5 +1,6 @@
 package uml_1;
 
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Pasaporte implements IdPersona {
     private String numero;
     private String nacionalidad;

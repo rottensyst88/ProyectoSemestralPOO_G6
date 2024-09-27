@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-@SuppressWarnings({"FieldMayBeFinal", "WriteOnlyObject"})
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Main {
     private Scanner sc = new Scanner(System.in);
     private static SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
@@ -155,7 +155,7 @@ public class Main {
     private void vendePasajes() {
         IdPersona id;
         TipoDocumento tipo = null;
-        Nombre nombreCliente = new Nombre();
+        Nombre nombreCliente = new Nombre(); // TODO Arreglar esto, no sé porque el IDE lo marca como error
 
         // DATOS DE LA VENTA!
 
@@ -315,14 +315,15 @@ public class Main {
                 sistemaCentral.findPasajero(id_pasajero).setFonoContacto(telefonoContacto);
                 */
 
-            }/*else{
-                sistemaCentral.findPasajero(id_pasajero).setNombreCompleto(sistemaCentral.findPasajero(id).getNombreCompleto());
+            }
+            /*
+            else{sistemaCentral.findPasajero(id_pasajero).setNombreCompleto(sistemaCentral.findPasajero(id).getNombreCompleto());
                 sistemaCentral.findPasajero(id_pasajero).setTelefono(sistemaCentral.findPasajero(id_pasajero).getTelefono());
                 sistemaCentral.findPasajero(id_pasajero).setNomContacto(sistemaCentral.findPasajero(id_pasajero).getNomContacto());
             }*/
 
             if (sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento), id_pasajero)) {
-                //Pasajero pasajero = sistemaCentral.createPasajero()
+                //Pasajero (clase) pasajero = sistemaCentral.createPasajero()
                 // venta.createPasaje(Integer.parseInt(asiento), viajeAbordar, sistemaCentral.findPasajero(id_pasajero));
                 System.out.println(":::: Pasaje agregado exitosamente!");
             } else {

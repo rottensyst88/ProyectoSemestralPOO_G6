@@ -1,26 +1,31 @@
 package uml_1;
+import uml_2.*;
+
+import java.util.ArrayList;
 
 public class Cliente extends Persona {
+
     private String email;
-    private ArrayList<Venta> ventas;
+    private ArrayList<Venta> ventas = new ArrayList<>();;
 
     public Cliente(IdPersona id, Nombre nom, String email) {
         super(id, nom);
         this.email = email;
-        this.ventas = new ArrayList<>();
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void addVenta(Venta venta) {
-        return ventas.add(venta);
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public void addVenta(Venta venta) {
+        ventas.add(venta);
+    }
 
+    public Venta[] getVentas() {
+        return ventas.toArray(new Venta[ventas.size()]);
+    }
 }

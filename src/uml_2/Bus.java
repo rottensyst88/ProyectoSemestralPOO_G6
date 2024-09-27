@@ -2,6 +2,7 @@ package uml_2;
 
 import java.util.ArrayList;
 
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Bus {
     private String patente;
     private String marca;

@@ -1,25 +1,26 @@
 package uml_2;
-
 import uml_1.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Venta {
     private String idDocumento;
     private TipoDocumento tipo;
     private LocalDate fecha;
-    private Cliente cliente;
-
     ArrayList<Pasaje> pasajes;
+
+    private Cliente cliente;
 
     public Venta(String id, TipoDocumento tipo, LocalDate fec, Cliente cli) {
         idDocumento = id;
         this.tipo = tipo;
         fecha = fec;
         cliente = cli;
-        pasajes = new ArrayList<>();
         cliente.addVenta(this);
+
+        pasajes = new ArrayList<>();
     }
 
     public String getIdDocumento() {
@@ -43,10 +44,7 @@ public class Venta {
     }
 
     public Pasaje[] getPasajes(){
-        // System.out.println(pasajes.size()); USADO PARA DEBUG!
-
-        Pasaje[] arregloPasajes = new Pasaje[pasajes.size()];
-        return pasajes.toArray(arregloPasajes);
+        return pasajes.toArray(new Pasaje[pasajes.size()]);
     }
 
     public int getMonto(){
