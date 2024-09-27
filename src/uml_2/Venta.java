@@ -19,6 +19,7 @@ public class Venta {
         fecha = fec;
         cliente = cli;
         pasajes = new ArrayList<>();
+        cliente.addVenta(this);
     }
 
     public String getIdDocumento() {
@@ -55,4 +56,6 @@ public class Venta {
         }
         return valor_monto;
     }
+
+
 }
