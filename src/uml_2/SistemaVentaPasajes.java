@@ -19,7 +19,7 @@ public class SistemaVentaPasajes {
     private ArrayList<Venta> ventas = new ArrayList<>(); // REVISAR!
 
     private DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH/mm");
+    private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH:mm");
 
     // METODOS FIND
 
@@ -257,13 +257,12 @@ public class SistemaVentaPasajes {
         for (int i = 0; i < viajes.size(); i++) {
             Viaje viaje = viajes.get(i);
             arregloViajes[i][0] = fechaFormateada.format(viaje.getFecha());
-
             arregloViajes[i][1] = horaFormateada.format(viaje.getHora());
-            String stringPrecio = "" + viaje.getPrecio();
-            arregloViajes[i][2] = stringPrecio;
-            arregloViajes[i][3] = viaje.getAsientos().toString(); //TODO ARREGLAR!
+            arregloViajes[i][2] = String.valueOf(viaje.getPrecio());
+            arregloViajes[i][3] = String.valueOf(viaje.getNroAsientosDisponibles());
             arregloViajes[i][4] = viaje.getBus().getPatente();
         }
+
         return arregloViajes;
     }
 
@@ -323,9 +322,9 @@ public class SistemaVentaPasajes {
         }
 
         Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, venta);
+        venta.createPasaje(asiento, viaje, pasajero);
 
-        ventas.add(nuevoPasaje.getVenta());
-        return true;
+        return ventas.add(nuevoPasaje.getVenta());
     }
 
     // FIN METODO VENDE_PASAJE
@@ -362,15 +361,15 @@ public class SistemaVentaPasajes {
         Pasaje[] pasajes = venta.getPasajes();
 
         for (Pasaje pasaje : pasajes) {
-            return new String[]{String.valueOf(pasaje.getNumero()),
-                    pasaje.getViaje().getFecha().toString(),
-                    pasaje.getViaje().getHora().toString(),
-                    pasaje.getViaje().getBus().getPatente(),
-                    String.valueOf(pasaje.getAsiento()),
-                    pasaje.getPasajero().getIdPersona().toString(),
-                    String.valueOf(pasaje.getPasajero().getNombreCompleto())};
+            return new String[]{"NUMERO DE PASAJE : " + String.valueOf(pasaje.getNumero()),
+                    "FECHA DEL VIAJE : " + pasaje.getViaje().getFecha().toString(),
+                    "HORA DEL VIAJE : " + pasaje.getViaje().getHora().toString(),
+                    "PATENTE BUS : " + pasaje.getViaje().getBus().getPatente(),
+                    "ASIENTO : " + String.valueOf(pasaje.getAsiento()),
+                    "RUT - PASAPORTE : " + pasaje.getPasajero().getIdPersona().toString(),
+                    "NOMBRE PASAJERO : " + String.valueOf(pasaje.getPasajero().getNombreCompleto())};
         }
-
+        System.out.println("PARA DEBUG: STRING VACIO");
         return new String[0];
     }
 }

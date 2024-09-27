@@ -6,33 +6,66 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal", "", "SpellCheckingInspection"})
 public class Main {
     private Scanner sc = new Scanner(System.in);
     private static SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
 
     public static void main(String[] args) {
-        Main mainInstance = new Main();
-        mainInstance.menu();
+
+        /*
+
+        Nombre n1 = new Nombre();
+        n1.setTratamiento(Tratamiento.SR);
+        n1.setNombre("Juan");
+        n1.setApellidoPaterno("Perez");
+        n1.setApellidoMaterno("Gonzalez");
+
+        Nombre n2 = new Nombre();
+        n2.setTratamiento(Tratamiento.SRA);
+        n2.setNombre("Maria");
+        n2.setApellidoPaterno("Gonzalez");
+        n2.setApellidoMaterno("Perez");
+
+        Nombre n3 = new Nombre();
+        n3.setTratamiento(Tratamiento.SR);
+        n3.setNombre("Pedro");
+        n3.setApellidoPaterno("Gonzalez");
+        n3.setApellidoMaterno("Lopez");
+
+        sistemaCentral.createCliente(Rut.of("12345678-9"), n1, "123456789", "aaa@aaa");
+        sistemaCentral.createCliente(Rut.of("23456789-0"), n2, "234567890", "bbb@bbb");
+        sistemaCentral.createCliente(Rut.of("34567890-1"), n3, "345678901", "ccc@ccc");
+
+        sistemaCentral.createBus("AABB12", "Volvo", "2021", 40);
+        sistemaCentral.createBus("BBCC23", "Mercedes", "2020", 30);
+        sistemaCentral.createBus("CCDD34", "Scania", "2019", 50);
+
+
+
+         */
+
+        Main main = new Main();
+        main.menu();
 
     }
 
     private void menu() {
         boolean verificador = true;
 
-        System.out.println("============================");
-        System.out.println("...::: Menú principal :::...\n");
-        System.out.println(" 1) Crear cliente");
-        System.out.println(" 2) Crear bus");
-        System.out.println(" 3) Crear viaje");
-        System.out.println(" 4) Vender pasajes");
-        System.out.println(" 5) Lista de pasajeros");
-        System.out.println(" 6) Lista de ventas");
-        System.out.println(" 7) Lista de viajes");
-        System.out.println(" 8) Salir");
-        System.out.println("----------------------------");
-
         do {
+            System.out.println("============================");
+            System.out.println("...::: Menú principal :::...\n");
+            System.out.println(" 1) Crear cliente");
+            System.out.println(" 2) Crear bus");
+            System.out.println(" 3) Crear viaje");
+            System.out.println(" 4) Vender pasajes");
+            System.out.println(" 5) Lista de pasajeros");
+            System.out.println(" 6) Lista de ventas");
+            System.out.println(" 7) Lista de viajes");
+            System.out.println(" 8) Salir");
+            System.out.println("----------------------------");
+
             System.out.print("\n..:: Ingrese número de opción: ");
             int valor = sc.nextInt();
 
@@ -155,7 +188,7 @@ public class Main {
     private void vendePasajes() {
         IdPersona id;
         TipoDocumento tipo = null;
-        Nombre nombreCliente = new Nombre(); // TODO Arreglar esto, no sé porque el IDE lo marca como error
+        Nombre nombreCliente = new Nombre();
 
         // DATOS DE LA VENTA!
 
@@ -339,23 +372,11 @@ public class Main {
 
         System.out.println(":::: Imprimiendo los pasajes");
 
-        String[] datosImpresion = sistemaCentral.pasajesAlImprimir(idDocumento, tipo);
+        String[] x = sistemaCentral.pasajesAlImprimir(idDocumento, tipo);
 
-
-        /*
-        for (int f = 0; f < cantidadPasajes; f++) {
-            System.out.println("------------------- PASAJE -------------------");
-            System.out.println("NUMERO DE PASAJE : " + venta.getPasajes()[f].getNumero());
-            System.out.println("FECHA DEL VIAJE : " + venta.getPasajes()[f].getViaje().getFecha());
-            System.out.println("HORA DEL VIAJE : " + venta.getPasajes()[f].getViaje().getHora());
-            System.out.println("PATENTE BUS : " + venta.getPasajes()[f].getViaje().getBus().getPatente());
-            System.out.println("ASIENTO : " + venta.getPasajes()[f].getAsiento());
-            System.out.println("RUT - PASAPORTE : " + venta.getPasajes()[f].getPasajero().getIdPersona());
-            System.out.println("NOMBRE PASAJERO : " + venta.getPasajes()[f].getPasajero().getNombreCompleto());
-            System.out.println("-----------------------------------------------\n");
+        for (int f = 0; f < x.length; f++) {
+            System.out.println(x[f]);
         }
-
-         */
     }
 
     private void listPasajerosViaje() {
@@ -476,7 +497,7 @@ public class Main {
         }
     }
 
-    private Viaje impresoraListadoViajes(String[] cabeceras, String[][] arregloImpresora, LocalDate fecha) {
+    private Viaje impresoraListadoViajes(String[] cabeceras, String[][] arregloImpresora, LocalDate fecha) { // TODO ELIMINAR
         int contador_letras = 0;
         int contador_for;
         int contador_todo = 0;
@@ -502,8 +523,6 @@ public class Main {
         for (z = 0; z < arregloImpresora.length; z++) {
             if (z == 0) {
 
-                // ESTA WEA IMPRIME LOS CONTENEDORES DE LA TABLA!
-
                 System.out.print("   ");
                 for (int x = 0; x < contador_todo; x++) {
                     if (contador_todo / cabeceras.length == contador_for) {
@@ -516,7 +535,6 @@ public class Main {
                 }
                 System.out.println("*");
 
-                // ESTA OTRA WEA IMPRIME LA CABECERA!
                 System.out.print("   ");
                 for (String cabecera : cabeceras) {
                     int espacios = contador_letras - cabecera.length();
@@ -526,7 +544,7 @@ public class Main {
                 System.out.println("|");
             }
 
-            // ESTA OTRA WEA IMPRIME LOS SEPARADORES!
+
             System.out.print("   ");
             for (int x = 0; x < contador_todo; x++) {
                 if (contador_todo / cabeceras.length == contador_for) {
@@ -581,7 +599,7 @@ public class Main {
 
     }
 
-    private void impresoraListadoAsientos(String[][] listadoBuses) {
+    private void impresoraListadoAsientos(String[][] listadoBuses) { // TODO Arreglar error en multiplos de 4 // usar String.delimiter
         int y = 3;
         int z;
         int q = 0;
@@ -606,7 +624,6 @@ public class Main {
             if (z < listadoBuses.length) {
                 if (z == 0) {
 
-                    // ESTA WEA IMPRIME LOS CONTENEDORES DE LA TABLA!
                     for (int x = 0; x < 21; x++) {
                         if (contador_for == 4) {
                             System.out.print("*");

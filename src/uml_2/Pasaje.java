@@ -14,12 +14,9 @@ public class Pasaje {
         this.numero = (long) (Math.random() * Math.pow(10, 12));
         this.asiento = asiento;
         this.viaje = viaje;
-
         this.pasajero = pasajero;
         viaje.addPasaje(this);
-
         this.venta = venta;
-        this.venta.createPasaje(this.asiento,this.viaje,this.pasajero);
     }
 
     public int getAsiento() {

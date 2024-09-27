@@ -76,6 +76,15 @@ public class Viaje {
     }
 
     public int getNroAsientosDisponibles() {
-        return (bus.getNroAsientos() - pasajes.size());
+
+        int x = 1;
+
+        for(Pasaje pasajeVendido : pasajes){
+            if(pasajeVendido.getVenta() != null){
+                x++;
+            }
+        }
+
+        return (bus.getNroAsientos() - x);
     }
 }
