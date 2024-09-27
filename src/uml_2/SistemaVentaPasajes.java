@@ -163,6 +163,7 @@ public class SistemaVentaPasajes {
         Viaje viaje = new Viaje(fecha, hora, precio, bus);
         if (findViaje(fecha.toString(), hora.toString(), patBus) == null) {
             viajes.add(viaje);
+            System.out.println("DEBUG! VALORES DE VIAJE: " + viaje.getFecha() + " " + viaje.getHora() + " " + viaje.getPrecio() + " " + viaje.getBus().getPatente());
             return true;
         }
 
@@ -176,6 +177,7 @@ public class SistemaVentaPasajes {
 
         if (findBus(patente) == null) {
             buses.add(bus);
+            System.out.println("DEBUG! VALORES DE BUS: " + bus.getPatente() + " " + bus.getMarca() + " " + bus.getModelo() + " " + bus.getNroAsientos());
             return true;
         }
         return false;
@@ -204,15 +206,6 @@ public class SistemaVentaPasajes {
         String[] asientos = new String[infoSobreAsientos.length];
 
         for (int i = 0; i < asientos.length; i++) {
-            /* Cabe aclarar que no sé en qué orden está el arreglo bidimensional
-            getAsientos, no sé si está primero el número o el estado, pero eso se puede
-            arreglar luego
-            Tampoco entiendo si debo agregar solo el estado o también el número, pero eso
-            es facil de cambiar
-             */
-            // String numAsiento = infoSobreAsientos[i][0];
-            // String estadoAsiento = infoSobreAsientos[i][1];
-
             asientos[i] = infoSobreAsientos[i][1];
         }
         return asientos;
@@ -250,9 +243,11 @@ public class SistemaVentaPasajes {
     public String[][] listViajes() {
         String[][] arregloViajes = new String[viajes.size()][5];
 
-        if (arregloViajes.length == 0) {
+        if (viajes.isEmpty()) {
             return new String[0][0];
         }
+
+        System.out.println("DEBUG -> ASIENTOS : " + arregloViajes[0][3]);
 
         for (int i = 0; i < viajes.size(); i++) {
             Viaje viaje = viajes.get(i);
@@ -360,14 +355,18 @@ public class SistemaVentaPasajes {
         Venta venta = findVenta(idDocumento, tipo);
         Pasaje[] pasajes = venta.getPasajes();
 
+        if(pasajes == null){
+            return new String[0];
+        }
+
         for (Pasaje pasaje : pasajes) {
-            return new String[]{"NUMERO DE PASAJE : " + String.valueOf(pasaje.getNumero()),
+            return new String[]{"NUMERO DE PASAJE : " + pasaje.getNumero(),
                     "FECHA DEL VIAJE : " + pasaje.getViaje().getFecha().toString(),
                     "HORA DEL VIAJE : " + pasaje.getViaje().getHora().toString(),
                     "PATENTE BUS : " + pasaje.getViaje().getBus().getPatente(),
-                    "ASIENTO : " + String.valueOf(pasaje.getAsiento()),
+                    "ASIENTO : " + pasaje.getAsiento(),
                     "RUT - PASAPORTE : " + pasaje.getPasajero().getIdPersona().toString(),
-                    "NOMBRE PASAJERO : " + String.valueOf(pasaje.getPasajero().getNombreCompleto())};
+                    "NOMBRE PASAJERO : " + pasaje.getPasajero().getNombreCompleto()};
         }
         System.out.println("PARA DEBUG: STRING VACIO");
         return new String[0];

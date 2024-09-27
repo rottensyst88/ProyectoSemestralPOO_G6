@@ -77,7 +77,7 @@ public class Viaje {
 
     public int getNroAsientosDisponibles() {
 
-        int x = 1;
+        int x = 0;
 
         for(Pasaje pasajeVendido : pasajes){
             if(pasajeVendido.getVenta() != null){

@@ -3,10 +3,11 @@ import uml_2.*;
 
 import java.util.ArrayList;
 
+@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
 public class Cliente extends Persona {
 
     private String email;
-    private ArrayList<Venta> ventas = new ArrayList<>();;
+    private ArrayList<Venta> ventas = new ArrayList<>();
 
     public Cliente(IdPersona id, Nombre nom, String email) {
         super(id, nom);
@@ -26,6 +27,6 @@ public class Cliente extends Persona {
     }
 
     public Venta[] getVentas() {
-        return ventas.toArray(new Venta[ventas.size()]);
+        return ventas.toArray(new Venta[0]);
     }
 }

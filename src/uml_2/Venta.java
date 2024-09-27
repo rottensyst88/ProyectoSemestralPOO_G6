@@ -44,7 +44,7 @@ public class Venta {
     }
 
     public Pasaje[] getPasajes(){
-        return pasajes.toArray(new Pasaje[pasajes.size()]);
+        return pasajes.toArray(new Pasaje[0]);
     }
 
     public int getMonto(){
