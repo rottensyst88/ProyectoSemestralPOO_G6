@@ -47,11 +47,9 @@ public class Viaje {
             asientos[z][0] = Integer.toString(z + 1);
             asientos[z][1] = "Libre";
         }
-
         for (Pasaje pasajeros : pasajes) {
             asientos[pasajeros.getAsiento() - 1][1] = "Ocupado";
         }
-
         return asientos;
     }
 
@@ -76,15 +74,6 @@ public class Viaje {
     }
 
     public int getNroAsientosDisponibles() {
-
-        int x = 0;
-
-        for(Pasaje pasajeVendido : pasajes){
-            if(pasajeVendido.getVenta() != null){
-                x++;
-            }
-        }
-
-        return (bus.getNroAsientos() - x);
+        return bus.getNroAsientos() - pasajes.size();
     }
 }

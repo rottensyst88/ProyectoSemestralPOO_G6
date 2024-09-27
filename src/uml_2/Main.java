@@ -16,12 +16,6 @@ public class Main {
 
         Main main = new Main();
 
-        // PRUEBAS DE CREACION DE CLIENTES Y BUSES!
-
-        System.out.println("*--------------*--------------*--------------*--------------*");
-        System.out.printf("| %12s | %12s | %12s | %12s |\n", "BUS", "SALIDA", "VALOR", "ASIENTOS");
-        System.out.println("*--------------+--------------+--------------+--------------*");
-
         Nombre n1 = new Nombre();
         n1.setTratamiento(Tratamiento.SR);
         n1.setNombre("Juan");

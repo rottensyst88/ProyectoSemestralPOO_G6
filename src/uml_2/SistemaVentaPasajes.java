@@ -316,7 +316,7 @@ public class SistemaVentaPasajes {
         Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, venta);
         venta.createPasaje(asiento, viaje, pasajero);
 
-        return ventas.add(nuevoPasaje.getVenta());
+        return true;
     }
 
     // FIN METODO VENDE_PASAJE
@@ -365,7 +365,7 @@ public class SistemaVentaPasajes {
                     "RUT - PASAPORTE : " + pasaje.getPasajero().getIdPersona().toString(),
                     "NOMBRE PASAJERO : " + pasaje.getPasajero().getNombreCompleto()};
         }
-        System.out.println("PARA DEBUG: STRING VACIO");
+
         return new String[0];
     }
 }
