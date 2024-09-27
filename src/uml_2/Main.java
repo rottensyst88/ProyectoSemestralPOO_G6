@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal", "", "SpellCheckingInspection"})
 public class Main {
-    private Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in).useDelimiter("\t|\r\n|[\n\r\u2028\u2029\u0085]");
     private static SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
 
     public static void main(String[] args) {
@@ -17,6 +17,10 @@ public class Main {
         Main main = new Main();
 
         // PRUEBAS DE CREACION DE CLIENTES Y BUSES!
+
+        System.out.println("*--------------*--------------*--------------*--------------*");
+        System.out.printf("| %12s | %12s | %12s | %12s |\n", "BUS", "SALIDA", "VALOR", "ASIENTOS");
+        System.out.println("*--------------+--------------+--------------+--------------*");
 
         Nombre n1 = new Nombre();
         n1.setTratamiento(Tratamiento.SR);
@@ -43,6 +47,10 @@ public class Main {
         sistemaCentral.createBus("AABB12", "Volvo", "2021", 40);
         sistemaCentral.createBus("BBCC23", "Mercedes", "2020", 30);
         sistemaCentral.createBus("CCDD34", "Scania", "2019", 50);
+
+        sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("10:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "AABB12");
+        sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("12:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "BBCC23");
+        sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("14:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "CCDD34");
 
         // FIN DE CREACION DE CLIENTES Y BUSES!
 
@@ -97,9 +105,8 @@ public class Main {
             tratamiento = SelectorTratamiento();
         } while (tratamiento == null);
 
-        sc.nextLine();
         System.out.print("Nombres: ");
-        usuario.setNombre(sc.nextLine());
+        usuario.setNombre(sc.next());
 
         System.out.print("Apellido Paterno : ");
         usuario.setApellidoPaterno(sc.next());
@@ -126,9 +133,8 @@ public class Main {
         System.out.print("Patente : ");
         String patente = sc.next();
 
-        sc.nextLine();
         System.out.print("Marca : ");
-        String marca = sc.nextLine();
+        String marca = sc.next();
 
         System.out.print("Modelo : ");
         String modelo = sc.next();
@@ -170,6 +176,7 @@ public class Main {
     private void vendePasajes() {
         IdPersona id;
         TipoDocumento tipo = null;
+        int selector = 1;
 
         System.out.println("\n....:::: Venta de pasajes ::::....\n");
         System.out.println(":::: Datos de la Venta");
@@ -194,19 +201,18 @@ public class Main {
         String fechaVenta = sc.next();
         LocalDate fec = LocalDate.parse(fechaVenta, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Nombre nombreCliente = new Nombre();
-
         System.out.println("\n:::: Datos del cliente\n");
 
         do {
             id = SelectorRut_Pasaporte();
         } while (id == null);
 
-        System.out.print("Nombre Cliente [Sr/Sra. * * *] : ");
-        sc.nextLine();
-        String cliente = sc.nextLine();
+        System.out.print("Nombre Cliente [Sr/Sra. * * *] : "); //TODO ¿Para qué se solicita este dato?
+        String cliente = sc.next();
 
         String[] nombres = cliente.split(" ");
+
+        Nombre nombreCliente = new Nombre();
 
         if (nombres[0].equals("Sr.")) {
             nombreCliente.setTratamiento(Tratamiento.SR);
@@ -218,7 +224,7 @@ public class Main {
         nombreCliente.setApellidoMaterno(nombres[3]);
 
         if (!sistemaCentral.iniciaVenta(idDocumento, tipo, fec, id)) {
-            System.out.println(":::: Error! Cliente no existe!");
+            System.out.println(":::: Error al iniciar venta!");
             return;
         }
 
@@ -239,21 +245,79 @@ public class Main {
 
             if (horariosDisponibles.length == 0) {
                 System.out.println(":::: Error! No hay horarios disponibles para la fecha seleccionada!");
+                System.out.print(":::: Desea seleccionar otra fecha? [1] Si [2] No : ");
+                selector = sc.nextInt();
             }
+            if (selector != 1) {
+                return;
+            }
+
         } while (horariosDisponibles.length == 0);
 
-        Viaje viajeAbordar = impresoraListadoViajes(new String[]{"|BUS", "|SALIDA", "|VALOR", "|ASIENTOS"}, horariosDisponibles, fechaViaje);
+        int contador = 0;
+        System.out.print("    *------------*------------*------------*------------*\n");
+        System.out.printf("    | %10s | %10s | %10s | %10s |\n", "BUS", "SALIDA", "VALOR", "ASIENTOS");
+        for (String[] horario : horariosDisponibles) {
+            System.out.println("    |------------+------------+------------+------------|");
+            System.out.printf(" %2s | %10s | %10s | %10s | %10s |\n", contador + 1, horario[0], horario[1], horario[2], horario[3]);
+            contador++;
+        }
+        System.out.println("    *------------*------------*------------*------------*\n");
 
-        if (viajeAbordar == null) {
-            System.out.println(":::: Error! Viaje no existe!");
-            return;
+        System.out.print("Seleccione viaje en [1.." + contador + "] : ");
+        int seleccion = sc.nextInt();
+
+        String[] datosCompra = new String[4];
+
+        for (int y = 0; y < seleccion; y++) {
+            if (y == seleccion - 1) {
+                datosCompra[0] = horariosDisponibles[y][0];
+                datosCompra[1] = horariosDisponibles[y][1];
+                datosCompra[2] = horariosDisponibles[y][2];
+                datosCompra[3] = horariosDisponibles[y][3];
+            }
         }
 
-        impresoraListadoAsientos(viajeAbordar.getAsientos());
+        int pasajesRedondeado = 1;
+
+        while (Integer.parseInt(datosCompra[3]) >= pasajesRedondeado * 4) {
+            pasajesRedondeado++;
+        }
+        String[] datos_viajeSelect = sistemaCentral.listAsientosDeViaje(fechaViaje, LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), datosCompra[0]);
+
+        System.out.println("*---*---*---*---*---*");
+        int IndiceAsiento = 0;
+        for (int y = 0; y < pasajesRedondeado-1; y++) {
+            for (int x = 0; x <= 4; x++) {
+                if (x == 2) {
+                    System.out.print("|   ");
+                } else {
+                    if (IndiceAsiento < datos_viajeSelect.length) {
+                        if (datos_viajeSelect[IndiceAsiento].equals("Ocupado")) {
+                            System.out.print("|  *");
+                        } else {
+                            System.out.printf("|%3d", IndiceAsiento + 1);
+                        }
+                    } else {
+                        System.out.print("|  *");
+                    }
+                    IndiceAsiento++;
+                }
+            }
+            System.out.println("|");
+        }
+
+        System.out.println("*---*---*---*---*---*");
 
         System.out.print("Seleccione sus asientos [separe por ,] : ");
+
         String asientos = sc.next();
         String[] split = asientos.split(",");
+
+        if (split.length != cantidadPasajes) {
+            System.out.println(":::: Error! Cantidad de asientos no coincide con la cantidad de pasajes!");
+            return;
+        }
 
         for (int i = 0; i < cantidadPasajes; i++) {
             IdPersona id_pasajero;
@@ -268,8 +332,7 @@ public class Main {
             if ((sistemaCentral.getNombrePasajero(id_pasajero) == null)) {
                 System.out.print("Nombre [Sr/Sra. * * *] : ");
 
-                sc.nextLine();
-                String nombre = sc.nextLine();
+                String nombre = sc.next();
                 Nombre nombrePasajero = new Nombre();
 
                 String[] nombres_1 = nombre.split(" ");
@@ -288,8 +351,7 @@ public class Main {
                 String telefono = sc.next();
 
                 System.out.print("Nombre de contacto [Sr/Sra. * * *] : ");
-                sc.nextLine();
-                String nombreContacto = sc.nextLine();
+                String nombreContacto = sc.next();
 
                 Nombre nombreContactoPasajero = new Nombre();
 
@@ -310,7 +372,7 @@ public class Main {
 
                 sistemaCentral.createPasajero(id_pasajero, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto);
             }
-            if (sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento), id_pasajero)) {
+            if (sistemaCentral.vendePasaje(idDocumento, tipo,LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), fechaViaje, datosCompra[0], Integer.parseInt(asiento), id_pasajero)) {
                 System.out.println(":::: Pasaje agregado exitosamente!");
             } else {
                 System.out.println(":::: Error al agregar pasaje!");
@@ -350,15 +412,17 @@ public class Main {
             System.out.println(":::: Error! No hay pasajeros para el viaje seleccionado!");
             return;
         }
-
-        System.out.println("ASIENTO\tRUT - PASAPORTE\tNOMBRE\tNOMBRE CONTACTO\tTELEFONO CONTACTO");
+        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*");
+        System.out.printf("| %8s | %16s | %24s | %24s | %20s |\n", "ASIENTO", "RUT/PASS", "PASAJERO", "CONTACTO","TELEFONO CONTACTO");
         for (String[] pasajero : pasajeros_arreglo) {
-            System.out.print(pasajero[0] + "\t");
-            System.out.print(pasajero[1] + "\t");
-            System.out.print(pasajero[2] + "\t");
-            System.out.print(pasajero[3] + "\t");
-            System.out.print(pasajero[4] + "\n");
+            System.out.println("*----------+------------------+----------------------------+------------------------+----------------------*");
+            System.out.printf("| %8s |", pasajero[0]);
+            System.out.printf(" %16s |", pasajero[1]);
+            System.out.printf(" %-24s |",pasajero[2]);
+            System.out.printf(" %-24s |", pasajero[3]);
+            System.out.printf(" %-20s |\n", pasajero[4]);
         }
+        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
     }
 
     private void listVentas() {
@@ -370,13 +434,19 @@ public class Main {
             return;
         }
 
-        System.out.println("ID DOCUMENT\tTIPO DOCU\tFECHA\tRUT - PASAPORTE\tCLIENTE\tCANT BOLETOS\tTOTAL VENTA");
+        System.out.println("*----------------*------------*------------------*------------------*--------------------------*------------------*----------------*");
+        System.out.printf("| %14s | %10s | %16s | %16s | %24s | %16s | %14s |\n","ID DOCUMENT","TIPO DOCU","FECHA","RUT / PASAPORTE","CLIENTE","CANT BOLETOS","TOTAL VENTA");
         for (String[] pasajero : pasajeros_arreglo) {
-            for (int x = 0; x < 7; x++) {
-                System.out.print(pasajero[x] + "\t");
-            }
-            System.out.println();
+            System.out.println("|----------------+------------+------------------+------------------+--------------------------+------------------+----------------|");
+            System.out.printf("| %14s |", pasajero[0]);
+            System.out.printf(" %10s |", pasajero[1]);
+            System.out.printf(" %-16s |", pasajero[2]);
+            System.out.printf(" %-16s |", pasajero[3]);
+            System.out.printf(" %-24s |", pasajero[4]);
+            System.out.printf(" %16s |", pasajero[5]);
+            System.out.printf(" %14s |\n", pasajero[6]);
         }
+        System.out.println("*----------------*------------*------------------*------------------*--------------------------*------------------*----------------*\n\n");
     }
 
     private void listViajes() {
@@ -388,13 +458,16 @@ public class Main {
             return;
         }
 
-        System.out.println("FECHA\tHORA\tPRECIO\tDISPONIBLES\tPATENTE");
+        System.out.println("*------------------*------------------*------------------*------------------*------------------*");
+        System.out.printf("| %16s | %16s | %16s | %16s | %16s |\n", "FECHA", "HORA", "PRECIO", "DISPONIBLES", "PATENTE");
         for (String[] pasajero : pasajeros_arreglo) {
+            System.out.println("*------------------+------------------+------------------+------------------+------------------*");
             for (int x = 0; x < 5; x++) {
-                System.out.print(pasajero[x] + "\t");
+                System.out.printf("| %16s ", pasajero[x]);
             }
-            System.out.println();
+            System.out.println("|");
         }
+        System.out.println("*------------------*------------------*------------------*------------------*------------------*\n\n");
     }
 
     private IdPersona SelectorRut_Pasaporte() {
@@ -438,202 +511,5 @@ public class Main {
             System.out.println("Error! Valor invalido!");
             return null;
         }
-    }
-
-    private Viaje impresoraListadoViajes(String[] cabeceras, String[][] arregloImpresora, LocalDate fecha) { // TODO ELIMINAR
-        int contador_letras = 0;
-        int contador_for;
-        int contador_todo = 0;
-        int z;
-
-        // CALCULA LONGITUD DE LA CABECERA!
-        for (String cabecera : cabeceras) {
-            if (cabecera.length() > contador_letras) {
-                contador_letras = cabecera.length();
-            }
-        }
-
-        contador_for = contador_letras;
-
-        //SE CUENTA EL TOTAL DE CARACTERES DE LA CABECERA!
-
-        for (String cabecera : cabeceras) {
-            int espacios = contador_letras - cabecera.length();
-            contador_todo += (espacios + cabecera.length());
-        }
-
-        // IMPRESION DE LA TABLA!
-        for (z = 0; z < arregloImpresora.length; z++) {
-            if (z == 0) {
-
-                System.out.print("   ");
-                for (int x = 0; x < contador_todo; x++) {
-                    if (contador_todo / cabeceras.length == contador_for) {
-                        System.out.print("*");
-                        contador_for = 0;
-                    } else {
-                        System.out.print("-");
-                    }
-                    contador_for++;
-                }
-                System.out.println("*");
-
-                System.out.print("   ");
-                for (String cabecera : cabeceras) {
-                    int espacios = contador_letras - cabecera.length();
-                    System.out.print(cabecera + " ".repeat(espacios));
-                }
-
-                System.out.println("|");
-            }
-
-
-            System.out.print("   ");
-            for (int x = 0; x < contador_todo; x++) {
-                if (contador_todo / cabeceras.length == contador_for) {
-                    System.out.print("+");
-                    contador_for = 0;
-                } else {
-                    System.out.print("-");
-                }
-                contador_for++;
-            }
-            System.out.println("+");
-
-            System.out.print(" " + (z + 1) + " |");
-
-            int f;
-
-            for (f = 0; f < arregloImpresora[z].length; f++) {
-                int espacios = contador_letras - arregloImpresora[z][f].length();
-                System.out.print(arregloImpresora[z][f] + " ".repeat(espacios - 1) + "|");
-            }
-            System.out.println();
-        }
-
-        System.out.print("   ");
-        for (int x = 0; x < contador_todo; x++) {
-            if (contador_todo / cabeceras.length == contador_for) {
-                System.out.print("*");
-                contador_for = 0;
-            } else {
-                System.out.print("-");
-            }
-            contador_for++;
-        }
-        System.out.print("*");
-        System.out.println("\n");
-
-        System.out.print("Seleccione viaje en [1.." + z + "] : ");
-        int seleccion = sc.nextInt();
-
-
-        boolean viaje = sistemaCentral.createViaje(fecha, LocalTime.of(Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(0, 2)), Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(3, 5))), Integer.parseInt(arregloImpresora[seleccion - 1][2]), arregloImpresora[seleccion - 1][0]);
-
-        if (viaje) {
-            return null;
-        } else {
-            Bus bus = new Bus(arregloImpresora[seleccion - 1][0], Integer.parseInt(arregloImpresora[seleccion - 1][3]));
-            return new Viaje(fecha, LocalTime.of(Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(0, 2)), Integer.parseInt(arregloImpresora[seleccion - 1][1].substring(3, 5))), Integer.parseInt(arregloImpresora[seleccion - 1][2]), bus);
-        }
-    }
-
-    private void impresoraListadoAsientos(String[][] listadoBuses) { // TODO Arreglar error en multiplos de 4 // usar String.delimiter
-        int y = 3;
-        int z;
-        int q = 0;
-        int contador_for = 4;
-        int contador_f;
-        int h = 1;
-
-        // System.out.println(listadoBuses.length);
-        System.out.println();
-
-        if (listadoBuses.length % 4 == 0) {
-            contador_f = listadoBuses.length;
-        } else {
-            do {
-                contador_f = 4 * h;
-                h++;
-
-            } while (contador_f < listadoBuses.length);
-        }
-
-        for (z = 0; z < contador_f; z++) {
-            if (z < listadoBuses.length) {
-                if (z == 0) {
-
-                    for (int x = 0; x < 21; x++) {
-                        if (contador_for == 4) {
-                            System.out.print("*");
-                            contador_for = 0;
-                        } else {
-                            System.out.print("-");
-                        }
-                        contador_for++;
-                    }
-                    System.out.println();
-                }
-
-                if (y != 5) {
-                    if (z >= 0 && z < 9) {
-                        System.out.print("| " + (z + 1) + " ");
-                    } else {
-                        System.out.print("| " + (z + 1));
-
-                    }
-                } else {
-                    System.out.print("|   ");
-                    y = 0;
-                    z -= 1;
-                }
-
-                if (q == 4) {
-                    System.out.println("|");
-                    q = -1;
-
-                    contador_for = 4;
-
-                    for (int x = 0; x < 21; x++) {
-                        if (contador_for == 4) {
-                            System.out.print("+");
-                            contador_for = 0;
-                        } else {
-                            System.out.print("-");
-                        }
-                        contador_for++;
-                    }
-                    System.out.println();
-                }
-
-            } else {
-                if (y != 5) {
-                    System.out.print("| * ");
-                } else {
-                    System.out.print("|   ");
-                    y = 0;
-                    z -= 1;
-                }
-
-            }
-            y++;
-            q++;
-        }
-
-        System.out.print("|\n");
-
-        contador_for = 4;
-
-        for (int x = 0; x < 21; x++) {
-            if (contador_for == 4) {
-                System.out.print("*");
-                contador_for = 0;
-            } else {
-                System.out.print("-");
-            }
-            contador_for++;
-        }
-
-        System.out.print("\n   ");
     }
 }

@@ -61,7 +61,6 @@ public class SistemaVentaPasajes {
 
     private Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
         for (Venta venta : ventas) {
-            //Venta venta = ventas.get(i); TODO REVISAR ESTO, NO SE SI ESTA BIEN.
             if (venta.getIdDocumento().equals(idDocumento) && venta.getTipo().equals(tipoDocumento)) {
                 return venta;
             }
@@ -139,9 +138,8 @@ public class SistemaVentaPasajes {
         return false;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
-            fonoContacto) { // TODO Implementar!
+            fonoContacto) {
 
         Pasajero p = new Pasajero(id, nom, fonoContacto);
         p.setNomContacto(nomContacto);
@@ -200,7 +198,6 @@ public class SistemaVentaPasajes {
             return new String[0];
         }
 
-        //obtengo la información sobre los asientos desde la clase Viaje
         String[][] infoSobreAsientos = viaje.getAsientos();
 
         String[] asientos = new String[infoSobreAsientos.length];
@@ -271,7 +268,7 @@ public class SistemaVentaPasajes {
         for (int i = 0; i < pasajeros.size(); i++) {
             Pasajero pasajero = pasajeros.get(i);
             //dado el problema con relacionar el número del asiento con los demás datos del pasajero, esa parte estará omitida por el momnto
-            arregloPasajeros[i][0] = "0";
+            arregloPasajeros[i][0] = "nulo";
             arregloPasajeros[i][1] = pasajero.getIdPersona().toString();
             arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
             arregloPasajeros[i][3] = pasajero.getNomContacto().toString();
