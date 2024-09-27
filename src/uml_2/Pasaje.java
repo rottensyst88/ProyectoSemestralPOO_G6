@@ -2,8 +2,6 @@ package uml_2;
 
 import uml_1.*;
 
-import java.lang.Math;
-
 public class Pasaje {
     private long numero;
     private int asiento;

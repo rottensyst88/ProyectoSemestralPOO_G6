@@ -58,8 +58,8 @@ public class  SistemaVentaPasajes {
     }
 
     private Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
-        for (int i = 0; i < ventas.size(); i++) {
-            Venta venta = ventas.get(i);
+        for (Venta venta : ventas) {
+            //Venta venta = ventas.get(i); TODO REVISAR ESTO, NO SE SI ESTA BIEN.
             if (venta.getIdDocumento().equals(idDocumento) && venta.getTipo().equals(tipoDocumento)) {
                 return venta;
             }
@@ -96,7 +96,7 @@ public class  SistemaVentaPasajes {
             }
         }
 
-        // si el arraylist esta vacio se retorna un arreglo vacio, segun las instrucciones
+        // si el arraylist esta vacío se retorna un arreglo vacio, segun las instrucciones
         if (viajesFecha.isEmpty()) {
             return new String[0][0];
         }
@@ -138,7 +138,7 @@ public class  SistemaVentaPasajes {
     }
 
     public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
-            fonoContacto) {
+            fonoContacto) { // TODO Implementar!
 
         Pasajero p = new Pasajero(id, nom, fonoContacto);
         p.setNomContacto(nomContacto);
@@ -195,7 +195,7 @@ public class  SistemaVentaPasajes {
             return new String[0];
         }
 
-        //obtengo la informacion sobre los asientos desde la clase viaje
+        //obtengo la información sobre los asientos desde la clase viaje
         String[][] infoSobreAsientos = viaje.getAsientos();
 
         String[] asientos = new String[infoSobreAsientos.length];
@@ -258,7 +258,7 @@ public class  SistemaVentaPasajes {
             arregloViajes[i][1] = horaFormateada.format(viaje.getHora());
             String stringPrecio = "" + viaje.getPrecio();
             arregloViajes[i][2] = stringPrecio;
-            arregloViajes[i][3] = viaje.getAsientos().toString();
+            arregloViajes[i][3] = viaje.getAsientos().toString(); //TODO ARREGLAR!
             arregloViajes[i][4] = viaje.getBus().getPatente();
         }
         return arregloViajes;
@@ -278,7 +278,7 @@ public class  SistemaVentaPasajes {
             arregloPasajeros[i][1] = pasajero.getIdPersona().toString();
             arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
             arregloPasajeros[i][3] = pasajero.getNomContacto().toString();
-            arregloPasajeros[i][4] = pasajero.getFonoContacto().toString();
+            arregloPasajeros[i][4] = pasajero.getFonoContacto();
         }
         return arregloPasajeros;
     }
@@ -357,14 +357,17 @@ public class  SistemaVentaPasajes {
     public String[] pasajesAlImprimir(String idDocumento, TipoDocumento tipo){
 
         Venta venta = findVenta(idDocumento, tipo);
-        String[] datos = {String.valueOf(venta.getPasajes()[0].getNumero()),
-                venta.getPasajes()[0].getViaje().getFecha().toString(),
-                venta.getPasajes()[0].getViaje().getHora().toString(),
-                venta.getPasajes()[0].getViaje().getBus().getPatente(),
-                String.valueOf(venta.getPasajes()[0].getAsiento()),
-                venta.getPasajes()[0].getPasajero().getIdPersona().toString(),
-                String.valueOf(venta.getPasajes()[0].getPasajero().getNombreCompleto())};
 
-        return datos;
+        if(venta == null){
+            return new String[0];
+        }else{
+            return new String[] {String.valueOf(venta.getPasajes()[0].getNumero()),
+                    venta.getPasajes()[0].getViaje().getFecha().toString(),
+                    venta.getPasajes()[0].getViaje().getHora().toString(),
+                    venta.getPasajes()[0].getViaje().getBus().getPatente(),
+                    String.valueOf(venta.getPasajes()[0].getAsiento()),
+                    venta.getPasajes()[0].getPasajero().getIdPersona().toString(),
+                    String.valueOf(venta.getPasajes()[0].getPasajero().getNombreCompleto())};
+        }
     }
 }

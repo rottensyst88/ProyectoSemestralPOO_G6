@@ -1,7 +1,5 @@
 package uml_2;
 
-import uml_1.Pasajero;
-
 import java.time.*;
 import java.util.ArrayList;
 
@@ -9,18 +7,16 @@ public class Viaje {
     private LocalDate fecha;
     private LocalTime hora;
     private int precio;
+
     private Bus bus;
-
-    private ArrayList<Pasaje> pasajes;
-
+    private ArrayList<Pasaje> pasajes = new ArrayList<>();
 
     public Viaje(LocalDate fecha, LocalTime hora, int precio, Bus bus) {
         this.fecha = fecha;
         this.hora = hora;
         this.precio = precio;
         this.bus = bus;
-
-        pasajes = new ArrayList<>();
+        bus.addViaje(this);
     }
 
     public LocalDate getFecha() {

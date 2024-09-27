@@ -315,16 +315,10 @@ public class Main {
                 sistemaCentral.findPasajero(id_pasajero).setFonoContacto(telefonoContacto);
                 */
 
-            }
-            /*
-            else {
-
-
+            }/*else{
                 sistemaCentral.findPasajero(id_pasajero).setNombreCompleto(sistemaCentral.findPasajero(id).getNombreCompleto());
                 sistemaCentral.findPasajero(id_pasajero).setTelefono(sistemaCentral.findPasajero(id_pasajero).getTelefono());
                 sistemaCentral.findPasajero(id_pasajero).setNomContacto(sistemaCentral.findPasajero(id_pasajero).getNomContacto());
-
-
             }*/
 
             if (sistemaCentral.vendePasaje(idDocumento, tipo, viajeAbordar.getHora(), viajeAbordar.getFecha(), viajeAbordar.getBus().getPatente(), Integer.parseInt(asiento), id_pasajero)) {

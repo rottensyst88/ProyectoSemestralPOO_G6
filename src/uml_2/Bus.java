@@ -8,12 +8,11 @@ public class Bus {
     private String modelo;
     private int nroAsientos;
 
-    private ArrayList<Viaje> viajes;
+    private ArrayList<Viaje> viajes = new ArrayList<>();
 
     public Bus(String patente, int nroAsientos) {
         this.patente = patente;
         this.nroAsientos = nroAsientos;
-        viajes = new ArrayList<>();
     }
 
     public String getPatente() {
