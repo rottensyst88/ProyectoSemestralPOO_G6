@@ -161,7 +161,6 @@ public class SistemaVentaPasajes {
         Viaje viaje = new Viaje(fecha, hora, precio, bus);
         if (findViaje(fecha.toString(), hora.toString(), patBus) == null) {
             viajes.add(viaje);
-            System.out.println("DEBUG! VALORES DE VIAJE: " + viaje.getFecha() + " " + viaje.getHora() + " " + viaje.getPrecio() + " " + viaje.getBus().getPatente());
             return true;
         }
 
@@ -175,7 +174,6 @@ public class SistemaVentaPasajes {
 
         if (findBus(patente) == null) {
             buses.add(bus);
-            System.out.println("DEBUG! VALORES DE BUS: " + bus.getPatente() + " " + bus.getMarca() + " " + bus.getModelo() + " " + bus.getNroAsientos());
             return true;
         }
         return false;
@@ -350,7 +348,7 @@ public class SistemaVentaPasajes {
         Venta venta = findVenta(idDocumento, tipo);
         Pasaje[] pasajes = venta.getPasajes();
 
-        if(pasajes == null){
+        if (pasajes == null) {
             return new String[0];
         }
 
