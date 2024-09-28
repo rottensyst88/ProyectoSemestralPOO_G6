@@ -376,12 +376,14 @@ public class Main {
 
         System.out.println(":::: Monto total de la venta : " + sistemaCentral.getMontoVenta(idDocumento, tipo));
         System.out.println("\n:::: Venta realizada exitosamente!");
-        System.out.println(":::: Imprimiendo los pasajes");
+        System.out.println(":::: Imprimiendo los pasajes\n\n");
 
         String[] x = sistemaCentral.pasajesAlImprimir(idDocumento, tipo);
 
         for (String s : x) {
+            System.out.println("-------------------- PASAJE ---------------------");
             System.out.println(s);
+            System.out.println("------------------------------------------------\n\n");
         }
     }
 

@@ -244,8 +244,6 @@ public class SistemaVentaPasajes {
             return new String[0][0];
         }
 
-        System.out.println("DEBUG -> ASIENTOS : " + arregloViajes[0][3]);
-
         for (int i = 0; i < viajes.size(); i++) {
             Viaje viaje = viajes.get(i);
             arregloViajes[i][0] = fechaFormateada.format(viaje.getFecha());
@@ -356,16 +354,19 @@ public class SistemaVentaPasajes {
             return new String[0];
         }
 
-        for (Pasaje pasaje : pasajes) {
-            return new String[]{"NUMERO DE PASAJE : " + pasaje.getNumero(),
-                    "FECHA DEL VIAJE : " + pasaje.getViaje().getFecha().toString(),
-                    "HORA DEL VIAJE : " + pasaje.getViaje().getHora().toString(),
-                    "PATENTE BUS : " + pasaje.getViaje().getBus().getPatente(),
-                    "ASIENTO : " + pasaje.getAsiento(),
-                    "RUT - PASAPORTE : " + pasaje.getPasajero().getIdPersona().toString(),
-                    "NOMBRE PASAJERO : " + pasaje.getPasajero().getNombreCompleto()};
-        }
+        String[] pasajesString = new String[pasajes.length];
 
-        return new String[0];
+        for (int i = 0; i < pasajes.length; i++) {
+            Pasaje pasaje = pasajes[i];
+
+            pasajesString[i] = "NUMERO DE PASAJE : " + pasaje.getNumero() + "\n" +
+                    "FECHA DEL VIAJE : " + pasaje.getViaje().getFecha().toString() + "\n" +
+                    "HORA DEL VIAJE : " + pasaje.getViaje().getHora().toString() + "\n" +
+                    "PATENTE BUS : " + pasaje.getViaje().getBus().getPatente() + "\n" +
+                    "ASIENTO : " + pasaje.getAsiento() + "\n" +
+                    "RUT - PASAPORTE : " + pasaje.getPasajero().getIdPersona().toString() + "\n" +
+                    "NOMBRE PASAJERO : " + pasaje.getPasajero().getNombreCompleto();
+        }
+        return pasajesString;
     }
 }
