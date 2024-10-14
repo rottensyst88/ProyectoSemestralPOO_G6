@@ -16,7 +16,7 @@ public class Main {
 
         Main main = new Main();
 
-        /*
+
         Nombre n1 = new Nombre();
         n1.setTratamiento(Tratamiento.SR);
         n1.setNombre("Juan");
@@ -46,7 +46,7 @@ public class Main {
         sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("10:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "AABB12");
         sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("12:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "BBCC23");
         sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("14:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "CCDD34");
-        */
+
 
         main.menu();
     }
