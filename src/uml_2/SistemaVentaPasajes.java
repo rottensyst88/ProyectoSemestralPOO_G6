@@ -309,7 +309,7 @@ public class SistemaVentaPasajes {
             //no existe un Bus
         }
 
-        Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, venta);
+        //Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, venta);
         venta.createPasaje(asiento, viaje, pasajero);
 
         return true;
