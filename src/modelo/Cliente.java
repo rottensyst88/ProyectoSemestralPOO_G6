@@ -1,5 +1,8 @@
 package modelo;
 
+import utilidades.IdPersona;
+import utilidades.Nombre;
+
 import java.util.ArrayList;
 
 @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
