@@ -1,57 +1,25 @@
-package uml_2;
+package vista;
+import controlador.SistemaVentaPasajes;
 
-import uml_1.*;
-
-import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
-@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal", "", "SpellCheckingInspection"})
-public class Main {
-    private Scanner sc = new Scanner(System.in).useDelimiter("\t|\r\n|[\n\r\u2028\u2029\u0085]");
-    private static SistemaVentaPasajes sistemaCentral = new SistemaVentaPasajes();
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
+public class UISVP {
 
-    public static void main(String[] args) {
+    // ATRIBUTOS (SINGLETON Y SCANNER)
 
-        Main main = new Main();
-
-
-        Nombre n1 = new Nombre();
-        n1.setTratamiento(Tratamiento.SR);
-        n1.setNombre("Juan");
-        n1.setApellidoPaterno("Perez");
-        n1.setApellidoMaterno("Gonzalez");
-
-        Nombre n2 = new Nombre();
-        n2.setTratamiento(Tratamiento.SRA);
-        n2.setNombre("Maria");
-        n2.setApellidoPaterno("Gonzalez");
-        n2.setApellidoMaterno("Perez");
-
-        Nombre n3 = new Nombre();
-        n3.setTratamiento(Tratamiento.SR);
-        n3.setNombre("Pedro");
-        n3.setApellidoPaterno("Gonzalez");
-        n3.setApellidoMaterno("Lopez");
-
-        sistemaCentral.createCliente(Rut.of("11.111.111-1"), n1, "123456789", "aaa@aaa");
-        sistemaCentral.createCliente(Rut.of("11.111.111-2"), n2, "234567890", "bbb@bbb");
-        sistemaCentral.createCliente(Rut.of("11.111.111-3"), n3, "345678901", "ccc@ccc");
-
-        sistemaCentral.createBus("AABB12", "Volvo", "2021", 40);
-        sistemaCentral.createBus("BBCC23", "Mercedes", "2020", 30);
-        sistemaCentral.createBus("CCDD34", "Scania", "2019", 50);
-
-        sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("10:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "AABB12");
-        sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("12:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "BBCC23");
-        sistemaCentral.createViaje(LocalDate.parse("01/01/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalTime.parse("14:00", DateTimeFormatter.ofPattern("HH:mm")), 10000, "CCDD34");
-
-
-        main.menu();
+    private static UISVP instancia = new UISVP();
+    public static UISVP getInstancia(){
+        return instancia;
     }
+    private Scanner sc = new Scanner(System.in).useDelimiter("\t|\r\n|[\n\r\u2028\u2029\u0085]");
 
-    private void menu() {
+    // METODOS
+
+    public void menu() {
         boolean verificador = true;
 
         do {
@@ -114,7 +82,7 @@ public class Main {
         System.out.print("Email : ");
         String email = sc.next();
 
-        if (sistemaCentral.createCliente(id, usuario, telefono, email)) {
+        if (SistemaVentaPasajes.getInstancia().createCliente(id, usuario, telefono, email)) {
             System.out.println("\n...:::: Cliente guardado exitosamente ::::...");
         } else {
             System.out.println("\n...:::: Error al guardar cliente ::::...");
@@ -136,7 +104,7 @@ public class Main {
         System.out.print("Numero de asientos : ");
         int nroAsientos = sc.nextInt();
 
-        if (sistemaCentral.createBus(patente, marca, modelo, nroAsientos)) {
+        if (SistemaVentaPasajes.getInstancia().createBus(patente, marca, modelo, nroAsientos)) {
             System.out.println("\n...:::: Bus guardado exitosamente ::::...");
         } else {
             System.out.println("\n...:::: Error al guardar bus ::::...");
@@ -160,7 +128,7 @@ public class Main {
         System.out.print("Patente Bus : ");
         String patente = sc.next();
 
-        if (sistemaCentral.createViaje(fecha, hora, precio, patente)) {
+        if (SistemaVentaPasajes.getInstancia().createViaje(fecha, hora, precio, patente)) {
             System.out.println("\n...:::: Viaje guardado exitosamente ::::...");
         } else {
             System.out.println("\n...:::: Error al guardar viaje ::::...");
@@ -217,7 +185,7 @@ public class Main {
         nombreCliente.setApellidoPaterno(nombres[2]);
         nombreCliente.setApellidoMaterno(nombres[3]);
 
-        if (!sistemaCentral.iniciaVenta(idDocumento, tipo, fec, id)) {
+        if (!SistemaVentaPasajes.getInstancia().iniciaVenta(idDocumento, tipo, fec, id)) {
             System.out.println(":::: Error al iniciar venta!");
             return;
         }
@@ -235,7 +203,7 @@ public class Main {
             fechaViaje = LocalDate.parse(fechaViajeSN, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
             System.out.println("::::Listado de horarios disponibles");
-            horariosDisponibles = sistemaCentral.getHorariosDisponibles(fechaViaje);
+            horariosDisponibles = SistemaVentaPasajes.getInstancia().getHorariosDisponibles(fechaViaje);
 
             if (horariosDisponibles.length == 0) {
                 System.out.println(":::: Error! No hay horarios disponibles para la fecha seleccionada!");
@@ -277,7 +245,7 @@ public class Main {
         while (Integer.parseInt(datosCompra[3]) >= pasajesRedondeado * 4) {
             pasajesRedondeado++;
         }
-        String[] datos_viajeSelect = sistemaCentral.listAsientosDeViaje(fechaViaje, LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), datosCompra[0]);
+        String[] datos_viajeSelect = SistemaVentaPasajes.getInstancia().listAsientosDeViaje(fechaViaje, LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), datosCompra[0]);
 
         System.out.println("*---*---*---*---*---*");
         int IndiceAsiento = 0;
@@ -323,7 +291,7 @@ public class Main {
                 id_pasajero = SelectorRut_Pasaporte();
             } while (id_pasajero == null);
 
-            if ((sistemaCentral.getNombrePasajero(id_pasajero) == null)) {
+            if ((SistemaVentaPasajes.getInstancia().getNombrePasajero(id_pasajero) == null)) {
                 System.out.print("Nombre [Sr/Sra. * * *] : ");
 
                 String nombre = sc.next();
@@ -364,9 +332,9 @@ public class Main {
                 System.out.print("Telefono de contacto : ");
                 String telefonoContacto = sc.next();
 
-                sistemaCentral.createPasajero(id_pasajero, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto);
+                SistemaVentaPasajes.getInstancia().createPasajero(id_pasajero, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto);
             }
-            if (sistemaCentral.vendePasaje(idDocumento, tipo,LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), fechaViaje, datosCompra[0], Integer.parseInt(asiento), id_pasajero)) {
+            if (SistemaVentaPasajes.getInstancia().vendePasaje(idDocumento, tipo,LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), fechaViaje, datosCompra[0], Integer.parseInt(asiento), id_pasajero)) {
                 System.out.println(":::: Pasaje agregado exitosamente!");
             } else {
                 System.out.println(":::: Error al agregar pasaje!");
@@ -374,11 +342,11 @@ public class Main {
             }
         }
 
-        System.out.println(":::: Monto total de la venta : " + sistemaCentral.getMontoVenta(idDocumento, tipo));
+        System.out.println(":::: Monto total de la venta : " + SistemaVentaPasajes.getInstancia().getMontoVenta(idDocumento, tipo));
         System.out.println("\n:::: Venta realizada exitosamente!");
         System.out.println(":::: Imprimiendo los pasajes\n\n");
 
-        String[] x = sistemaCentral.pasajesAlImprimir(idDocumento, tipo);
+        String[] x = SistemaVentaPasajes.getInstancia().pasajesAlImprimir(idDocumento, tipo);
 
         for (String s : x) {
             System.out.println("-------------------- PASAJE ---------------------");
@@ -402,7 +370,7 @@ public class Main {
         String patente = sc.next();
         patente = patente.substring(0, 2) + patente.substring(3, 5) + patente.substring(6, 8);
 
-        String[][] pasajeros_arreglo = sistemaCentral.listPasajeros(fecha, hora, patente);
+        String[][] pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajeros(fecha, hora, patente);
 
         if (pasajeros_arreglo.length == 0) {
             System.out.println(":::: Error! No hay pasajeros para el viaje seleccionado!");
@@ -423,7 +391,7 @@ public class Main {
 
     private void listVentas() {
         System.out.println("\n...:::: Listado de ventas ::::...\n");
-        String[][] pasajeros_arreglo = sistemaCentral.listVentas();
+        String[][] pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listVentas();
 
         if (pasajeros_arreglo.length == 0) {
             System.out.println(":::: Error! No hay ventas");
@@ -447,7 +415,7 @@ public class Main {
 
     private void listViajes() {
         System.out.println("\n...:::: Listado de viajes ::::...\n");
-        String[][] pasajeros_arreglo = sistemaCentral.listViajes();
+        String[][] pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listViajes();
 
         if (pasajeros_arreglo.length == 0) {
             System.out.println(":::: Error! No hay viajes");
@@ -508,4 +476,5 @@ public class Main {
             return null;
         }
     }
+
 }

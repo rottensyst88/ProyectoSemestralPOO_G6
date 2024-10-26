@@ -1,4 +1,4 @@
-package uml_1;
+package modelo;
 
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Pasaporte implements IdPersona {

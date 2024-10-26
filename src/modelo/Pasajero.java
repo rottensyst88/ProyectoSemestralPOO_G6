@@ -1,4 +1,4 @@
-package uml_1;
+package modelo;
 
 public class Pasajero extends Persona {
     private Nombre nomContacto;

@@ -1,5 +1,4 @@
-package uml_1;
-import uml_2.*;
+package modelo;
 
 import java.util.ArrayList;
 
