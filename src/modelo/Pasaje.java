@@ -1,5 +1,4 @@
-package uml_2;
-import uml_1.*;
+package modelo;
 
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Pasaje {

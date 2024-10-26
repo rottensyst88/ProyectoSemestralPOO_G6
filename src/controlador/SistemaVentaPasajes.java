@@ -1,6 +1,6 @@
-package uml_2;
+package controlador;
 
-import uml_1.*;
+import modelo.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,6 +9,14 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class SistemaVentaPasajes {
+    private static SistemaVentaPasajes instancia;
+
+    public static SistemaVentaPasajes getInstancia(){
+        if (instancia == null){
+            instancia = new SistemaVentaPasajes();
+        }
+        return instancia;
+    }
 
     // ATRIBUTOS DE LA CLASE SISTEMA_VENDE_PASAJES
 

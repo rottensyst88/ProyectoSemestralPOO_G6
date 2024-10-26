@@ -1,5 +1,4 @@
-package uml_2;
-import uml_1.*;
+package modelo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
