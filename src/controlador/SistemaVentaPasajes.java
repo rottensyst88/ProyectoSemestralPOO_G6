@@ -22,6 +22,10 @@ public class SistemaVentaPasajes {
     }
 
     // ATRIBUTOS DE LA CLASE SISTEMA_VENDE_PASAJES
+    // OE GAXI SI LEES ESTO SOS ALTO PAJERO
+    // Y EL RENA IGUAL LOL
+    // (-;
+    // TODO Eliminar mensajes anteriores!
 
     private ArrayList<Cliente> clientes = new ArrayList<>();
     private ArrayList<Pasajero> pasajeros = new ArrayList<>();
