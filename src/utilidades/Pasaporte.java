@@ -1,4 +1,4 @@
-package modelo;
+package utilidades;
 
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Pasaporte implements IdPersona {

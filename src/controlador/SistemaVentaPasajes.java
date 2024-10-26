@@ -1,6 +1,9 @@
 package controlador;
 
 import modelo.*;
+import utilidades.IdPersona;
+import utilidades.Nombre;
+import utilidades.TipoDocumento;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
