@@ -1,3 +1,7 @@
+package A;
+
+import Modelo.Viaje;
+
 public abstract class Tripulante extends Persona{
     private Direccion direccion;
 
@@ -15,6 +19,8 @@ public abstract class Tripulante extends Persona{
     }
 
     public abstract void addViaje(Viaje viaje);
+
+
 
     public abstract int getNroViajes();
 
