@@ -1,3 +1,5 @@
+package utilidades;
+
 public abstract class Pago {
     private int monto;
 
