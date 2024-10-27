@@ -9,7 +9,6 @@ public class Empresa {
     private String nombre;
     private String url;
     private List<Bus> buses;
-    // falta implementar consistencia de asociacion con BUSES;
     private List<Conductor> conductores;
     private List <Auxiliar> auxiliares;
 
@@ -39,7 +38,7 @@ public class Empresa {
     }
 
     public void addBus(Bus bus){
-        if(buses.contains(bus)){
+        if(!buses.contains(bus)){
             buses.add(bus);
         }
     }

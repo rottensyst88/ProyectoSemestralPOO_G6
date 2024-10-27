@@ -21,6 +21,6 @@ public class Conductor extends Tripulante {
 
     @Override
     public int getNroViajes() {
-
+        return viajes.size();
     }
 }
