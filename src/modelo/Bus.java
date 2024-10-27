@@ -1,19 +1,25 @@
-package modelo;
+package Modelo;
+import A.*;
+
 
 import java.util.ArrayList;
 
-@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Bus {
     private String patente;
     private String marca;
     private String modelo;
     private int nroAsientos;
+    private Empresa emp;
+
 
     private ArrayList<Viaje> viajes = new ArrayList<>();
 
-    public Bus(String patente, int nroAsientos) {
+    public Bus(String patente, int nroAsientos, Empresa emp) {
         this.patente = patente;
         this.nroAsientos = nroAsientos;
+        this.emp = emp;
+        //Consistencia asociacion
+        emp.addBus(this);
     }
 
     public String getPatente() {
@@ -40,7 +46,19 @@ public class Bus {
         return nroAsientos;
     }
 
-    public void addViaje(Viaje viaje) {
-        viajes.add(viaje);
+    public Empresa getEmp() {
+        return emp;
     }
+
+    public void addViaje(Viaje viaje) {
+        if(!viajes.contains(viaje)) {
+            viajes.add(viaje);
+        }
+    }
+
+    public Viaje[] getViajes() {
+        return viajes.toArray(new Viaje[viajes.size()]);
+    }
+
+
 }

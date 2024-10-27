@@ -1,5 +1,6 @@
 package Modelo;
-import A.*;
+import modelo.Tripulante;
+import utilidades.Direccion;
 
 
 import java.util.*;

@@ -1,8 +1,9 @@
-package A;
+package modelo;
 
 import Modelo.Viaje;
+import utilidades.Direccion;
 
-public abstract class Tripulante extends Persona{
+public abstract class Tripulante {
     private Direccion direccion;
 
     public  Tripulante(idPersona id, Nombre nom, Direccion dir){
