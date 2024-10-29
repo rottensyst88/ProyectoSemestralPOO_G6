@@ -1,7 +1,5 @@
 package utilidades;
 
-import modelo.Tratamiento;
-
 public class Nombre {
     private Tratamiento tratamiento;
     private String nombre;
