@@ -1,6 +1,5 @@
 package modelo;
-
-import utilidades.TipoDocumento;
+import utilidades.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

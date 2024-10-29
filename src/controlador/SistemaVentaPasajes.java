@@ -1,9 +1,7 @@
 package controlador;
 
 import modelo.*;
-import utilidades.IdPersona;
-import utilidades.Nombre;
-import utilidades.TipoDocumento;
+import utilidades.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,12 +18,6 @@ public class SistemaVentaPasajes {
         }
         return instancia;
     }
-
-    // ATRIBUTOS DE LA CLASE SISTEMA_VENDE_PASAJES
-    // OE GAXI SI LEES ESTO SOS ALTO PAJERO
-    // Y EL RENA IGUAL LOL
-    // (-;
-    // TODO Eliminar mensajes anteriores!
 
     private ArrayList<Cliente> clientes = new ArrayList<>();
     private ArrayList<Pasajero> pasajeros = new ArrayList<>();
@@ -238,7 +230,7 @@ public class SistemaVentaPasajes {
             //REVISAR ID PERSONA debería dar RUT/PASAPORTE
             arregloVentas[i][3] = venta.getCliente().getIdPersona().toString();
             //REVISAR SI TRAE TRATAMIENTO
-            arregloVentas[i][4] = venta.getCliente().getNombreCompleto().toString();
+            arregloVentas[i][4] = venta.getCliente().getNombreCompleto().toString(); // TODO Arreglar error!
             //pasando int a String
             String stringCantBoletos = "" + venta.getPasajes().length;
             arregloVentas[i][5] = stringCantBoletos;

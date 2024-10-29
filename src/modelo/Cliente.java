@@ -1,7 +1,6 @@
 package modelo;
 
-import utilidades.IdPersona;
-import utilidades.Nombre;
+import utilidades.*;
 
 import java.util.ArrayList;
 

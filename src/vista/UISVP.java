@@ -1,29 +1,24 @@
 package vista;
+
 import controlador.SistemaVentaPasajes;
 import utilidades.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class UISVP {
-
-    // ATRIBUTOS (SINGLETON Y SCANNER)
-
     private static UISVP instancia = new UISVP();
     public static UISVP getInstancia(){
         return instancia;
     }
     private Scanner sc = new Scanner(System.in).useDelimiter("\t|\r\n|[\n\r\u2028\u2029\u0085]");
 
-    // METODOS
-
     public void menu() {
         boolean verificador = true;
 
         do {
+            System.out.println("VERSION DE PRUEBA - AVANCE 2!");
             System.out.println("============================");
             System.out.println("...::: Menú principal :::...\n");
             System.out.println(" 1) Crear cliente");

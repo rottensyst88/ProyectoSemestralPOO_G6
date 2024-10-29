@@ -1,7 +1,5 @@
-package Modelo;
-import modelo.Tripulante;
+package modelo;
 import utilidades.*;
-
 
 import java.util.*;
 
@@ -48,7 +46,7 @@ public class Empresa {
         return buses.toArray(new Bus[buses.size()]);
     }
 
-    public boolean addConductor(Idpersona id, Nombre nom, Direccion dir){
+    public boolean addConductor(IdPersona id, Nombre nom, Direccion dir){
         if(!existeConducPorId(id)){
             Conductor c = new Conductor(id, nom, dir);
             return conductores.add(c);
@@ -56,7 +54,7 @@ public class Empresa {
     }
 
 
-    public boolean addAuxiliar(Idpersona id, Nombre nom, Direccion dir){
+    public boolean addAuxiliar(IdPersona id, Nombre nom, Direccion dir){
         if(!existeAuxPorId(id)){
             Auxiliar a = new Auxiliar(id, nom, dir);
             return auxiliares.add(a);
@@ -65,14 +63,14 @@ public class Empresa {
 
     private boolean existeAuxPorId(IdPersona id){
         for (Auxiliar a : auxiliares) {
-            if(a.getIdPersona.equals(id)){
+            if(a.getIdPersona().equals(id)){
                 return true;
             }
         }return false;
     }
     private boolean existeConducPorId(IdPersona id){
         for (Conductor c : conductores) {
-            if(c.getIdPersona.equals(id)){
+            if(c.getIdPersona().equals(id)){
                 return true;
             }
         }return false;

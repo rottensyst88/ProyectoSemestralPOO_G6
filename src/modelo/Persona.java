@@ -1,7 +1,6 @@
 package modelo;
 
-import utilidades.IdPersona;
-import utilidades.Nombre;
+import utilidades.*;
 
 public class Persona {
     private IdPersona idPersona;

@@ -1,6 +1,4 @@
-package Modelo;
-import A.*;
-
+package modelo;
 
 import java.util.ArrayList;
 
@@ -20,6 +18,11 @@ public class Bus {
         this.emp = emp;
         //Consistencia asociacion
         emp.addBus(this);
+    }
+
+    public Bus(String patente, int nroAsientos){
+        this.patente = patente;
+        this.nroAsientos = nroAsientos;
     }
 
     public String getPatente() {

@@ -1,13 +1,11 @@
 package modelo;
+import utilidades.*;
 
-import Modelo.Viaje;
-import utilidades.Direccion;
-
-public abstract class Tripulante {
+public abstract class Tripulante extends Persona{
     private Direccion direccion;
 
-    public  Tripulante(idPersona id, Nombre nom, Direccion dir){
-        super(nom, id);
+    public Tripulante(IdPersona id, Nombre nom, Direccion dir){
+        super(id, nom);
         this.direccion = dir;
     }
 
@@ -21,9 +19,6 @@ public abstract class Tripulante {
 
     public abstract void addViaje(Viaje viaje);
 
-
-
     public abstract int getNroViajes();
-
 
 }

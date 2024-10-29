@@ -1,14 +1,13 @@
-package Modelo;
-import modelo.Tripulante;
-import utilidades.*;
+package modelo;
 
+import utilidades.*;
 import java.util.*;
 
-public class Conductor extends Tripulante {
+public class Auxiliar extends Tripulante {
     private List<Viaje> viajes = new ArrayList<Viaje>();
     //FALTA IMPLEMENTAR ASOCIACION CON VIAJE
 
-    public Conductor(idPersona id, Nombre nom, Direccion dir) {
+    public Auxiliar(IdPersona id, Nombre nom, Direccion dir) {
         super(id, nom, dir);
     }
 
