@@ -1,7 +1,5 @@
 package modelo;
-
-import utilidades.IdPersona;
-import utilidades.Nombre;
+import utilidades.*;
 
 public class Pasajero extends Persona {
     private Nombre nomContacto;

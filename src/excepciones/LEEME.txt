@@ -1,0 +1,8 @@
+| AVISO | AVISO | AVISO | AVISO | AVISO | AVISO | AVISO | AVISO |
+
+Las clases del paquete excepciones están listas. Por favor, no modificarlas a menos de que sea estrictamente necesario.
+Del mismo modo, si van a ser modificadas, avisar antes de hacer cambios.
+
+~AB
+
+| AVISO | AVISO | AVISO | AVISO | AVISO | AVISO | AVISO | AVISO |

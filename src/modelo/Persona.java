@@ -1,5 +1,4 @@
 package modelo;
-
 import utilidades.*;
 
 public class Persona {
@@ -16,7 +15,7 @@ public class Persona {
         return idPersona;
     }
 
-    public void setIdPersona(IdPersona idPersona) {
+    public void setIdPersona(IdPersona idPersona) { // ESTE METODO NO APARECE EN EL UML! TODO Revisar!
         this.idPersona = idPersona;
     }
 

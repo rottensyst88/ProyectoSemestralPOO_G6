@@ -8,7 +8,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class SistemaVentaPasajes {
     private static SistemaVentaPasajes instancia;
 
@@ -27,111 +26,6 @@ public class SistemaVentaPasajes {
 
     private DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH:mm");
-
-    // METODOS FIND
-
-    private Cliente findCliente(IdPersona id) {
-        for (Cliente cliente : clientes) {
-            if (cliente.getIdPersona().equals(id)) {
-                return cliente;
-            }
-        }
-        return null;
-    }
-
-    private Pasajero findPasajero(IdPersona id) {
-        for (Pasajero pasajero : pasajeros) {
-            if (pasajero.getIdPersona().equals(id)) {
-                return pasajero;
-            }
-        }
-        return null;
-    }
-
-    private Bus findBus(String patente) {
-        for (Bus bus : buses) {
-            if (bus.getPatente().equals(patente)) {
-                return bus;
-            }
-        }
-        return null;
-    }
-
-    private Viaje findViaje(String fecha, String hora, String patenteBus) {
-        for (Viaje viaje : viajes) {
-            if (viaje.getFecha().toString().equals(fecha) && viaje.getHora().toString().equals(hora) && viaje.getBus().getPatente().equals(patenteBus)) {
-                return viaje;
-            }
-        }
-        return null;
-    }
-
-    private Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
-        for (Venta venta : ventas) {
-            if (venta.getIdDocumento().equals(idDocumento) && venta.getTipo().equals(tipoDocumento)) {
-                return venta;
-            }
-        }
-        return null;
-    }
-
-    // FIN METODOS FIND, TOTAL DE METODOS -> 5/5
-
-    // METODOS GET
-
-    public int getMontoVenta(String idDocumento, TipoDocumento tipo) {
-        Venta venta = findVenta(idDocumento, tipo);
-        if (venta != null) {
-            return venta.getMonto();
-        } else return 0;
-    }
-
-    public String getNombrePasajero(IdPersona idPasajero) {
-        Pasajero pasajero = findPasajero(idPasajero);
-        if (pasajero != null) {
-            return pasajero.getNomContacto().getNombre();
-        } else return null;
-    }
-
-    public String[][] getHorariosDisponibles(LocalDate fecha) {
-        ArrayList<Viaje> viajesFecha = new ArrayList<>();
-
-        //aquí busco si es que hay algún viaje con esa fecha en la lista de viajes
-        //si es que hay lo agrego a un nuevo arraylist que cree para guardarlos ahi
-        for (Viaje viaje : viajes) {
-            if (viaje.getFecha().equals(fecha)) {
-                viajesFecha.add(viaje);
-            }
-        }
-
-        // si el arraylist esta vacío se retorna un arreglo vacio, segun las instrucciones
-        if (viajesFecha.isEmpty()) {
-            return new String[0][0];
-        }
-
-        String[][] horariosDisponibles = new String[viajesFecha.size()][4];
-
-        //relleno el arreglo bidimensional mediante un ciclo for
-        //accediendo  a los datos que me piden mediante viajesFecha.get(i)
-        for (int i = 0; i < viajesFecha.size(); i++) {
-            Viaje viaje = viajesFecha.get(i);
-            Bus bus = viaje.getBus();
-
-
-            String horaComoString = viaje.getHora().toString();
-
-            horariosDisponibles[i][0] = bus.getPatente();
-            horariosDisponibles[i][1] = horaComoString;
-            horariosDisponibles[i][2] = String.valueOf(viaje.getPrecio());
-            horariosDisponibles[i][3] = String.valueOf(viaje.getNroAsientosDisponibles());
-
-        }
-        return horariosDisponibles;
-    }
-
-    // FIN METODOS GET, TOTAL METODOS -> 3/3
-
-    // METODOS CREATE
 
     public boolean createCliente(IdPersona id, Nombre nom, String fono, String email) {
 
@@ -174,21 +68,62 @@ public class SistemaVentaPasajes {
         return false;
     }
 
-    public boolean createBus(String patente, String marca, String modelo, int nroAsientos) {
-        Bus bus = new Bus(patente, nroAsientos);
-        bus.setMarca(marca);
-        bus.setModelo(modelo);
 
-        if (findBus(patente) == null) {
-            buses.add(bus);
-            return true;
+    public boolean iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, IdPersona idCliente) {
+        //primero debo verificar si es que el cliente existe con su id
+        //luego verificar si es que existe la venta con esa idDocumento
+
+        Venta venta = findVenta(idDocumento, tipo);
+        if (venta != null) {
+            return false;
+            //ya existe una venta con esos datos
         }
-        return false;
+
+        Cliente cliente = findCliente(idCliente);
+        if (cliente == null) {
+            return false;
+            // no existe un cliente con este id
+        }
+        Venta nuevaVenta = new Venta(idDocumento, tipo, fecha, cliente);
+        ventas.add(nuevaVenta);
+        return true;
     }
 
-    // FIN METODOS CREATE, TOTAL METODOS -> 4/4
+    public String[][] getHorariosDisponibles(LocalDate fecha) {
+        ArrayList<Viaje> viajesFecha = new ArrayList<>();
 
-    // METODOS LIST
+        //aquí busco si es que hay algún viaje con esa fecha en la lista de viajes
+        //si es que hay lo agrego a un nuevo arraylist que cree para guardarlos ahi
+        for (Viaje viaje : viajes) {
+            if (viaje.getFecha().equals(fecha)) {
+                viajesFecha.add(viaje);
+            }
+        }
+
+        // si el arraylist esta vacío se retorna un arreglo vacio, segun las instrucciones
+        if (viajesFecha.isEmpty()) {
+            return new String[0][0];
+        }
+
+        String[][] horariosDisponibles = new String[viajesFecha.size()][4];
+
+        //relleno el arreglo bidimensional mediante un ciclo for
+        //accediendo  a los datos que me piden mediante viajesFecha.get(i)
+        for (int i = 0; i < viajesFecha.size(); i++) {
+            Viaje viaje = viajesFecha.get(i);
+            Bus bus = viaje.getBus();
+
+
+            String horaComoString = viaje.getHora().toString();
+
+            horariosDisponibles[i][0] = bus.getPatente();
+            horariosDisponibles[i][1] = horaComoString;
+            horariosDisponibles[i][2] = String.valueOf(viaje.getPrecio());
+            horariosDisponibles[i][3] = String.valueOf(viaje.getNroAsientosDisponibles());
+
+        }
+        return horariosDisponibles;
+    }
 
     public String[] listAsientosDeViaje(LocalDate fecha, LocalTime hora,
                                         String patBus) {
@@ -212,6 +147,63 @@ public class SistemaVentaPasajes {
         }
         return asientos;
     }
+
+    public String getNombrePasajero(IdPersona idPasajero) {
+        Pasajero pasajero = findPasajero(idPasajero);
+        if (pasajero != null) {
+            return pasajero.getNomContacto().getNombre();
+        } else return null;
+    }
+
+    public int getMontoVenta(String idDocumento, TipoDocumento tipo) {
+        Venta venta = findVenta(idDocumento, tipo);
+        if (venta != null) {
+            return venta.getMonto();
+        } else return 0;
+    }
+
+    public boolean vendePasaje(String idDoc, TipoDocumento tipo, LocalTime hora, LocalDate fecha,
+                               String patBus, int asiento, IdPersona idPasajero) {
+        /*
+        -Se debe verificar si existe una venta con el idDoc y tipo dados
+        -Verificar si existe un viaje, y si existe el pasajero
+         */
+        Venta venta = findVenta(idDoc, tipo);
+        if (venta == null) {
+            return false;
+            //No existe venta
+        }
+
+        Pasajero pasajero = findPasajero(idPasajero);
+        if (pasajero == null) {
+            return false;
+            // no existe un cliente con este id
+        }
+
+        //ocupo toString(), para poder utilizar el metodo findViaje el cual solo recibe string
+        String horaComoString = hora.toString();
+        String fechaComoString = fecha.toString();
+        Viaje viaje = findViaje(fechaComoString, horaComoString, patBus);
+        if (viaje == null) {
+            return false;
+            //no existe un viaje
+        }
+        Bus bus = findBus(patBus);
+        if (bus == null) {
+            return false;
+            //no existe un Bus
+        }
+
+        //Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, venta);
+        venta.createPasaje(asiento, viaje, pasajero);
+
+        return true;
+    }
+
+    //public void pagaVenta(){} //TODO CREAR LAS DOS CLASES, RECIBEN PARAMETROS DIFERENTES!
+
+    //public void pagaVenta(){}
+
 
     public String[][] listVentas() {
         //Dado que el metodo devuelve un ARREGLO BIDIMENSIONAL, el mensaje apropiado en caso de existir ventas se debe desplegar desde el main
@@ -278,77 +270,45 @@ public class SistemaVentaPasajes {
             arregloPasajeros[i][4] = pasajero.getFonoContacto();
         }
         return arregloPasajeros;
+    } //todo Modificar a listPasajerosViaje
+
+    private Cliente findCliente(IdPersona id) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getIdPersona().equals(id)) {
+                return cliente;
+            }
+        }
+        return null;
     }
 
-    // FIN METODOS LIST, TOTAL METODOS 4/4
-
-    // METODO VENDE_PASAJE
-
-    public boolean vendePasaje(String idDoc, TipoDocumento tipo, LocalTime hora, LocalDate fecha,
-                               String patBus, int asiento, IdPersona idPasajero) {
-        /*
-        -Se debe verificar si existe una venta con el idDoc y tipo dados
-        -Verificar si existe un viaje, y si existe el pasajero
-         */
-        Venta venta = findVenta(idDoc, tipo);
-        if (venta == null) {
-            return false;
-            //No existe venta
+    private Venta findVenta(String idDocumento, TipoDocumento tipoDocumento) {
+        for (Venta venta : ventas) {
+            if (venta.getIdDocumento().equals(idDocumento) && venta.getTipo().equals(tipoDocumento)) {
+                return venta;
+            }
         }
-
-        Pasajero pasajero = findPasajero(idPasajero);
-        if (pasajero == null) {
-            return false;
-            // no existe un cliente con este id
-        }
-
-        //ocupo toString(), para poder utilizar el metodo findViaje el cual solo recibe string
-        String horaComoString = hora.toString();
-        String fechaComoString = fecha.toString();
-        Viaje viaje = findViaje(fechaComoString, horaComoString, patBus);
-        if (viaje == null) {
-            return false;
-            //no existe un viaje
-        }
-        Bus bus = findBus(patBus);
-        if (bus == null) {
-            return false;
-            //no existe un Bus
-        }
-
-        //Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, venta);
-        venta.createPasaje(asiento, viaje, pasajero);
-
-        return true;
+        return null;
     }
 
-    // FIN METODO VENDE_PASAJE
-
-    // METODO INICIA_VENTA
-
-    public boolean iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, IdPersona idCliente) {
-        //primero debo verificar si es que el cliente existe con su id
-        //luego verificar si es que existe la venta con esa idDocumento
-
-        Venta venta = findVenta(idDocumento, tipo);
-        if (venta != null) {
-            return false;
-            //ya existe una venta con esos datos
+    private Viaje findViaje(String fecha, String hora, String patenteBus) {
+        for (Viaje viaje : viajes) {
+            if (viaje.getFecha().toString().equals(fecha) && viaje.getHora().toString().equals(hora) && viaje.getBus().getPatente().equals(patenteBus)) {
+                return viaje;
+            }
         }
-
-        Cliente cliente = findCliente(idCliente);
-        if (cliente == null) {
-            return false;
-            // no existe un cliente con este id
-        }
-        Venta nuevaVenta = new Venta(idDocumento, tipo, fecha, cliente);
-        ventas.add(nuevaVenta);
-        return true;
+        return null;
     }
 
-    // FIN METODO INICIA_VENTA
+    private Pasajero findPasajero(IdPersona id) {
+        for (Pasajero pasajero : pasajeros) {
+            if (pasajero.getIdPersona().equals(id)) {
+                return pasajero;
+            }
+        }
+        return null;
+    }
 
-    //TOTAL METODOS -> 18/18
+    //TODO A PARTIR DE ABAJO, LOS METODOS DEBEN SER ELIMINADOS!!!
 
     public String[] pasajesAlImprimir(String idDocumento, TipoDocumento tipo) {
 
@@ -374,4 +334,26 @@ public class SistemaVentaPasajes {
         }
         return pasajesString;
     }
+
+    private Bus findBus(String patente) {
+        for (Bus bus : buses) {
+            if (bus.getPatente().equals(patente)) {
+                return bus;
+            }
+        }
+        return null;
+    }
+
+    public boolean createBus(String patente, String marca, String modelo, int nroAsientos) {
+        Bus bus = new Bus(patente, nroAsientos);
+        bus.setMarca(marca);
+        bus.setModelo(modelo);
+
+        if (findBus(patente) == null) {
+            buses.add(bus);
+            return true;
+        }
+        return false;
+    } //todo Clase innecesaria!
+
 }

@@ -18,35 +18,59 @@ public class UISVP {
         boolean verificador = true;
 
         do {
-            System.out.println("VERSION DE PRUEBA - AVANCE 2!");
-            System.out.println("============================");
-            System.out.println("...::: Menú principal :::...\n");
-            System.out.println(" 1) Crear cliente");
-            System.out.println(" 2) Crear bus");
-            System.out.println(" 3) Crear viaje");
-            System.out.println(" 4) Vender pasajes");
-            System.out.println(" 5) Lista de pasajeros");
-            System.out.println(" 6) Lista de ventas");
-            System.out.println(" 7) Lista de viajes");
-            System.out.println(" 8) Salir");
-            System.out.println("----------------------------");
+            System.out.println("""
+                    DEBUG VERSION - AVANCE2
+                    VERSION INCOMPLETA
+                    COMPILATION 1 / VARIAS
+                    FUNCIONES 1-3 y 11-13 NO FUNCIONALES!
+                    ============================
+                    ...::: Menú principal :::...
+                    
+                     1) Crear empresa
+                     2) Contratar tripulante
+                     3) Crear terminal
+                     4) Crear cliente
+                     5) Crear bus
+                     6) Crear viaje
+                     7) Vender pasajes
+                     8) Listar ventas
+                     9) Listar viajes
+                    10) Listar pasajeros de viaje
+                    11) Listar empresas
+                    12) Listar llegadas/salidas de terminal
+                    13) Listar ventas de empresa
+                    14) Salir
+                    ----------------------------
+                    """);
 
             System.out.print("\n..:: Ingrese número de opción: ");
             int valor = sc.nextInt();
 
             switch (valor) {
-                case 1 -> createCliente();
-                case 2 -> createBus();
-                case 3 -> createViaje();
-                case 4 -> vendePasajes();
-                case 5 -> listPasajerosViaje();
-                case 6 -> listVentas();
-                case 7 -> listViajes();
-                case 8 -> verificador = false;
+                case 1 -> createEmpresas();
+                case 2 -> contrataTripulante();
+                case 3 -> createTerminal();
+                case 4 -> createCliente();
+                case 5 -> createBus();
+                case 6 -> createViaje();
+                case 7 -> vendePasajes();
+                case 8 -> listVentas();
+                case 9 -> listViajes();
+                case 10 -> listPasajerosViaje();
+                case 11 -> listEmpresas();
+                case 12 -> listLlegadasSalidasTerminal();
+                case 13 -> listVentasEmpresa();
+                case 14 -> verificador = false;
                 default -> System.out.println("Error! Ingrese los datos de forma correcta!");
             }
         } while (verificador);
     }
+
+    private void createEmpresas(){}
+
+    private void contrataTripulante(){}
+
+    private void createTerminal(){}
 
     private void createCliente() {
         Nombre usuario = new Nombre();
@@ -351,39 +375,7 @@ public class UISVP {
         }
     }
 
-    private void listPasajerosViaje() {
-        System.out.println("\n...:::: Listado de pasajeros de un viaje ::::...\n");
-
-        System.out.print("Fecha de viaje[dd/mm/yyyy] : ");
-        String fechaViaje = sc.next();
-        LocalDate fecha = LocalDate.parse(fechaViaje, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
-        System.out.print("Hora de viaje[hh:mm] : ");
-        String horaViaje = sc.next();
-        LocalTime hora = LocalTime.parse(horaViaje, DateTimeFormatter.ofPattern("HH:mm"));
-
-        System.out.print("Patente del bus : ");
-        String patente = sc.next();
-        patente = patente.substring(0, 2) + patente.substring(3, 5) + patente.substring(6, 8);
-
-        String[][] pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajeros(fecha, hora, patente);
-
-        if (pasajeros_arreglo.length == 0) {
-            System.out.println(":::: Error! No hay pasajeros para el viaje seleccionado!");
-            return;
-        }
-        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*");
-        System.out.printf("| %8s | %16s | %24s | %24s | %20s |\n", "ASIENTO", "RUT/PASS", "PASAJERO", "CONTACTO","TELEFONO CONTACTO");
-        for (String[] pasajero : pasajeros_arreglo) {
-            System.out.println("*----------+------------------+----------------------------+------------------------+----------------------*");
-            System.out.printf("| %8s |", pasajero[0]);
-            System.out.printf(" %16s |", pasajero[1]);
-            System.out.printf(" %-24s |",pasajero[2]);
-            System.out.printf(" %-24s |", pasajero[3]);
-            System.out.printf(" %-20s |\n", pasajero[4]);
-        }
-        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
-    }
+    private void pagaVentaPasajes(){}
 
     private void listVentas() {
         System.out.println("\n...:::: Listado de ventas ::::...\n");
@@ -430,6 +422,46 @@ public class UISVP {
         System.out.println("*------------------*------------------*------------------*------------------*------------------*\n\n");
     }
 
+    private void listPasajerosViaje() {
+        System.out.println("\n...:::: Listado de pasajeros de un viaje ::::...\n");
+
+        System.out.print("Fecha de viaje[dd/mm/yyyy] : ");
+        String fechaViaje = sc.next();
+        LocalDate fecha = LocalDate.parse(fechaViaje, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        System.out.print("Hora de viaje[hh:mm] : ");
+        String horaViaje = sc.next();
+        LocalTime hora = LocalTime.parse(horaViaje, DateTimeFormatter.ofPattern("HH:mm"));
+
+        System.out.print("Patente del bus : ");
+        String patente = sc.next();
+        patente = patente.substring(0, 2) + patente.substring(3, 5) + patente.substring(6, 8);
+
+        String[][] pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajeros(fecha, hora, patente);
+
+        if (pasajeros_arreglo.length == 0) {
+            System.out.println(":::: Error! No hay pasajeros para el viaje seleccionado!");
+            return;
+        }
+        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*");
+        System.out.printf("| %8s | %16s | %24s | %24s | %20s |\n", "ASIENTO", "RUT/PASS", "PASAJERO", "CONTACTO","TELEFONO CONTACTO");
+        for (String[] pasajero : pasajeros_arreglo) {
+            System.out.println("*----------+------------------+----------------------------+------------------------+----------------------*");
+            System.out.printf("| %8s |", pasajero[0]);
+            System.out.printf(" %16s |", pasajero[1]);
+            System.out.printf(" %-24s |",pasajero[2]);
+            System.out.printf(" %-24s |", pasajero[3]);
+            System.out.printf(" %-20s |\n", pasajero[4]);
+        }
+        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
+    }
+
+    private void listEmpresas(){}
+
+    private void listLlegadasSalidasTerminal(){}
+
+    private void listVentasEmpresa(){}
+
     private IdPersona SelectorRut_Pasaporte() {
 
         System.out.print("Rut[1] o Pasaporte[2] : ");
@@ -472,5 +504,4 @@ public class UISVP {
             return null;
         }
     }
-
 }

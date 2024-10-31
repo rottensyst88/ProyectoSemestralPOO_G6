@@ -3,14 +3,15 @@ import utilidades.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
-@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Venta {
     private String idDocumento;
     private TipoDocumento tipo;
     private LocalDate fecha;
-    ArrayList<Pasaje> pasajes;
 
+    private List<Pasaje> pasajes = new ArrayList<>();
+    private Pago pago;
     private Cliente cliente;
 
     public Venta(String id, TipoDocumento tipo, LocalDate fec, Cliente cli) {
@@ -54,6 +55,4 @@ public class Venta {
         }
         return valor_monto;
     }
-
-
 }
