@@ -102,9 +102,11 @@ public class UISVP {
         System.out.print("Email : ");
         String email = sc.next();
 
-        if (SistemaVentaPasajes.getInstancia().createCliente(id, usuario, telefono, email)) {
+        try {
+            SistemaVentaPasajes.getInstancia().createCliente(id, usuario, telefono, email);
             System.out.println("\n...:::: Cliente guardado exitosamente ::::...");
-        } else {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("\n...:::: Error al guardar cliente ::::...");
         }
     }
@@ -148,9 +150,11 @@ public class UISVP {
         System.out.print("Patente Bus : ");
         String patente = sc.next();
 
-        if (SistemaVentaPasajes.getInstancia().createViaje(fecha, hora, precio, patente)) {
+        try{
+            SistemaVentaPasajes.getInstancia().createViaje(fecha, hora, precio, patente);
             System.out.println("\n...:::: Viaje guardado exitosamente ::::...");
-        } else {
+        }catch (Exception e){
+            System.out.println(e.getMessage());
             System.out.println("\n...:::: Error al guardar viaje ::::...");
         }
     }

@@ -36,6 +36,14 @@ public class Venta {
         return fecha;
     }
 
+    public int getMonto(){
+        int valor_monto = 0;
+        for (Pasaje pasaje : pasajes) {
+            valor_monto += pasaje.getViaje().getPrecio();
+        }
+        return valor_monto;
+    }
+
     public Cliente getCliente() {
         return cliente;
     }
@@ -48,11 +56,24 @@ public class Venta {
         return pasajes.toArray(new Pasaje[0]);
     }
 
-    public int getMonto(){
-        int valor_monto = 0;
-        for (Pasaje pasaje : pasajes) {
-            valor_monto += pasaje.getViaje().getPrecio();
-        }
-        return valor_monto;
+    public int getMontoPagado(){
+        return pago.getMonto();
+    }
+
+    public boolean pagaMonto(){
+        return true;
+    }
+
+    public boolean pagaMonto(long nroTarjeta){
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object otro){
+        return (this == otro);
+    }
+
+    public String getTipoPago(){
+        return "ERROR! OPERACIÓN NO IMPLEMENTADA";
     }
 }
