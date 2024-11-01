@@ -66,9 +66,37 @@ public class UISVP {
         } while (verificador);
     }
 
-    private void createEmpresas(){}
+    private void createEmpresas(){
+        System.out.println("...:::: Creando una nueva Empresa ::::....\n");
 
-    private void contrataTripulante(){}
+        System.out.print("R.U.T : ");
+        String rut = sc.next();
+
+        System.out.print("Nombre : ");
+        String nombre = sc.next();
+
+        System.out.print("url : ");
+        String url = sc.next();
+
+        //TODO Implementar!
+    }
+
+    private void contrataTripulante(){
+        System.out.println("...:::: Creando un nuevo Tripulante\n\n");
+        System.out.println(":::: Dato de la Empresa");
+
+        System.out.print("R.U.T : ");
+        String rut = sc.next();
+
+        System.out.println("\n:::: Datos tripulante");
+        System.out.print("Auxiliar[1] o Conductor[2] : ");
+        byte opcion = sc.nextByte();
+
+        System.out.print("Rut[1] o Pasaporte[2] : ");
+
+
+
+    }
 
     private void createTerminal(){}
 
@@ -441,7 +469,7 @@ public class UISVP {
         String patente = sc.next();
         patente = patente.substring(0, 2) + patente.substring(3, 5) + patente.substring(6, 8);
 
-        String[][] pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajeros(fecha, hora, patente);
+        String[][] pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajerosViaje(fecha, hora, patente);
 
         if (pasajeros_arreglo.length == 0) {
             System.out.println(":::: Error! No hay pasajeros para el viaje seleccionado!");

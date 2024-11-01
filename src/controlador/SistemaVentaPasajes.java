@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class SistemaVentaPasajes {
     private static SistemaVentaPasajes instancia;
@@ -53,19 +54,18 @@ public class SistemaVentaPasajes {
         }
     }
 
-    public void createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) { //todo FALTA ARREGLARLO!
-        Bus bus = findBus(patBus);
+    public void createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) throws SistemaVentaPasajesException{ //todo FALTA ARREGLARLO!
+        Bus bus = findBus(patBus); //TODO Arreglar esto!
         if (bus == null) {
-            return false;
+            throw new SistemaVentaPasajesException("No existe bus con la patente indicada");
         }
 
         Viaje viaje = new Viaje(fecha, hora, precio, bus);
         if (findViaje(fecha.toString(), hora.toString(), patBus) == null) {
             viajes.add(viaje);
-            return true;
+        } else{
+            throw new SistemaVentaPasajesException("Ya existe pasaje viaje con fecha, hora y patente de bus indicados");
         }
-
-        return false;
     }
 
     public void iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, IdPersona idCliente)
@@ -80,7 +80,8 @@ public class SistemaVentaPasajes {
         }
         Venta nuevaVenta = new Venta(idDocumento, tipo, fecha, cliente);
         ventas.add(nuevaVenta);
-        return true; //arreglar!
+
+        //TODO Implementar excepciones de forma correcta!
     }
 
     public String[][] getHorariosDisponibles(LocalDate fecha) {
@@ -142,56 +143,50 @@ public class SistemaVentaPasajes {
         return asientos;
     }
 
-    public String getNombrePasajero(IdPersona idPasajero) {
+    public Optional<String> getNombrePasajero(IdPersona idPasajero) {
         Pasajero pasajero = findPasajero(idPasajero);
         if (pasajero != null) {
-            return pasajero.getNomContacto().getNombre();
-        } else return null;
+            return Optional.of(pasajero.getNomContacto().getNombre());
+        } else return Optional.empty();
     }
 
-    public int getMontoVenta(String idDocumento, TipoDocumento tipo) {
+    public Optional<Integer> getMontoVenta(String idDocumento, TipoDocumento tipo) {
         Venta venta = findVenta(idDocumento, tipo);
         if (venta != null) {
-            return venta.getMonto();
-        } else return 0;
+            return Optional.of(venta.getMonto());
+        } else return Optional.empty();
     }
 
-    public boolean vendePasaje(String idDoc, TipoDocumento tipo, LocalTime hora, LocalDate fecha,
-                               String patBus, int asiento, IdPersona idPasajero) {
-        /*
-        -Se debe verificar si existe una venta con el idDoc y tipo dados
-        -Verificar si existe un viaje, y si existe el pasajero
-         */
-        Venta venta = findVenta(idDoc, tipo);
-        if (venta == null) {
-            return false;
-            //No existe venta
-        }
+    public void vendePasaje(String idDoc, TipoDocumento tipo, LocalTime hora, LocalDate fecha,
+                               String patBus, int asiento, IdPersona idPasajero) throws SistemaVentaPasajesException{
 
-        Pasajero pasajero = findPasajero(idPasajero);
-        if (pasajero == null) {
-            return false;
-            // no existe un cliente con este id
-        }
-
-        //ocupo toString(), para poder utilizar el metodo findViaje el cual solo recibe string
         String horaComoString = hora.toString();
         String fechaComoString = fecha.toString();
         Viaje viaje = findViaje(fechaComoString, horaComoString, patBus);
+        Venta venta = findVenta(idDoc, tipo);
+        Pasajero pasajero = findPasajero(idPasajero);
+        // Bus bus = findBus(patBus); //TODO arreglar!
+
+        if (venta == null) {
+            throw new SistemaVentaPasajesException("No existe venta con el ID y Tipo de Doc. indicados");
+        }
+
+
+        if (pasajero == null) {
+            throw new SistemaVentaPasajesException("No existe pasajero con el ID indicado");
+
+        }
+
         if (viaje == null) {
-            return false;
-            //no existe un viaje
+            throw new SistemaVentaPasajesException("No existe viaje con la fecha, hora y patente de bus indicados");
         }
-        Bus bus = findBus(patBus);
+
+        /*
         if (bus == null) {
-            return false;
-            //no existe un Bus
-        }
+            throw new SistemaVentaPasajesException("")
+        }*/
 
-        //Pasaje nuevoPasaje = new Pasaje(asiento, viaje, pasajero, venta);
         venta.createPasaje(asiento, viaje, pasajero);
-
-        return true;
     }
 
     //public void pagaVenta(){} //TODO CREAR LAS DOS CLASES, RECIBEN PARAMETROS DIFERENTES!
@@ -247,24 +242,23 @@ public class SistemaVentaPasajes {
         return arregloViajes;
     }
 
-    public String[][] listPasajeros(LocalDate fecha, LocalTime hora, String patBus) {
+    public String[][] listPasajerosViaje(LocalDate fecha, LocalTime hora, String patBus) throws SistemaVentaPasajesException{
         String[][] arregloPasajeros = new String[pasajeros.size()][5];
 
         if (arregloPasajeros.length == 0) {
-            return new String[0][0];
+            throw new SistemaVentaPasajesException("No existe viaje con la fecha, hora y patente de bus indicadas");
         }
 
         for (int i = 0; i < pasajeros.size(); i++) {
             Pasajero pasajero = pasajeros.get(i);
-            //dado el problema con relacionar el número del asiento con los demás datos del pasajero, esa parte estará omitida por el momnto
-            arregloPasajeros[i][0] = "nulo";
+            arregloPasajeros[i][0] = "nulo"; //TODO dado el problema con relacionar el número del asiento con los demás datos del pasajero, esa parte estará omitida por el momntoBus bus = findBus(patBus);
             arregloPasajeros[i][1] = pasajero.getIdPersona().toString();
             arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
             arregloPasajeros[i][3] = pasajero.getNomContacto().toString();
             arregloPasajeros[i][4] = pasajero.getFonoContacto();
         }
         return arregloPasajeros;
-    } //todo Modificar a listPasajerosViaje
+    }
 
     private Cliente findCliente(IdPersona id) {
         for (Cliente cliente : clientes) {
