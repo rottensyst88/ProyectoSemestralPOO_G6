@@ -10,10 +10,11 @@ public class ControladorEmpresas {
         return instancia;
     }
 
-    public void createEmpresa(){
+    public void createBus(){
+
     }
 
-    public void createBus(){
+    public void createEmpresa(){
 
     }
 

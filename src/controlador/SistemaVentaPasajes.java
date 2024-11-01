@@ -2,6 +2,7 @@ package controlador;
 
 import modelo.*;
 import utilidades.*;
+import excepciones.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,26 +22,25 @@ public class SistemaVentaPasajes {
     private ArrayList<Cliente> clientes = new ArrayList<>();
     private ArrayList<Pasajero> pasajeros = new ArrayList<>();
     private ArrayList<Viaje> viajes = new ArrayList<>();
-    private ArrayList<Bus> buses = new ArrayList<>();
-    private ArrayList<Venta> ventas = new ArrayList<>(); // REVISAR!
+    private ArrayList<Venta> ventas = new ArrayList<>();
 
     private DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH:mm");
 
-    public boolean createCliente(IdPersona id, Nombre nom, String fono, String email) {
+    public void createCliente(IdPersona id, Nombre nom, String fono, String email) throws SistemaVentaPasajesException{
 
         Cliente c = new Cliente(id, nom, email);
         c.setTelefono(fono);
 
         if (findCliente(id) == null) {
             clientes.add(c);
-            return true;
+        }else{
+            throw new SistemaVentaPasajesException("Ya existe cliente con el ID indicado!");
         }
-        return false;
     }
 
-    public boolean createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
-            fonoContacto) {
+    public void createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
+            fonoContacto) throws SistemaVentaPasajesException {
 
         Pasajero p = new Pasajero(id, nom, fonoContacto);
         p.setNomContacto(nomContacto);
@@ -48,12 +48,12 @@ public class SistemaVentaPasajes {
 
         if (findPasajero(id) == null) {
             pasajeros.add(p);
-            return true;
+        }else{
+            throw new SistemaVentaPasajesException("Ya existe pasajero con el ID indicado!");
         }
-        return false;
     }
 
-    public boolean createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) {
+    public void createViaje(LocalDate fecha, LocalTime hora, int precio, String patBus) { //todo FALTA ARREGLARLO!
         Bus bus = findBus(patBus);
         if (bus == null) {
             return false;
@@ -68,25 +68,19 @@ public class SistemaVentaPasajes {
         return false;
     }
 
-
-    public boolean iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, IdPersona idCliente) {
-        //primero debo verificar si es que el cliente existe con su id
-        //luego verificar si es que existe la venta con esa idDocumento
-
+    public void iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, IdPersona idCliente)
+    throws SistemaVentaPasajesException {
         Venta venta = findVenta(idDocumento, tipo);
         if (venta != null) {
-            return false;
-            //ya existe una venta con esos datos
+            throw new SistemaVentaPasajesException("Ya existe venta con ID y Tipo de Doc. indicado");
         }
-
         Cliente cliente = findCliente(idCliente);
         if (cliente == null) {
-            return false;
-            // no existe un cliente con este id
+            throw new SistemaVentaPasajesException("No existe un cliente con ID integrado!");
         }
         Venta nuevaVenta = new Venta(idDocumento, tipo, fecha, cliente);
         ventas.add(nuevaVenta);
-        return true;
+        return true; //arreglar!
     }
 
     public String[][] getHorariosDisponibles(LocalDate fecha) {
@@ -310,6 +304,7 @@ public class SistemaVentaPasajes {
 
     //TODO A PARTIR DE ABAJO, LOS METODOS DEBEN SER ELIMINADOS!!!
 
+    /*
     public String[] pasajesAlImprimir(String idDocumento, TipoDocumento tipo) {
 
         Venta venta = findVenta(idDocumento, tipo);
@@ -355,5 +350,5 @@ public class SistemaVentaPasajes {
         }
         return false;
     } //todo Clase innecesaria!
-
+    */
 }
