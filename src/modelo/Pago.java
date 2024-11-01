@@ -1,4 +1,3 @@
-// TODO REVISAR LA CORRECTA IMPLEMENTATION DE CLASES PAGO Y SUS DERIVADAS!
 package modelo;
 
 public abstract class Pago {
