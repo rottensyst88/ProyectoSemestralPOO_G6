@@ -82,6 +82,10 @@ public class UISVP {
     }
 
     private void contrataTripulante(){
+        Nombre tripulante = new Nombre();
+        IdPersona id;
+        Tratamiento tratamiento;
+
         System.out.println("...:::: Creando un nuevo Tripulante\n\n");
         System.out.println(":::: Dato de la Empresa");
 
@@ -92,13 +96,54 @@ public class UISVP {
         System.out.print("Auxiliar[1] o Conductor[2] : ");
         byte opcion = sc.nextByte();
 
-        System.out.print("Rut[1] o Pasaporte[2] : ");
+        do {
+            id = SelectorRut_Pasaporte();
+        } while (id == null);
+
+        do {
+            tratamiento = SelectorTratamiento();
+        } while (tratamiento == null);
+
+        System.out.print("Nombres: ");
+        tripulante.setNombre(sc.next());
+
+        System.out.print("Apellido Paterno : ");
+        tripulante.setApellidoPaterno(sc.next());
+
+        System.out.print("Apellido Materno : ");
+        tripulante.setApellidoMaterno(sc.next());
+
+        System.out.print("Calle : ");
+        String calle = sc.next();
+
+        System.out.print("Numero : ");
+        int numero = sc.nextInt();
+
+        System.out.print("Comuna : ");
+        String comuna = sc.next();
+
+        Direccion direccion = new Direccion(calle, numero, comuna);
 
 
 
     }
 
-    private void createTerminal(){}
+    private void createTerminal(){
+        System.out.println("...:::: Creando un nuevo Terminal\n\n");
+        System.out.print("Nombre : ");
+        String nombre = sc.next();
+
+        System.out.print("Calle : ");
+        String calle = sc.next();
+
+        System.out.print("Numero : ");
+        int numero = sc.nextInt();
+
+        System.out.print("Comuna : ");
+        String comuna = sc.next();
+
+
+    }
 
     private void createCliente() {
         Nombre usuario = new Nombre();
@@ -154,7 +199,7 @@ public class UISVP {
         System.out.print("Numero de asientos : ");
         int nroAsientos = sc.nextInt();
 
-        if (SistemaVentaPasajes.getInstancia().createBus(patente, marca, modelo, nroAsientos)) {
+        if (SistemaVentaPasajes.getInstancia().createBus(patente, marca, modelo, nroAsientos)) { //todo ARREGLAR
             System.out.println("\n...:::: Bus guardado exitosamente ::::...");
         } else {
             System.out.println("\n...:::: Error al guardar bus ::::...");
@@ -237,9 +282,11 @@ public class UISVP {
         nombreCliente.setApellidoPaterno(nombres[2]);
         nombreCliente.setApellidoMaterno(nombres[3]);
 
-        if (!SistemaVentaPasajes.getInstancia().iniciaVenta(idDocumento, tipo, fec, id)) {
+        try{
+            SistemaVentaPasajes.getInstancia().iniciaVenta(idDocumento, tipo, fec, id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println(":::: Error al iniciar venta!");
-            return;
         }
 
         System.out.println("\n::::Pasajes a vender");
@@ -386,11 +433,12 @@ public class UISVP {
 
                 SistemaVentaPasajes.getInstancia().createPasajero(id_pasajero, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto);
             }
-            if (SistemaVentaPasajes.getInstancia().vendePasaje(idDocumento, tipo,LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), fechaViaje, datosCompra[0], Integer.parseInt(asiento), id_pasajero)) {
+            try{
+                SistemaVentaPasajes.getInstancia().vendePasaje(idDocumento, tipo,LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), fechaViaje, datosCompra[0], Integer.parseInt(asiento), id_pasajero);
                 System.out.println(":::: Pasaje agregado exitosamente!");
-            } else {
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 System.out.println(":::: Error al agregar pasaje!");
-                return;
             }
         }
 
@@ -398,7 +446,7 @@ public class UISVP {
         System.out.println("\n:::: Venta realizada exitosamente!");
         System.out.println(":::: Imprimiendo los pasajes\n\n");
 
-        String[] x = SistemaVentaPasajes.getInstancia().pasajesAlImprimir(idDocumento, tipo);
+        String[] x = SistemaVentaPasajes.getInstancia().pasajesAlImprimir(idDocumento, tipo); //todo ARREGLAR!
 
         for (String s : x) {
             System.out.println("-------------------- PASAJE ---------------------");
