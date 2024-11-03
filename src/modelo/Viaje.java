@@ -2,23 +2,45 @@ package modelo;
 
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Viaje {
+
     private LocalDate fecha;
     private LocalTime hora;
     private int precio;
 
+    //duracion en minutos
+    private int duracion;
+
     private Bus bus;
     private ArrayList<Pasaje> pasajes = new ArrayList<>();
+    //???
+    private String[] Comunas = new String[2];
 
-    public Viaje(LocalDate fecha, LocalTime hora, int precio, Bus bus) {
+    //los conductores serán 1 o 2
+    private ArrayList<Conductor> conductores = new ArrayList<>();
+    private Auxiliar auxiliar;
+    private Tripulante tripulantes[];
+    private Terminal terminalLlegada;
+    private Terminal terminalSalida;
+
+    public Viaje(LocalDate fecha, LocalTime hora, int precio, int dur, Bus bus, Auxiliar aux, Conductor cond, Terminal sale, Terminal llega) {
         this.fecha = fecha;
         this.hora = hora;
         this.precio = precio;
-
         this.bus = bus;
         this.bus.addViaje(this);
+        this.auxiliar = aux;
+        auxiliar.addViaje(this);
+        this.conductores.add(cond);
+        this.duracion = dur;
+        this.tripulantes = new Tripulante[3];
+        this.terminalLlegada = sale;
+        this.terminalSalida = llega;
+
+
     }
 
     public LocalDate getFecha() {
@@ -41,6 +63,7 @@ public class Viaje {
         return bus;
     }
 
+    /* aparentemente to do este metodo cambió respecto al avance pasado
     public String[][] getAsientos() {
         String[][] asientos = new String[bus.getNroAsientos()][2];
         for (int z = 0; z < bus.getNroAsientos(); z++) {
@@ -51,6 +74,20 @@ public class Viaje {
             asientos[pasajeros.getAsiento() - 1][1] = "Ocupado";
         }
         return asientos;
+    }
+    este metodo corresponde al reemplazo*/
+
+    public String[] getAsientos() {
+        String[] Asientos = new String[bus.getNroAsientos()];
+        Arrays.fill(Asientos, "*");
+        for (Pasaje pasaje : pasajes) {
+            int asiento = pasaje.getAsiento();
+            if (asiento >= 1 && asiento <= bus.getNroAsientos()) {
+                Asientos[asiento - 1] = Integer.toString(asiento);
+            }
+        }
+
+        return Asientos;
     }
 
     public void addPasaje(Pasaje pasaje) {
@@ -69,11 +106,48 @@ public class Viaje {
         return listaPasajeros;
     }
 
-    public boolean existeDisponibilidad() {
-        return pasajes.size() < bus.getNroAsientos();
+    public boolean existeDisponibilidad(int nroAsientos) {
+        if (pasajes.size() >= nroAsientos) {
+            return true;
+        }
+        return false;
     }
 
     public int getNroAsientosDisponibles() {
         return bus.getNroAsientos() - pasajes.size();
+    }
+
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
+    }
+
+    private int duracionMinutos;
+    public LocalDateTime getFechaHoraTermino() {
+        LocalDateTime inicio = LocalDateTime.of(fecha, hora);
+        Duration duracion = Duration.ofMinutes(duracionMinutos);
+        LocalDateTime termino = inicio.plus(duracion);
+        return termino;
+
+    }
+
+    //?????
+    public Venta[] getVentas() {
+        return ventas.toArray(new Venta[0]);
+    }
+
+    public void addConductor(Conductor conductor) {
+        conductores.add(conductor);
+        conductor.addViaje(this);
+    }
+
+    public Terminal getTerminalLlegada(){
+        return terminalLlegada;
+    }
+    public Terminal getTerminalSAlida() {
+        return terminalSalida;
+
+    }
+    public Tripulante[] getTripulantes() {
+        return tripulantes;
     }
 }

@@ -20,7 +20,6 @@ public class Venta {
         fecha = fec;
         cliente = cli;
         cliente.addVenta(this);
-
         pasajes = new ArrayList<>();
     }
 
