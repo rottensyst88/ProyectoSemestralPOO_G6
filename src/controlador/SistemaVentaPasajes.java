@@ -123,7 +123,7 @@ public class SistemaVentaPasajes {
         boolean centinela = false;
 
         for (Viaje viaje : viajes){
-            if (viaje.existeDisponibilidad(nroPasajes) && viaje.getFecha().equals(fecha)) {
+            if (viaje.getNroAsientosDisponibles() >= nroPasajes && viaje.getFecha().equals(fecha)) {
                 if (viaje.getTerminalLlegada().getDireccion().getComuna().equals(comLlegada)) {
                     if(viaje.getTerminalSAlida().getDireccion().getComuna().equals(comSalida)){
                         centinela = true;

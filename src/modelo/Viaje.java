@@ -105,10 +105,7 @@ public class Viaje {
     }
 
     public boolean existeDisponibilidad(int nroAsientos) {
-        if (pasajes.size() >= nroAsientos) {
-            return true;
-        }
-        return false;
+        return pasajes.size() >= nroAsientos;
     }
 
     public int getNroAsientosDisponibles() {

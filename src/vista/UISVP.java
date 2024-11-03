@@ -20,8 +20,40 @@ public class UISVP {
     private Scanner sc = new Scanner(System.in).useDelimiter("\t|\r\n|[\n\r\u2028\u2029\u0085]");
 
     public void menu() {
-        boolean verificador = true;
 
+        ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
+        Nombre aux_test = new Nombre();
+        aux_test.setTratamiento(Tratamiento.SR);
+        aux_test.setNombre("Ery Flores");
+        aux_test.setApellidoPaterno("Valle");
+        aux_test.setApellidoMaterno("Lindo");
+        ControladorEmpresas.getInstance().hireAuxiliarForEmpresa(Rut.of("77.777.777-7"),Rut.of("00.000.000-0"),
+                aux_test,new Direccion("Santa Rosa",123,"Coihueco"));
+        Nombre con_test = new Nombre();
+        con_test.setTratamiento(Tratamiento.SR);
+        con_test.setNombre("Ariel Alonso");
+        con_test.setApellidoPaterno("Bob");
+        con_test.setApellidoMaterno("Bar");
+        ControladorEmpresas.getInstance().hireConductorForEmpresa(Rut.of("77.777.777-7"),Rut.of("00.000.000-1"),con_test,
+                new Direccion("Santo Domingo",456,"Talquipen"));
+        ControladorEmpresas.getInstance().createTerminal("Santo Milagro", new Direccion("Placido",1,"Talquipen"));
+        ControladorEmpresas.getInstance().createTerminal("Pecado Milenio", new Direccion("Milenio",2,"Nuble"));
+        ControladorEmpresas.getInstance().createBus("AABB12","VOLVO","GEN",40,Rut.of("77.777.777-7"));
+        Nombre cli_test = new Nombre();
+        cli_test.setTratamiento(Tratamiento.SR);
+        cli_test.setNombre("Juan Perez");
+        cli_test.setApellidoPaterno("Boole");
+        cli_test.setApellidoMaterno("Baron");
+        SistemaVentaPasajes.getInstancia().createCliente(Rut.of("11.111.111-1"),cli_test,"888-888","juan@aol.mk");
+        IdPersona[] trip_test = new IdPersona[2];
+        trip_test[0] = Rut.of("00.000.000-0");
+        trip_test[1] = Rut.of("00.000.000-1");
+        String[] nCom_test = {"Talquipen","Nuble"};
+        SistemaVentaPasajes.getInstancia().createViaje(LocalDate.of(1212,12,12),LocalTime.of(12,12),5000,60,
+                "AABB12",trip_test,nCom_test);
+
+
+        boolean verificador = true;
         do {
             System.out.println("""
                     DEBUG VERSION - AVANCE2
@@ -69,6 +101,7 @@ public class UISVP {
                 default -> System.out.println("Error! Ingrese los datos de forma correcta!");
             }
         } while (verificador);
+
     }
 
     private void createEmpresas() {
@@ -285,7 +318,7 @@ public class UISVP {
         datos_id[0] = id_aux;
 
         for (int z = 1; z <= conductores; z++) {
-            System.out.print("\n:: Id conductor ::");
+            System.out.println("\n:: Id conductor ::");
             do {
                 id_con = SelectorRut_Pasaporte();
             } while (id_con == null);
