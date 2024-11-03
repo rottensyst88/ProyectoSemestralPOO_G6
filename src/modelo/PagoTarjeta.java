@@ -7,6 +7,7 @@ public class PagoTarjeta extends Pago {
         super(monto);
         this.nroTarjeta = nroTarjeta;
     }
+
     public long getNroTarjeta() {
         return nroTarjeta;
     }

@@ -119,6 +119,22 @@ public class SistemaVentaPasajes {
         if (cliente.isEmpty()) {
             throw new SistemaVentaPasajesException("No existe un cliente con ID integrado!");
         }
+
+        boolean centinela = false;
+
+        for (Viaje viaje : viajes){
+            if (viaje.existeDisponibilidad(nroPasajes) && viaje.getFecha().equals(fecha)) {
+                if (viaje.getTerminalLlegada().getDireccion().getComuna().equals(comLlegada)) {
+                    if(viaje.getTerminalSAlida().getDireccion().getComuna().equals(comSalida)){
+                        centinela = true;
+                    }
+                }
+            }
+        }
+        if(!centinela){
+            throw new SistemaVentaPasajesException("No existen viajes disponibles en la fecha y con terminales en las comunas de salida y llegada indicados");
+        }
+
         Venta nuevaVenta = new Venta(idDocumento, tipo, fecha, cliente.get());
         ventas.add(nuevaVenta);
     }

@@ -36,6 +36,8 @@ public class ControladorEmpresas {
         }
         Empresa nuevaEmpresa = new Empresa(rut, nombre, url);
         empresas.add(nuevaEmpresa);
+
+
     }
 
     public void createBus(String pat, String marca, String modelo, int nroAsientos, Rut rutEmp) throws SistemaVentaPasajesException {

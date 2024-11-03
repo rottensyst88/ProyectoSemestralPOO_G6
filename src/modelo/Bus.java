@@ -7,20 +7,18 @@ public class Bus {
     private String marca;
     private String modelo;
     private int nroAsientos;
+
     private Empresa emp;
-
-
     private ArrayList<Viaje> viajes = new ArrayList<>();
 
     public Bus(String patente, int nroAsientos, Empresa emp) {
         this.patente = patente;
         this.nroAsientos = nroAsientos;
         this.emp = emp;
-        //Consistencia asociacion
         emp.addBus(this);
     }
 
-    public Bus(String patente, int nroAsientos){
+    public Bus(String patente, int nroAsientos) {
         this.patente = patente;
         this.nroAsientos = nroAsientos;
     }
@@ -54,7 +52,7 @@ public class Bus {
     }
 
     public void addViaje(Viaje viaje) {
-        if(!viajes.contains(viaje)) {
+        if (!viajes.contains(viaje)) {
             viajes.add(viaje);
         }
     }

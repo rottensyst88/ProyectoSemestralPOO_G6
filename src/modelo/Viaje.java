@@ -39,8 +39,6 @@ public class Viaje {
         this.tripulantes = new Tripulante[3];
         this.terminalLlegada = sale;
         this.terminalSalida = llega;
-
-
     }
 
     public LocalDate getFecha() {

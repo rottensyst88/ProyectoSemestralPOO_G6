@@ -1,12 +1,12 @@
 package modelo;
 
 import utilidades.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Auxiliar extends Tripulante {
     private List<Viaje> viajes = new ArrayList<>();
-    //todo FALTA IMPLEMENTAR ASOCIACION CON VIAJE
 
     public Auxiliar(IdPersona id, Nombre nom, Direccion dir) {
         super(id, nom, dir);
@@ -17,7 +17,6 @@ public class Auxiliar extends Tripulante {
         if (!viajes.contains(viaje)) {
             viajes.add(viaje);
         }
-
     }
 
     @Override

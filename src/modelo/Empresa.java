@@ -90,7 +90,7 @@ public class Empresa {
         return tripulantes;
     }
 
-    //FALTA GET VENTAS;
+    //todo FALTA GET VENTAS;
 
 
 }

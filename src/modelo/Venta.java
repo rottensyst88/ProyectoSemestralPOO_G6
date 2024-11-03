@@ -1,4 +1,5 @@
 package modelo;
+
 import utilidades.*;
 
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ public class Venta {
         return idDocumento;
     }
 
-    public TipoDocumento getTipo(){
+    public TipoDocumento getTipo() {
         return tipo;
     }
 
@@ -35,7 +36,7 @@ public class Venta {
         return fecha;
     }
 
-    public int getMonto(){
+    public int getMonto() {
         int valor_monto = 0;
         for (Pasaje pasaje : pasajes) {
             valor_monto += pasaje.getViaje().getPrecio();
@@ -47,32 +48,32 @@ public class Venta {
         return cliente;
     }
 
-    public void createPasaje(int asiento, Viaje viaje, Pasajero pasajero){
+    public void createPasaje(int asiento, Viaje viaje, Pasajero pasajero) {
         pasajes.add(new Pasaje(asiento, viaje, pasajero, this));
     }
 
-    public Pasaje[] getPasajes(){
+    public Pasaje[] getPasajes() {
         return pasajes.toArray(new Pasaje[0]);
     }
 
-    public int getMontoPagado(){
+    public int getMontoPagado() {
         return pago.getMonto();
     }
 
-    public boolean pagaMonto(){
+    public boolean pagaMonto() {
         return true;
     }
 
-    public boolean pagaMonto(long nroTarjeta){
+    public boolean pagaMonto(long nroTarjeta) {
         return true;
     }
 
     @Override
-    public boolean equals(Object otro){
+    public boolean equals(Object otro) {
         return (this == otro);
     }
 
-    public String getTipoPago(){
+    public String getTipoPago() {
         return "ERROR! OPERACIÓN NO IMPLEMENTADA";
     }
 }
