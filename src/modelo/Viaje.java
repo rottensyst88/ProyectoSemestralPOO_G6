@@ -4,7 +4,7 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
+@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal", "GrazieInspection"})
 public class Viaje {
 
     private LocalDate fecha;
@@ -22,7 +22,7 @@ public class Viaje {
     //los conductores serán 1 o 2
     private ArrayList<Conductor> conductores = new ArrayList<>();
     private Auxiliar auxiliar;
-    private Tripulante tripulantes[];
+    private Tripulante[] tripulantes;
     private Terminal terminalLlegada;
     private Terminal terminalSalida;
 
@@ -32,7 +32,7 @@ public class Viaje {
         this.precio = precio;
         this.bus = bus;
         this.bus.addViaje(this);
-        this.auxiliar = aux;
+        auxiliar = aux;
         auxiliar.addViaje(this);
         this.conductores.add(cond);
         this.duracion = dur;
@@ -61,7 +61,7 @@ public class Viaje {
         return bus;
     }
 
-    /* aparentemente to do este metodo cambió respecto al avance pasado
+    /* aparentemente, to do este metodo cambió respecto al avance pasado
     public String[][] getAsientos() {
         String[][] asientos = new String[bus.getNroAsientos()][2];
         for (int z = 0; z < bus.getNroAsientos(); z++) {
@@ -117,23 +117,22 @@ public class Viaje {
     }
 
     private int duracionMinutos;
+
     public LocalDateTime getFechaHoraTermino() {
         LocalDateTime inicio = LocalDateTime.of(fecha, hora);
         Duration duracion = Duration.ofMinutes(duracionMinutos);
-        LocalDateTime termino = inicio.plus(duracion);
-        return termino;
-
+        return inicio.plus(duracion);
     }
 
     //?????
     public Venta[] getVentas() {
         ArrayList<Venta> ventas = new ArrayList<>();
 
-        if(!pasajes.isEmpty()){
-            for(Pasaje pasaje : pasajes){
+        if (!pasajes.isEmpty()) {
+            for (Pasaje pasaje : pasajes) {
                 ventas.add(pasaje.getVenta());
             }
-            return ventas.toArray(new Venta[ventas.size()]);
+            return ventas.toArray(new Venta[0]);
         }
         return new Venta[0];
     }
@@ -143,13 +142,15 @@ public class Viaje {
         conductor.addViaje(this);
     }
 
-    public Terminal getTerminalLlegada(){
+    public Terminal getTerminalLlegada() {
         return terminalLlegada;
     }
+
     public Terminal getTerminalSAlida() {
         return terminalSalida;
 
     }
+
     public Tripulante[] getTripulantes() {
         return tripulantes;
     }

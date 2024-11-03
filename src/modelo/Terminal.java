@@ -1,7 +1,6 @@
 package modelo;
 import utilidades.Direccion;
 import java.util.*;
-import java.util.List;
 
 public class Terminal {
     String nombre;

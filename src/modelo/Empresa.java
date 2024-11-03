@@ -43,7 +43,7 @@ public class Empresa {
     }
 
     public Bus[] getBuses(){
-        return buses.toArray(new Bus[buses.size()]);
+        return buses.toArray(new Bus[0]);
     }
 
     public boolean addConductor(IdPersona id, Nombre nom, Direccion dir){

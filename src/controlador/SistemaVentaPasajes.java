@@ -68,36 +68,36 @@ public class SistemaVentaPasajes {
 
         if (ControladorEmpresas.getInstance().findAuxiliar(idTripulantes[0], bus.get().getEmp().getRut()).isEmpty()) {
             throw new SistemaVentaPasajesException("No existe auxiliar con el ID indicado en la empresa con el RUT indicado");
-        }else{
+        } else {
             aux = ControladorEmpresas.getInstance().findAuxiliar(idTripulantes[0], bus.get().getEmp().getRut()).get();
         }
 
-        if(idTripulantes.length == 2 ){
-            if (ControladorEmpresas.getInstance().findConductor(idTripulantes[1], bus.get().getEmp().getRut()).isPresent()){
+        if (idTripulantes.length == 2) {
+            if (ControladorEmpresas.getInstance().findConductor(idTripulantes[1], bus.get().getEmp().getRut()).isPresent()) {
                 con = ControladorEmpresas.getInstance().findConductor(idTripulantes[1], bus.get().getEmp().getRut()).get();
-            }else{
+            } else {
                 throw new SistemaVentaPasajesException("No existe conductor con el ID indicado en la empresa con el RUT indicado");
             }
         }
 
-        if(ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[0]).isEmpty()){
+        if (ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[0]).isEmpty()) {
             throw new SistemaVentaPasajesException("No existe terminal de salida en la comuna indicada");
         }
         Terminal tSalida = ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[0]).get();
 
-        if(ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[1]).isEmpty()){
+        if (ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[1]).isEmpty()) {
             throw new SistemaVentaPasajesException("No existe terminal de llegada en la comuna indicada");
         }
         Terminal tEntrada = ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[1]).get();
-        
 
-        Viaje viaje = new Viaje(fecha, hora, precio, duracion,bus.get(),aux, con, tSalida, tEntrada);
 
-        if (idTripulantes.length == 3){
-            if(ControladorEmpresas.getInstance().findConductor(idTripulantes[2], bus.get().getEmp().getRut()).isPresent()){
+        Viaje viaje = new Viaje(fecha, hora, precio, duracion, bus.get(), aux, con, tSalida, tEntrada);
+
+        if (idTripulantes.length == 3) {
+            if (ControladorEmpresas.getInstance().findConductor(idTripulantes[2], bus.get().getEmp().getRut()).isPresent()) {
                 con = ControladorEmpresas.getInstance().findConductor(idTripulantes[2], bus.get().getEmp().getRut()).get();
                 viaje.addConductor(con);
-            }else{
+            } else {
                 throw new SistemaVentaPasajesException("No existe conductor con el ID indicado en la empresa con el RUT indicado");
             }
         }
@@ -111,6 +111,7 @@ public class SistemaVentaPasajes {
 
     public void iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, String comSalida, String comLlegada, IdPersona idCliente, int nroPasajes)
             throws SistemaVentaPasajesException {
+
         Optional<Venta> venta = findVenta(idDocumento, tipo);
         if (venta.isPresent()) {
             throw new SistemaVentaPasajesException("Ya existe venta con ID y Tipo de Doc. indicado");
@@ -122,16 +123,16 @@ public class SistemaVentaPasajes {
 
         boolean centinela = false;
 
-        for (Viaje viaje : viajes){
+        for (Viaje viaje : viajes) {
             if (viaje.getNroAsientosDisponibles() >= nroPasajes && viaje.getFecha().equals(fecha)) {
                 if (viaje.getTerminalLlegada().getDireccion().getComuna().equals(comLlegada)) {
-                    if(viaje.getTerminalSAlida().getDireccion().getComuna().equals(comSalida)){
+                    if (viaje.getTerminalSAlida().getDireccion().getComuna().equals(comSalida)) {
                         centinela = true;
                     }
                 }
             }
         }
-        if(!centinela){
+        if (!centinela) {
             throw new SistemaVentaPasajesException("No existen viajes disponibles en la fecha y con terminales en las comunas de salida y llegada indicados");
         }
 
@@ -139,30 +140,28 @@ public class SistemaVentaPasajes {
         ventas.add(nuevaVenta);
     }
 
-    public String[][] getHorariosDisponibles(LocalDate fecha) {
+    public String[][] getHorariosDisponibles(LocalDate fechaViaje, String comunaSalida, String comunaLlegada, int nroPasajes) {
         ArrayList<Viaje> viajesFecha = new ArrayList<>();
 
-        //aquí busco si es que hay algún viaje con esa fecha en la lista de viajes
-        //si es que hay lo agrego a un nuevo arraylist que cree para guardarlos ahi
         for (Viaje viaje : viajes) {
-            if (viaje.getFecha().equals(fecha)) {
-                viajesFecha.add(viaje);
+            if (viaje.getFecha().equals(fechaViaje)) {
+                if (viaje.getTerminalLlegada().getDireccion().getComuna().equals(comunaLlegada) && viaje.getTerminalSAlida().getDireccion().getComuna().equals(comunaSalida)) {
+                    if (viaje.getNroAsientosDisponibles() >= nroPasajes) {
+                        viajesFecha.add(viaje);
+                    }
+                }
             }
         }
 
-        // si el arraylist esta vacío se retorna un arreglo vacio, segun las instrucciones
         if (viajesFecha.isEmpty()) {
             return new String[0][0];
         }
 
         String[][] horariosDisponibles = new String[viajesFecha.size()][4];
 
-        //relleno el arreglo bidimensional mediante un ciclo for
-        //accediendo  a los datos que me piden mediante viajesFecha.get(i)
         for (int i = 0; i < viajesFecha.size(); i++) {
             Viaje viaje = viajesFecha.get(i);
             Bus bus = viaje.getBus();
-
 
             String horaComoString = viaje.getHora().toString();
 
@@ -175,10 +174,7 @@ public class SistemaVentaPasajes {
         return horariosDisponibles;
     }
 
-    public String[] listAsientosDeViaje(LocalDate fecha, LocalTime hora,
-                                        String patBus) {
-
-        //ocupo toString(), para poder utilizar el metodo findViaje el cual solo recibe string
+    public String[] listAsientosDeViaje(LocalDate fecha, LocalTime hora, String patBus) {
 
         String horaComoString = hora.toString();
         String fechaComoString = fecha.toString();
@@ -193,6 +189,7 @@ public class SistemaVentaPasajes {
 
     public Optional<String> getNombrePasajero(IdPersona idPasajero) {
         Optional<Pasajero> pasajero = findPasajero(idPasajero);
+
         if (pasajero.isPresent()) {
             return Optional.of(pasajero.get().getNomContacto().getNombre());
         } else {
@@ -217,7 +214,6 @@ public class SistemaVentaPasajes {
         Optional<Viaje> viaje = findViaje(fechaComoString, horaComoString, patBus);
         Optional<Venta> venta = findVenta(idDoc, tipo);
         Optional<Pasajero> pasajero = findPasajero(idPasajero);
-        // Bus bus = findBus(patBus); //TODO arreglar!
 
         if (venta.isEmpty()) {
             throw new SistemaVentaPasajesException("No existe venta con el ID y Tipo de Doc. indicados");
@@ -230,24 +226,35 @@ public class SistemaVentaPasajes {
             throw new SistemaVentaPasajesException("No existe viaje con la fecha, hora y patente de bus indicados");
         }
 
-        /*
-        if (bus == null) {
-            throw new SistemaVentaPasajesException("")
-        }*/
-
         venta.get().createPasaje(asiento, viaje.get(), pasajero.get());
     }
 
-    public void pagaVenta(String idDocumento, TipoDocumento tipo) {
+    public void pagaVenta(String idDocumento, TipoDocumento tipo) throws SistemaVentaPasajesException {
+        Optional<Venta> venta = findVenta(idDocumento, tipo);
 
+        if (venta.isEmpty()) {
+            throw new SistemaVentaPasajesException("No existe venta con el ID y Tipo de Doc. indicados");
+        }
+
+        if (venta.get().getMontoPagado() != 0) {
+            throw new SistemaVentaPasajesException("La venta ya fue pagada");
+        }
+        venta.get().pagaMonto();
     }
 
-    public void pagaVenta(String idDocumento, TipoDocumento tipo, long nroTarjeta) {
+    public void pagaVenta(String idDocumento, TipoDocumento tipo, long nroTarjeta) throws SistemaVentaPasajesException {
+        Optional<Venta> venta = findVenta(idDocumento, tipo);
 
+        if (venta.isEmpty()) {
+            throw new SistemaVentaPasajesException("No existe venta con el ID y Tipo de Doc. indicados");
+        }
+        if (venta.get().getMontoPagado() != 0) {
+            throw new SistemaVentaPasajesException("La venta ya fue pagada");
+        }
+        venta.get().pagaMonto(nroTarjeta);
     }
 
     public String[][] listVentas() {
-        //Dado que el metodo devuelve un ARREGLO BIDIMENSIONAL, el mensaje apropiado en caso de existir ventas se debe desplegar desde el main
         String[][] arregloVentas = new String[ventas.size()][7];
 
         if (arregloVentas.length == 0) {
@@ -303,7 +310,7 @@ public class SistemaVentaPasajes {
 
         for (int i = 0; i < pasajeros.size(); i++) {
             Pasajero pasajero = pasajeros.get(i);
-            arregloPasajeros[i][0] = "nulo"; //TODO dado el problema con relacionar el número del asiento con los demás datos del pasajero, esa parte estará omitida por el momntoBus bus = findBus(patBus);
+            arregloPasajeros[i][0] = //"nulo"; //TODO dado el problema con relacionar el número del asiento con los demás datos del pasajero, esa parte estará omitida por el momntoBus bus = findBus(patBus);
             arregloPasajeros[i][1] = pasajero.getIdPersona().toString();
             arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
             arregloPasajeros[i][3] = pasajero.getNomContacto().toString();

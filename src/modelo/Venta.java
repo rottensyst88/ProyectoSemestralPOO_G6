@@ -57,23 +57,42 @@ public class Venta {
     }
 
     public int getMontoPagado() {
+        if(pago == null) {
+            return 0;
+        }
         return pago.getMonto();
     }
 
     public boolean pagaMonto() {
-        return true;
+        if(pago == null) {
+            pago = new PagoEfectivo(getMonto());
+            return true;
+        }
+        return false;
     }
 
     public boolean pagaMonto(long nroTarjeta) {
-        return true;
+        if(pago == null) {
+            pago = new PagoTarjeta(nroTarjeta, getMonto());
+            return true;
+        }
+        return false;
     }
 
-    @Override
     public boolean equals(Object otro) {
-        return (this == otro);
+        if(otro instanceof Venta){
+            return (this == otro);
+        }
+        return false;
     }
 
     public String getTipoPago() {
-        return "ERROR! OPERACIÓN NO IMPLEMENTADA";
+        if (pago instanceof PagoEfectivo) {
+            return "Efectivo";
+        }else if (pago instanceof PagoTarjeta) {
+            return "Tarjeta";
+        }else{
+            return null;
+        }
     }
 }

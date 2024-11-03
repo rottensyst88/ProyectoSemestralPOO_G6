@@ -386,31 +386,14 @@ public class UISVP {
 
         try {
             SistemaVentaPasajes.getInstancia().iniciaVenta(idDocumento, tipo, fec, origen, destino, id, cantidadPasajes);
-        } catch (Exception e) {
+        } catch (SistemaVentaPasajesException e) {
             System.out.println(e.getMessage());
             System.out.println(":::: Error al iniciar venta!");
+            return;
         }
 
-        String[][] horariosDisponibles = SistemaVentaPasajes.getInstancia().getHorariosDisponibles(fec);
+        String[][] horariosDisponibles = SistemaVentaPasajes.getInstancia().getHorariosDisponibles(fec, origen, destino,cantidadPasajes);
         System.out.println("::::Listado de horarios disponibles");
-
-        /*
-        do {
-            System.out.println("::::Listado de horarios disponibles");
-            horariosDisponibles = SistemaVentaPasajes.getInstancia().getHorariosDisponibles(fec);
-
-            if (horariosDisponibles.length == 0) {
-                System.out.println(":::: Error! No hay horarios disponibles para la fecha seleccionada!");
-                System.out.print(":::: Desea seleccionar otra fecha? [1] Si [2] No : ");
-                selector = sc.nextInt();
-            }
-            if (selector != 1) {
-                return;
-            }
-
-        } while (horariosDisponibles.length == 0);
-         */
-
         int contador = 0;
 
         System.out.print("    *------------*------------*------------*------------*\n");
@@ -539,7 +522,7 @@ public class UISVP {
             }
         }
 
-        System.out.println(":::: Monto total de la venta : " + SistemaVentaPasajes.getInstancia().getMontoVenta(idDocumento, tipo));
+        System.out.println(":::: Monto total de la venta : " + SistemaVentaPasajes.getInstancia().getMontoVenta(idDocumento, tipo).get());
 
         boolean verifPago = false;
         do {
@@ -547,20 +530,26 @@ public class UISVP {
             System.out.print("Efectivo[1] o Tarjeta[2] : ");
             int opcion = sc.nextInt();
 
-            switch (opcion) {
-                case 1:
-                    PagoEfectivo pagoE = new PagoEfectivo(SistemaVentaPasajes.getInstancia().getMontoVenta(idDocumento, tipo).get());
-                    verifPago = true;
-                    break;
-                case 2:
-                    System.out.print("Ingrese NRO tarjeta : ");
-                    long nTarjeta = sc.nextLong();
-                    PagoTarjeta pagoT = new PagoTarjeta(nTarjeta, SistemaVentaPasajes.getInstancia().getMontoVenta(idDocumento, tipo).get());
-                    verifPago = true;
-                    break;
-                default:
-                    System.out.println("Error! Opcion no valida!");
+            try{
+                switch (opcion) {
+                    case 1:
+                        SistemaVentaPasajes.getInstancia().pagaVenta(idDocumento, tipo);
+                        verifPago = true;
+                        break;
+                    case 2:
+                        System.out.print("Ingrese NRO tarjeta : ");
+                        long nTarjeta = sc.nextLong();
+                        SistemaVentaPasajes.getInstancia().pagaVenta(idDocumento, tipo, nTarjeta);
+                        verifPago = true;
+                        break;
+                    default:
+                        System.out.println("Error! Opcion no valida!");
+                }
+            } catch (SistemaVentaPasajesException e){
+                System.out.println(e.getMessage());
+                System.out.println(":::: Error! ::::");
             }
+
         } while (!verifPago);
 
         System.out.println("\n:::: Venta realizada exitosamente!");
