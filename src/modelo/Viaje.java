@@ -132,7 +132,15 @@ public class Viaje {
 
     //?????
     public Venta[] getVentas() {
-        return ventas.toArray(new Venta[0]);
+        ArrayList<Venta> ventas = new ArrayList<>();
+
+        if(!pasajes.isEmpty()){
+            for(Pasaje pasaje : pasajes){
+                ventas.add(pasaje.getVenta());
+            }
+            return ventas.toArray(new Venta[ventas.size()]);
+        }
+        return new Venta[0];
     }
 
     public void addConductor(Conductor conductor) {
