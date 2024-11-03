@@ -27,30 +27,30 @@ public class UISVP {
         aux_test.setNombre("Ery Flores");
         aux_test.setApellidoPaterno("Valle");
         aux_test.setApellidoMaterno("Lindo");
-        ControladorEmpresas.getInstance().hireAuxiliarForEmpresa(Rut.of("77.777.777-7"),Rut.of("00.000.000-0"),
-                aux_test,new Direccion("Santa Rosa",123,"Coihueco"));
+        ControladorEmpresas.getInstance().hireAuxiliarForEmpresa(Rut.of("77.777.777-7"), Rut.of("00.000.000-0"),
+                aux_test, new Direccion("Santa Rosa", 123, "Coihueco"));
         Nombre con_test = new Nombre();
         con_test.setTratamiento(Tratamiento.SR);
         con_test.setNombre("Ariel Alonso");
         con_test.setApellidoPaterno("Bob");
         con_test.setApellidoMaterno("Bar");
-        ControladorEmpresas.getInstance().hireConductorForEmpresa(Rut.of("77.777.777-7"),Rut.of("00.000.000-1"),con_test,
-                new Direccion("Santo Domingo",456,"Talquipen"));
-        ControladorEmpresas.getInstance().createTerminal("Santo Milagro", new Direccion("Placido",1,"Talquipen"));
-        ControladorEmpresas.getInstance().createTerminal("Pecado Milenio", new Direccion("Milenio",2,"Nuble"));
-        ControladorEmpresas.getInstance().createBus("AABB12","VOLVO","GEN",40,Rut.of("77.777.777-7"));
+        ControladorEmpresas.getInstance().hireConductorForEmpresa(Rut.of("77.777.777-7"), Rut.of("00.000.000-1"), con_test,
+                new Direccion("Santo Domingo", 456, "Talquipen"));
+        ControladorEmpresas.getInstance().createTerminal("Santo Milagro", new Direccion("Placido", 1, "Talquipen"));
+        ControladorEmpresas.getInstance().createTerminal("Pecado Milenio", new Direccion("Milenio", 2, "Nuble"));
+        ControladorEmpresas.getInstance().createBus("AABB12", "VOLVO", "GEN", 40, Rut.of("77.777.777-7"));
         Nombre cli_test = new Nombre();
         cli_test.setTratamiento(Tratamiento.SR);
         cli_test.setNombre("Juan Perez");
         cli_test.setApellidoPaterno("Boole");
         cli_test.setApellidoMaterno("Baron");
-        SistemaVentaPasajes.getInstancia().createCliente(Rut.of("11.111.111-1"),cli_test,"888-888","juan@aol.mk");
+        SistemaVentaPasajes.getInstancia().createCliente(Rut.of("11.111.111-1"), cli_test, "888-888", "juan@aol.mk");
         IdPersona[] trip_test = new IdPersona[2];
         trip_test[0] = Rut.of("00.000.000-0");
         trip_test[1] = Rut.of("00.000.000-1");
-        String[] nCom_test = {"Talquipen","Nuble"};
-        SistemaVentaPasajes.getInstancia().createViaje(LocalDate.of(1212,12,12),LocalTime.of(12,12),5000,60,
-                "AABB12",trip_test,nCom_test);
+        String[] nCom_test = {"Talquipen", "Nuble"};
+        SistemaVentaPasajes.getInstancia().createViaje(LocalDate.of(1212, 12, 12), LocalTime.of(12, 12), 5000, 60,
+                "AABB12", trip_test, nCom_test);
 
 
         boolean verificador = true;
@@ -116,7 +116,7 @@ public class UISVP {
         System.out.print("url : ");
         String url = sc.next();
 
-        try{
+        try {
             ControladorEmpresas.getInstance().createEmpresa(Rut.of(rut_st), nombre, url);
             System.out.println("...:::: Empresa guardada exitosamente ::::....");
         } catch (SistemaVentaPasajesException e) {
@@ -137,7 +137,6 @@ public class UISVP {
         System.out.print("R.U.T : ");
         String rut_st = sc.next();
         Rut rut = Rut.of(rut_st);
-
 
 
         System.out.println("\n:::: Datos tripulante");
@@ -172,7 +171,7 @@ public class UISVP {
 
         Direccion direccion = new Direccion(calle, numero, comuna);
 
-        try{
+        try {
             if (opcion == 1) {
                 ControladorEmpresas.getInstance().hireAuxiliarForEmpresa(rut, id, tripulante, direccion);
                 System.out.println("...:::: Auxiliar contratado exitosamente ::::....");
@@ -204,7 +203,7 @@ public class UISVP {
 
         Direccion direccion = new Direccion(calle, numero, comuna);
 
-        try{
+        try {
             ControladorEmpresas.getInstance().createTerminal(nombre, direccion);
             System.out.println("...:::: Terminal guardado exitosamente ::::....");
         } catch (SistemaVentaPasajesException e) {
@@ -392,7 +391,7 @@ public class UISVP {
             return;
         }
 
-        String[][] horariosDisponibles = SistemaVentaPasajes.getInstancia().getHorariosDisponibles(fec, origen, destino,cantidadPasajes);
+        String[][] horariosDisponibles = SistemaVentaPasajes.getInstancia().getHorariosDisponibles(fec, origen, destino, cantidadPasajes);
         System.out.println("::::Listado de horarios disponibles");
         int contador = 0;
 
@@ -530,7 +529,7 @@ public class UISVP {
             System.out.print("Efectivo[1] o Tarjeta[2] : ");
             int opcion = sc.nextInt();
 
-            try{
+            try {
                 switch (opcion) {
                     case 1:
                         SistemaVentaPasajes.getInstancia().pagaVenta(idDocumento, tipo);
@@ -545,7 +544,7 @@ public class UISVP {
                     default:
                         System.out.println("Error! Opcion no valida!");
                 }
-            } catch (SistemaVentaPasajesException e){
+            } catch (SistemaVentaPasajesException e) {
                 System.out.println(e.getMessage());
                 System.out.println(":::: Error! ::::");
             }
@@ -591,16 +590,16 @@ public class UISVP {
             return;
         }
 
-        System.out.println("*------------------*------------------*------------------*------------------*------------------*");
-        System.out.printf("| %16s | %16s | %16s | %16s | %16s |\n", "FECHA", "HORA", "PRECIO", "DISPONIBLES", "PATENTE");
+        System.out.println("*------------------*------------------*------------------*------------------*------------------*------------------*------------------*------------------*");
+        System.out.printf("| %16s | %16s | %16s | %16s | %16s | %16s | %16s | %16s |\n", "FECHA", "HORA SALE", "HORA LLEGA", "PRECIO", "ASIENTOS DISP.", "PATENTE", "ORIGEN", "DESTINO");
         for (String[] pasajero : pasajeros_arreglo) {
-            System.out.println("*------------------+------------------+------------------+------------------+------------------*");
-            for (int x = 0; x < 5; x++) {
+            System.out.println("*------------------+------------------+------------------+------------------+------------------*------------------*------------------*------------------*");
+            for (int x = 0; x < 8; x++) {
                 System.out.printf("| %16s ", pasajero[x]);
             }
             System.out.println("|");
         }
-        System.out.println("*------------------*------------------*------------------*------------------*------------------*\n\n");
+        System.out.println("*------------------*------------------*------------------*------------------*------------------*------------------*------------------*------------------*\n\n");
     }
 
     private void listPasajerosViaje() {

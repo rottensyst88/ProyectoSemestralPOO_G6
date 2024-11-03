@@ -283,7 +283,7 @@ public class SistemaVentaPasajes {
     }
 
     public String[][] listViajes() {
-        String[][] arregloViajes = new String[viajes.size()][5];
+        String[][] arregloViajes = new String[viajes.size()][8];
 
         if (viajes.isEmpty()) {
             return new String[0][0];
@@ -293,9 +293,12 @@ public class SistemaVentaPasajes {
             Viaje viaje = viajes.get(i);
             arregloViajes[i][0] = fechaFormateada.format(viaje.getFecha());
             arregloViajes[i][1] = horaFormateada.format(viaje.getHora());
-            arregloViajes[i][2] = String.valueOf(viaje.getPrecio());
-            arregloViajes[i][3] = String.valueOf(viaje.getNroAsientosDisponibles());
-            arregloViajes[i][4] = viaje.getBus().getPatente();
+            arregloViajes[i][2] = horaFormateada.format(viaje.getFechaHoraTermino().toLocalTime());
+            arregloViajes[i][3] = String.valueOf(viaje.getPrecio());
+            arregloViajes[i][4] = String.valueOf(viaje.getNroAsientosDisponibles());
+            arregloViajes[i][5] = viaje.getBus().getPatente();
+            arregloViajes[i][6] = viaje.getTerminalSAlida().getDireccion().getComuna().toUpperCase();
+            arregloViajes[i][7] = viaje.getTerminalLlegada().getDireccion().getComuna().toUpperCase();
         }
 
         return arregloViajes;
