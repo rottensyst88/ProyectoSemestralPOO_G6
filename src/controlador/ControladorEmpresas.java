@@ -126,8 +126,6 @@ public class ControladorEmpresas {
 
         if (terminalNombre.isEmpty()) {
             throw new SistemaVentaPasajesException("No existe terminal con el nombre indicado");
-        } else{
-
         }
 
         Terminal t = terminalNombre.get();
@@ -146,7 +144,6 @@ public class ControladorEmpresas {
                 viajesFiltrados.add(datosViaje);
             }
         }
-
 
         for (Viaje viaje : t.getSalidas()) {
             if (viaje.getFecha().equals(fecha)) {

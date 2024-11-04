@@ -37,8 +37,11 @@ public class Viaje {
         this.conductores.add(cond);
         this.duracion = dur;
         this.tripulantes = new Tripulante[3];
+
         this.terminalLlegada = sale;
+        terminalLlegada.addLlegada(this); // ESTO ES ASOCIACION!
         this.terminalSalida = llega;
+        terminalSalida.addSalida(this);
     }
 
     public LocalDate getFecha() {
