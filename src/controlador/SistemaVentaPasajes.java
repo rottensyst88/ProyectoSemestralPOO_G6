@@ -318,12 +318,6 @@ public class SistemaVentaPasajes {
             return new String[0][0];
         }
 
-        for (Venta venta : ventas){
-            for(Pasaje pasaje : venta.getPasajes()){
-
-            }
-        }
-
         for (int i = 0; i < pasajeros.size(); i++) {
             Pasajero pasajero = pasajeros.get(i);
 
