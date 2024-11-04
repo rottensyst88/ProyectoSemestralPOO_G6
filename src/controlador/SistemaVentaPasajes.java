@@ -315,12 +315,27 @@ public class SistemaVentaPasajes {
         String[][] arregloPasajeros = new String[pasajeros.size()][5];
 
         if (arregloPasajeros.length == 0) {
+            return new String[0][0];
+        }
 
+        for (Venta venta : ventas){
+            for(Pasaje pasaje : venta.getPasajes()){
+
+            }
         }
 
         for (int i = 0; i < pasajeros.size(); i++) {
             Pasajero pasajero = pasajeros.get(i);
-            arregloPasajeros[i][0] = //"nulo"; //TODO dado el problema con relacionar el número del asiento con los demás datos del pasajero, esa parte estará omitida por el momntoBus bus = findBus(patBus);
+
+            for (Venta venta : ventas){
+                for(Pasaje pasaje : venta.getPasajes()){
+                    if (pasaje.getPasajero().getIdPersona().equals(pasajero.getIdPersona())){
+                        arregloPasajeros[i][0] = String.valueOf(pasaje.getAsiento());
+                        break;
+                    }
+                }
+            }
+
             arregloPasajeros[i][1] = pasajero.getIdPersona().toString();
             arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
             arregloPasajeros[i][3] = pasajero.getNomContacto().toString();

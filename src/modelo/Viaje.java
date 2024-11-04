@@ -92,7 +92,8 @@ public class Viaje {
         pasajes.add(pasaje);
     }
 
-    public String[][] getListaPasajeros() {
+    public String[][]
+    getListaPasajeros() {
         String[][] listaPasajeros = new String[pasajes.size()][4];
 
         for (Pasaje pasajeros : pasajes) {

@@ -4,6 +4,7 @@ import modelo.*;
 import excepciones.*;
 import utilidades.*;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +37,6 @@ public class ControladorEmpresas {
         }
         Empresa nuevaEmpresa = new Empresa(rut, nombre, url);
         empresas.add(nuevaEmpresa);
-
-
     }
 
     public void createBus(String pat, String marca, String modelo, int nroAsientos, Rut rutEmp) throws SistemaVentaPasajesException {
@@ -104,11 +103,98 @@ public class ControladorEmpresas {
     }
 
     public String[][] listEmpresas() {
-        return null; //todo ARREGLAR!
+        String[][] out = new String[empresas.size()][6];
+
+        if (empresas.isEmpty()) {
+            return out;
+        }
+
+        for (int i = 0; i < empresas.size(); i++) {
+            Empresa empresa = empresas.get(i);
+            out[i][0] = empresa.getRut().toString();
+            out[i][1] = empresa.getNombre();
+            out[i][2] = empresa.getUrl();
+            out[i][3] = String.valueOf(empresa.getTripulantes().length); // Cantidad de tripulantes
+            out[i][4] = String.valueOf(empresa.getBuses().length);// Cantidad de buses
+            out[i][5] = String.valueOf(empresa.getVentas().length);
+        }
+        return out;
     }
 
-    public String[][] listLlegadasSalidasTerminal(String nombre, LocalDate fecha) {
-        return null; //todo ARREGLAR!
+    public String[][] listLlegadasSalidasTerminal(String nombre, LocalDate fecha) throws SistemaVentaPasajesException {
+
+        Optional<Terminal> terminalNombre = findTerminal(nombre);
+        if (terminalNombre.isEmpty()) {
+            throw new SistemaVentaPasajesException("No existe terminal con el nombre indicado");
+        }
+
+        Terminal t = terminalNombre.get();
+        //LocalDate fechaLocal = new java.sql.Date(fecha.getTime()).toLocalDate();
+        List<String[]> viajesFiltrados = new ArrayList<>();
+
+
+        //LLENO LA LISTA DE FILTRADOS CON LOS VIAJES QUE TENGAN LA MISMA FECHA
+        for (Viaje viaje : t.getLlegadas()) {
+            if (viaje.getFecha().equals(fecha)) {
+                String[] datosViaje = new String[5];
+                datosViaje[0] = "Llegada";
+                datosViaje[1] = viaje.getHora().toString();
+                datosViaje[2] = viaje.getBus().getPatente();
+                datosViaje[3] = viaje.getBus().getEmp().getNombre();
+                datosViaje[4] = String.valueOf(viaje.getListaPasajeros().length);
+
+                viajesFiltrados.add(datosViaje);
+            }
+        }
+
+
+        for (Viaje viaje : t.getSalidas()) {
+            if (viaje.getFecha().equals(fecha)) {
+                String[] datosViaje = new String[5];
+                datosViaje[0] = "Salida";
+                datosViaje[1] = viaje.getHora().toString();
+                datosViaje[2] = viaje.getBus().getPatente();
+                datosViaje[3] = viaje.getBus().getEmp().getNombre();
+                datosViaje[4] = String.valueOf(viaje.getListaPasajeros().length);
+
+                viajesFiltrados.add(datosViaje);
+            }
+        }
+
+        String[][] out = new String[viajesFiltrados.size()][5];
+
+        if (viajesFiltrados.isEmpty()) {
+            return out;
+        }
+
+        for (int i = 0; i < viajesFiltrados.size(); i++) {
+            out[i] = viajesFiltrados.get(i);
+        }
+
+        return out;
+    }
+
+    public String[][] listVentasEmpresa(Rut rut) throws SistemaVentaPasajesException {
+
+        Optional<Empresa> empresaExist = findEmpresa(rut);
+        if (empresaExist.isEmpty()) {
+            throw new SistemaVentaPasajesException("No existe empresa con el rut indicado");
+        }
+
+        Empresa e = empresaExist.get();
+
+        Venta[] ventas = e.getVentas(); // TODO Arreglar!
+        String[][] out = new String[ventas.length][4];
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        for (int i = 0; i < ventas.length; i++) {
+            Venta venta = ventas[i];
+            out[i][0] = sdf.format(venta.getFecha());
+            out[i][1] = venta.getTipo().toString();
+            out[i][2] = String.valueOf(venta.getMontoPagado());
+            out[i][3] = venta.getTipoPago();
+        }
+        return out;
     }
 
     protected Optional<Empresa> findEmpresa(Rut rut) {
@@ -148,12 +234,12 @@ public class ControladorEmpresas {
     }
 
     protected Optional<Conductor> findConductor(IdPersona id, Rut rutEmpresa) {
-        for(Bus bus : buses) {
-            if(bus.getEmp().getRut().equals(rutEmpresa)){
+        for (Bus bus : buses) {
+            if (bus.getEmp().getRut().equals(rutEmpresa)) {
                 Tripulante[] trip = bus.getEmp().getTripulantes();
                 for (Tripulante t : trip) {
-                    if (t instanceof Conductor){
-                        if(t.getIdPersona().equals(id)){
+                    if (t instanceof Conductor) {
+                        if (t.getIdPersona().equals(id)) {
                             return Optional.of((Conductor) t);
                         }
                     }
@@ -163,13 +249,14 @@ public class ControladorEmpresas {
         return Optional.empty();
     }
 
+    // todo ARREGLAR!
     protected Optional<Auxiliar> findAuxiliar(IdPersona id, Rut rutEmpresa) {
-        for(Bus bus : buses) {
-            if(bus.getEmp().getRut().equals(rutEmpresa)){
+        for (Bus bus : buses) {
+            if (bus.getEmp().getRut().equals(rutEmpresa)) {
                 Tripulante[] trip = bus.getEmp().getTripulantes();
                 for (Tripulante t : trip) {
-                    if (t instanceof Auxiliar){
-                        if(t.getIdPersona().equals(id)){
+                    if (t instanceof Auxiliar) {
+                        if (t.getIdPersona().equals(id)) {
                             return Optional.of((Auxiliar) t);
                         }
                     }

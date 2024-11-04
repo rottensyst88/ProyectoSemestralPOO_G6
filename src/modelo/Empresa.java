@@ -90,7 +90,18 @@ public class Empresa {
         return tripulantes;
     }
 
-    //todo FALTA GET VENTAS;
+    /* TODO TENER EN CUENTA QUE ESTO PUEDE FALLAR */
 
+    public Venta[] getVentas(){
+        ArrayList<Venta> ventas = new ArrayList<>();
 
+        for (Bus bus : buses){
+            for (Viaje viaje : bus.getViajes()){
+                for(Venta venta : viaje.getVentas()){
+                    ventas.add(venta);
+                }
+            }
+        }
+        return ventas.toArray(new Venta[0]);
+    }
 }
