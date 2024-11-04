@@ -552,6 +552,15 @@ public class UISVP {
         } while (!verifPago);
 
         System.out.println("\n:::: Venta realizada exitosamente!");
+        System.out.println(":::: Imprimiendo los pasajes\n\n");
+
+        String[] x = SistemaVentaPasajes.getInstancia().pasajesAlImprimir(idDocumento, tipo);
+
+        for (String s : x) {
+            System.out.println("-------------------- PASAJE ---------------------");
+            System.out.println(s);
+            System.out.println("------------------------------------------------\n\n");
+        }
     }
 
     private void pagaVentaPasajes() {

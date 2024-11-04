@@ -358,12 +358,10 @@ public class SistemaVentaPasajes {
         return Optional.empty();
     }
 
-    //TODO A PARTIR DE ABAJO, LOS METODOS DEBEN SER ELIMINADOS!!!
-    /*
     public String[] pasajesAlImprimir(String idDocumento, TipoDocumento tipo) {
 
-        Venta venta = findVenta(idDocumento, tipo);
-        Pasaje[] pasajes = venta.getPasajes();
+        Optional<Venta> venta = findVenta(idDocumento, tipo);
+        Pasaje[] pasajes = venta.get().getPasajes();
 
         if (pasajes == null) {
             return new String[0];
@@ -383,5 +381,5 @@ public class SistemaVentaPasajes {
                     "NOMBRE PASAJERO : " + pasaje.getPasajero().getNombreCompleto();
         }
         return pasajesString;
-    }*/
+    }
 }
