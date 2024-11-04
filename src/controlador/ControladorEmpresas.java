@@ -122,16 +122,16 @@ public class ControladorEmpresas {
     }
 
     public String[][] listLlegadasSalidasTerminal(String nombre, LocalDate fecha) throws SistemaVentaPasajesException {
-
         Optional<Terminal> terminalNombre = findTerminal(nombre);
+
         if (terminalNombre.isEmpty()) {
             throw new SistemaVentaPasajesException("No existe terminal con el nombre indicado");
+        } else{
+
         }
 
         Terminal t = terminalNombre.get();
-        //LocalDate fechaLocal = new java.sql.Date(fecha.getTime()).toLocalDate();
         List<String[]> viajesFiltrados = new ArrayList<>();
-
 
         //LLENO LA LISTA DE FILTRADOS CON LOS VIAJES QUE TENGAN LA MISMA FECHA
         for (Viaje viaje : t.getLlegadas()) {

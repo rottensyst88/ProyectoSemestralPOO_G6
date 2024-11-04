@@ -30,8 +30,6 @@ public class UISVP {
 
         do {
             System.out.println("""
-                    DEBUG VERSION - AVANCE2
-                    VERSION INCOMPLETA COMPILATION 3
                     ============================
                     ...::: Menú principal :::...
                     
@@ -624,13 +622,60 @@ public class UISVP {
         System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
     }
 
+    private void listVentasEmpresa() {
+
+    }
+
     private void listEmpresas() {
+        System.out.println("\n...:::: Listado de empresas::::...\n");
+        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*--------------------------*");
+        System.out.printf("| %10s | %20s | %30s | %20s | %15s | %15s |\n", "RUT EMPRESA", "NOMBRE", "URL", "NRO. TRIPULANTES", "NRO. BUSES", "NRO. VENTAS");
+
+
+        String[][] empresas_arreglo = ControladorEmpresas.getInstance().listEmpresas();
+
+
+        for (String[] empresa : empresas_arreglo) {
+            System.out.println("*----------+------------------+--------------------------+--------------------------+----------------------+--------------------------*");
+            System.out.printf(" %10s |", empresa[0]);
+            System.out.printf(" %20s |", empresa[1]);
+            System.out.printf(" %30s |", empresa[2]);
+            System.out.printf(" %20s |", empresa[3]);
+            System.out.printf(" %15s |", empresa[4]);
+            System.out.printf(" %15s |\n", empresa[5]);
+        }
+        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*--------------------------*\n\n");
     }
 
     private void listLlegadasSalidasTerminal() {
-    }
+        System.out.println("\n...:::: Listado de llegadas y salidas de un terminal::::...\n");
+        System.out.print("Nombre terminal : ");
+        String nombre_terminal = sc.next();
+        System.out.print("Fecha[dd/MM/yyyy] : ");
+        String fecha_terminal = sc.next();
+        LocalDate fecha = LocalDate.parse(fecha_terminal, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-    private void listVentasEmpresa() {
+        try {
+            String[][] llegadasSalidas = ControladorEmpresas.getInstance().listLlegadasSalidasTerminal(nombre_terminal, fecha);
+            System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*");
+            System.out.printf("| %8s | %16s | %24s | %24s | %20s |\n", "LLEGADA/SALIDA", "HORA", "PATENTE BUS", "NOMBRE EMPRESA", "NRO. PASAJEROS");
+
+
+            for (String[] a : llegadasSalidas) {
+
+                System.out.println("*----------+------------------+----------------------------+------------------------+----------------------*");
+                System.out.printf("| %8s |", a[0]);
+                System.out.printf(" %16s |", a[1]);
+                System.out.printf(" %-24s |", a[2]);
+                System.out.printf(" %-24s |", a[3]);
+                System.out.printf(" %-20s |\n", a[4]);
+            }
+            System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
+
+
+        } catch (SistemaVentaPasajesException e) {
+            System.out.println("*** Error: No existe un terminal con el nombre dado ***");
+        }
     }
 
     /*
