@@ -183,7 +183,7 @@ public class ControladorEmpresas {
 
         Empresa e = empresaExist.get();
 
-        Venta[] ventas = e.getVentas(); // TODO Arreglar!
+        Venta[] ventas = e.getVentas();
         String[][] out = new String[ventas.length][4];
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -249,7 +249,6 @@ public class ControladorEmpresas {
         return Optional.empty();
     }
 
-    // todo ARREGLAR!
     protected Optional<Auxiliar> findAuxiliar(IdPersona id, Rut rutEmpresa) {
         for (Bus bus : buses) {
             if (bus.getEmp().getRut().equals(rutEmpresa)) {

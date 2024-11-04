@@ -513,7 +513,7 @@ public class UISVP {
         }
     }
 
-    private void pagaVentaPasajes(String idDocumento, TipoDocumento tipo) { // todo ESTA CLASE POSEE ALGO RARO.... REVISAR
+    private void pagaVentaPasajes(String idDocumento, TipoDocumento tipo) {
         boolean verifPago = false;
 
         do {
@@ -578,7 +578,6 @@ public class UISVP {
             return;
         }
 
-        // todo ARREGLAR HORA DE SALIDA!
         System.out.println("*------------------*------------------*------------------*------------------*------------------*------------------*------------------*------------------*");
         System.out.printf("| %16s | %16s | %16s | %16s | %16s | %16s | %16s | %16s |\n", "FECHA", "HORA SALE", "HORA LLEGA", "PRECIO", "ASIENTOS DISP.", "PATENTE", "ORIGEN", "DESTINO");
         for (String[] pasajero : pasajeros_arreglo) {

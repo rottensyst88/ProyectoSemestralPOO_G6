@@ -117,12 +117,10 @@ public class Viaje {
         this.duracion = duracion;
     }
 
-    private int duracionMinutos;
-
     public LocalDateTime getFechaHoraTermino() {
         LocalDateTime inicio = LocalDateTime.of(fecha, hora);
-        Duration duracion = Duration.ofMinutes(duracionMinutos);
-        return inicio.plus(duracion);
+        Duration duracionM = Duration.ofMinutes(duracion);
+        return inicio.plus(duracionM);
     }
 
     //?????

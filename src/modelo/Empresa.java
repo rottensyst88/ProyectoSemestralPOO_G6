@@ -90,8 +90,6 @@ public class Empresa {
         return tripulantes;
     }
 
-    /* TODO TENER EN CUENTA QUE ESTO PUEDE FALLAR */
-
     public Venta[] getVentas(){
         ArrayList<Venta> ventas = new ArrayList<>();
 
