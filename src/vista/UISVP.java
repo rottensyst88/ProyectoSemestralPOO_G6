@@ -509,8 +509,11 @@ public class UISVP {
 
                 System.out.print("Telefono de contacto : ");
                 String telefonoContacto = sc.next();
-
-                SistemaVentaPasajes.getInstancia().createPasajero(id_pasajero, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto);
+                try {
+                    SistemaVentaPasajes.getInstancia().createPasajero(id_pasajero, nombrePasajero, telefono, nombreContactoPasajero, telefonoContacto);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             try {
                 SistemaVentaPasajes.getInstancia().vendePasaje(idDocumento, tipo, LocalTime.parse(datosCompra[1], DateTimeFormatter.ofPattern("HH:mm")), fec, datosCompra[0], Integer.parseInt(asiento), id_pasajero);
@@ -522,7 +525,7 @@ public class UISVP {
         }
 
         System.out.println(":::: Monto total de la venta : " + SistemaVentaPasajes.getInstancia().getMontoVenta(idDocumento, tipo).get());
-
+        /*
         boolean verifPago = false;
         do {
             System.out.println("\n:::: Pago de la venta");
@@ -551,7 +554,11 @@ public class UISVP {
 
         } while (!verifPago);
 
+         */
+        pagaVentaPasajes(idDocumento, tipo);
+
         System.out.println("\n:::: Venta realizada exitosamente!");
+
         System.out.println(":::: Imprimiendo los pasajes\n\n");
 
         String[] x = SistemaVentaPasajes.getInstancia().pasajesAlImprimir(idDocumento, tipo);
@@ -563,7 +570,35 @@ public class UISVP {
         }
     }
 
-    private void pagaVentaPasajes() {
+    private void pagaVentaPasajes(String idDocumento, TipoDocumento tipo) {
+        boolean verifPago = false;
+        do {
+            System.out.println("\n:::: Pago de la venta");
+            System.out.print("Efectivo[1] o Tarjeta[2] : ");
+            int opcion = sc.nextInt();
+
+            try {
+                switch (opcion) {
+                    case 1:
+                        SistemaVentaPasajes.getInstancia().pagaVenta(idDocumento, tipo);
+                        verifPago = true;
+                        break;
+                    case 2:
+                        System.out.print("Ingrese NRO tarjeta : ");
+                        long nTarjeta = sc.nextLong();
+                        SistemaVentaPasajes.getInstancia().pagaVenta(idDocumento, tipo, nTarjeta);
+                        verifPago = true;
+                        break;
+                    default:
+                        System.out.println("Error! Opcion no valida!");
+                }
+            } catch (SistemaVentaPasajesException e) {
+                System.out.println(e.getMessage());
+                System.out.println(":::: Error! ::::");
+            }
+
+        } while (!verifPago);
+
     }
 
     private void listVentas() {
