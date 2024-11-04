@@ -305,10 +305,17 @@ public class SistemaVentaPasajes {
     }
 
     public String[][] listPasajerosViaje(LocalDate fecha, LocalTime hora, String patBus) throws SistemaVentaPasajesException {
+
+        Optional<Viaje> viajes = findViaje(fecha.toString(),hora.toString(),patBus);
+
+        if(viajes.isEmpty()) {
+            throw new SistemaVentaPasajesException("No existe viaje con la fecha, hora y patente de bus indicadas");
+        }
+
         String[][] arregloPasajeros = new String[pasajeros.size()][5];
 
         if (arregloPasajeros.length == 0) {
-            throw new SistemaVentaPasajesException("No existe viaje con la fecha, hora y patente de bus indicadas");
+
         }
 
         for (int i = 0; i < pasajeros.size(); i++) {
