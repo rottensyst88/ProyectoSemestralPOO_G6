@@ -270,7 +270,7 @@ public class SistemaVentaPasajes {
             //REVISAR ID PERSONA debería dar RUT/PASAPORTE
             arregloVentas[i][3] = venta.getCliente().getIdPersona().toString();
             //REVISAR SI TRAE TRATAMIENTO
-            arregloVentas[i][4] = venta.getCliente().getNombreCompleto().toString(); // TODO Arreglar error!
+            arregloVentas[i][4] = venta.getCliente().getNombreCompleto().toString();
             //pasando int a String
             String stringCantBoletos = "" + venta.getPasajes().length;
             arregloVentas[i][5] = stringCantBoletos;
