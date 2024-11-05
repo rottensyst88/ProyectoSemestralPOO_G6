@@ -1,15 +1,22 @@
-package uml_2;
+package modelo;
 
 import java.util.ArrayList;
 
-@SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
 public class Bus {
     private String patente;
     private String marca;
     private String modelo;
     private int nroAsientos;
 
+    private Empresa emp;
     private ArrayList<Viaje> viajes = new ArrayList<>();
+
+    public Bus(String patente, int nroAsientos, Empresa emp) {
+        this.patente = patente;
+        this.nroAsientos = nroAsientos;
+        this.emp = emp;
+        emp.addBus(this);
+    }
 
     public Bus(String patente, int nroAsientos) {
         this.patente = patente;
@@ -40,7 +47,19 @@ public class Bus {
         return nroAsientos;
     }
 
-    public void addViaje(Viaje viaje) {
-        viajes.add(viaje);
+    public Empresa getEmp() {
+        return emp;
     }
+
+    public void addViaje(Viaje viaje) {
+        if (!viajes.contains(viaje)) {
+            viajes.add(viaje);
+        }
+    }
+
+    public Viaje[] getViajes() {
+        return viajes.toArray(new Viaje[0]);
+    }
+
+
 }

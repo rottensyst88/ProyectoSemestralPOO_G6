@@ -1,4 +1,4 @@
-package uml_2;
+package utilidades;
 
 public enum TipoDocumento {
     BOLETA,

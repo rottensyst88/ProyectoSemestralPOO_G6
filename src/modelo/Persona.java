@@ -1,4 +1,5 @@
-package uml_1;
+package modelo;
+import utilidades.*;
 
 public class Persona {
     private IdPersona idPersona;
@@ -12,10 +13,6 @@ public class Persona {
 
     public IdPersona getIdPersona() {
         return idPersona;
-    }
-
-    public void setIdPersona(IdPersona idPersona) {
-        this.idPersona = idPersona;
     }
 
     public Nombre getNombreCompleto() {

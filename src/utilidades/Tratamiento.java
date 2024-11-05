@@ -1,4 +1,4 @@
-package uml_1;
+package utilidades;
 
 public enum Tratamiento {
     SR,

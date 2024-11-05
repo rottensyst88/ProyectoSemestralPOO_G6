@@ -1,13 +1,12 @@
-package uml_1;
-import uml_2.*;
-
+package modelo;
+import utilidades.*;
 import java.util.ArrayList;
+import java.util.List;
 
-@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
 public class Cliente extends Persona {
 
     private String email;
-    private ArrayList<Venta> ventas = new ArrayList<>();
+    private List<Venta> ventas = new ArrayList<>();
 
     public Cliente(IdPersona id, Nombre nom, String email) {
         super(id, nom);
