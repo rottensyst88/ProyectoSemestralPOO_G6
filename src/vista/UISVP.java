@@ -25,7 +25,7 @@ public class UISVP {
 
     public void menu() {
         boolean verificador = true;
-        datosPrueba();
+        datosPrueba(); //todo DESACTIVAR ANTES DE ENTREGAR!
         do {
             System.out.println("""
                     ============================
@@ -66,7 +66,7 @@ public class UISVP {
                 case 12 -> listLlegadasSalidasTerminal();
                 case 13 -> listVentasEmpresa();
                 case 14 -> verificador = false;
-                case 69 -> jesse();
+                case 69 -> jesse(); // todo SOLO USADO PARA PROBAR CONDICIONES U OTRAS COSAS, DESACTIVAR ANTES DE ENTREGAR!
                 default -> System.out.println("Error! Ingrese los datos de forma correcta!");
             }
         } while (verificador);
