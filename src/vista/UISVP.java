@@ -66,7 +66,7 @@ public class UISVP {
                 case 12 -> listLlegadasSalidasTerminal();
                 case 13 -> listVentasEmpresa();
                 case 14 -> verificador = false;
-                case 69 -> jesse(); // todo SOLO USADO PARA PROBAR CONDICIONES U OTRAS COSAS, DESACTIVAR ANTES DE ENTREGAR!
+                //case 99 -> jesse(); // todo SOLO USADO PARA PROBAR CONDICIONES U OTRAS COSAS, DESACTIVAR ANTES DE ENTREGAR!
                 default -> System.out.println(":::: Valor ingresado no es valido ::::");
             }
         } while (verificador);
