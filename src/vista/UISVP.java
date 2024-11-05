@@ -582,7 +582,7 @@ public class UISVP {
         System.out.println("*----------------*------------*------------------*------------------*--------------------------------*------------------*----------------*");
         System.out.printf("| %14s | %10s | %16s | %16s | %30s | %16s | %14s |\n", "ID DOCUMENT", "TIPO DOCU", "FECHA", "RUT / PASAPORTE", "CLIENTE", "CANT BOLETOS", "TOTAL VENTA");
         for (String[] pasajero : pasajeros_arreglo) {
-            System.out.println("*----------------*------------*------------------*------------------*--------------------------------*------------------*----------------*");
+            System.out.println("*----------------+------------+------------------+------------------+--------------------------------+------------------+----------------*");
             System.out.printf("| %14s |", pasajero[0]);
             System.out.printf(" %10s |", pasajero[1]);
             System.out.printf(" %-16s |", pasajero[2]);
@@ -606,7 +606,7 @@ public class UISVP {
         System.out.println("*------------------*------------------*------------------*------------------*------------------*------------------*------------------*------------------*");
         System.out.printf("| %16s | %16s | %16s | %16s | %16s | %16s | %16s | %16s |\n", "FECHA", "HORA SALE", "HORA LLEGA", "PRECIO", "ASIENTOS DISP.", "PATENTE", "ORIGEN", "DESTINO");
         for (String[] pasajero : pasajeros_arreglo) {
-            System.out.println("*------------------+------------------+------------------+------------------+------------------*------------------*------------------*------------------*");
+            System.out.println("*------------------+------------------+------------------+------------------+------------------+------------------+------------------+------------------*");
             for (int x = 0; x < 8; x++) {
                 System.out.printf("| %16s ", pasajero[x]);
             }
@@ -639,7 +639,7 @@ public class UISVP {
         System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*");
         System.out.printf("| %8s | %16s | %24s | %24s | %20s |\n", "ASIENTO", "RUT/PASS", "PASAJERO", "CONTACTO", "TELEFONO CONTACTO");
         for (String[] pasajero : pasajeros_arreglo) {
-            System.out.println("*----------+------------------+----------------------------+------------------------+----------------------*");
+            System.out.println("*----------+------------------+--------------------------+--------------------------+----------------------*");
             System.out.printf("| %8s |", pasajero[0]);
             System.out.printf(" %16s |", pasajero[1]);
             System.out.printf(" %-24s |", pasajero[2]);
@@ -654,10 +654,14 @@ public class UISVP {
         System.out.print("Ingrese rut: ");
         Rut rut = Rut.of(sc.next());
 
-
-
         try {
             String[][] listas = ControladorEmpresas.getInstance().listVentasEmpresa(rut);
+
+            if (listas.length == 0) {
+                System.out.println(":::: Error! No hay ventas para la empresa seleccionada!");
+                return;
+            }
+
             System.out.println("*--------------*--------------*--------------*--------------*");
             System.out.printf("| %12s | %12s | %12s | %12s |\n", "FECHA", "TIPO", "MONTO PAGADO", "TIPO PAGO");
             for (String[] lista : listas) {
