@@ -4,7 +4,6 @@ import modelo.*;
 import excepciones.*;
 import utilidades.*;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,9 +23,9 @@ public class ControladorEmpresas {
 
     //ATRIBUTOS CLASE
 
-    private List<Terminal> terminales = new ArrayList<Terminal>();
-    private List<Bus> buses = new ArrayList<Bus>();
-    private List<Empresa> empresas = new ArrayList<Empresa>();
+    private List<Terminal> terminales = new ArrayList<>();
+    private List<Bus> buses = new ArrayList<>();
+    private List<Empresa> empresas = new ArrayList<>();
 
 
     //METODOS
@@ -137,7 +136,7 @@ public class ControladorEmpresas {
             if (viaje.getFecha().equals(fecha)) {
                 String[] datosViaje = new String[5];
                 datosViaje[0] = "Llegada";
-                datosViaje[1] = viaje.getHora().toString();
+                datosViaje[1] = viaje.getFechaHoraTermino().toLocalTime().toString();
                 datosViaje[2] = viaje.getBus().getPatente();
                 datosViaje[3] = viaje.getBus().getEmp().getNombre();
                 datosViaje[4] = String.valueOf(viaje.getListaPasajeros().length);
@@ -180,6 +179,11 @@ public class ControladorEmpresas {
         }
 
         Venta[] ventas = empresaExist.get().getVentas();
+
+        if (ventas.length == 0) {
+            return new String[0][4];
+        }
+
         String[][] out = new String[ventas.length][4];
         DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 

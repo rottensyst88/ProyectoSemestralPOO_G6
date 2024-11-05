@@ -57,6 +57,10 @@ public class SistemaVentaPasajes {
     public void createViaje(LocalDate fecha, LocalTime hora, int precio, int duracion, String patBus, IdPersona[]
             idTripulantes, String[] nomComunas) throws SistemaVentaPasajesException {
 
+        if (findViaje(fecha.toString(), hora.toString(), patBus).isPresent()) {
+            throw new SistemaVentaPasajesException("Ya existe viaje con fecha, hora y patente de bus indicados");
+        }
+
         Optional<Bus> bus = ControladorEmpresas.getInstance().findBus(patBus);
         Auxiliar aux;
         Conductor con = null;
@@ -201,9 +205,8 @@ public class SistemaVentaPasajes {
         Optional<Venta> venta = findVenta(idDocumento, tipo);
         if (venta.isPresent()) {
             return Optional.of(venta.get().getMonto());
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     public void vendePasaje(String idDoc, TipoDocumento tipo, LocalTime hora, LocalDate fecha,
@@ -377,12 +380,12 @@ public class SistemaVentaPasajes {
     public String[] pasajesAlImprimir(String idDocumento, TipoDocumento tipo) {
 
         Optional<Venta> venta = findVenta(idDocumento, tipo);
-        Pasaje[] pasajes = venta.get().getPasajes();
 
-        if (pasajes == null) {
+        if (venta.isEmpty()) {
             return new String[0];
         }
 
+        Pasaje[] pasajes = venta.get().getPasajes();
         String[] pasajesString = new String[pasajes.length];
 
         for (int i = 0; i < pasajes.length; i++) {
