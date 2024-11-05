@@ -152,7 +152,7 @@ public class UISVP {
     }
 
     private void createTerminal() {
-        System.out.println("...:::: Creando un nuevo Terminal\n\n");
+        System.out.println("...:::: Creando un nuevo Terminal\n");
         System.out.print("Nombre : ");
         String nombre = sc.next();
 
@@ -375,8 +375,20 @@ public class UISVP {
         }
         System.out.println("    *------------*------------*------------*------------*\n");
 
-        System.out.print("Seleccione viaje en [1.." + contador + "] : ");
-        int seleccion = sc.nextInt();
+        int seleccion;
+
+        boolean centinela = true;
+
+        do {
+            System.out.print("Seleccione viaje en [1.." + contador + "] : ");
+            seleccion = sc.nextInt();
+
+            if (seleccion > contador || seleccion < 1) {
+                System.out.println(":::: Error! Valor fuera de rango!");
+                continue;
+            }
+            centinela = false;
+        } while (centinela);
 
         String[] datosCompra = new String[4];
 
@@ -420,15 +432,31 @@ public class UISVP {
 
         System.out.println("*---*---*---*---*---*");
 
-        System.out.print("Seleccione sus asientos [separe por ,] : ");
+        String[] split;
+        boolean centinela_ = true;
 
-        String asientos = sc.next();
-        String[] split = asientos.split(",");
+        do {
+            System.out.print("Seleccione sus asientos [separe por ,] : ");
 
-        if (split.length != cantidadPasajes) {
-            System.out.println(":::: Error! Cantidad de asientos no coincide con la cantidad de pasajes!");
-            return;
-        }
+            String asientos = sc.next();
+            split = asientos.split(",");
+
+            if (split.length != cantidadPasajes) {
+                System.out.println(":::: Error! Cantidad de asientos no coincide con la cantidad de pasajes!");
+                continue;
+            }
+
+            centinela_ = false;
+            for (String s : split) {
+                if (Integer.parseInt(s) > datos_viajeSelect.length || Integer.parseInt(s) < 1) {
+                    System.out.println(":::: Error! Asiento ubicado fuera de rango!");
+                    centinela_ = true;
+                    break;
+                }
+            }
+
+        } while (centinela_);
+
 
         for (int i = 0; i < cantidadPasajes; i++) {
             IdPersona id_pasajero;
@@ -551,19 +579,19 @@ public class UISVP {
             return;
         }
 
-        System.out.println("*----------------*------------*------------------*------------------*--------------------------*------------------*----------------*");
-        System.out.printf("| %14s | %10s | %16s | %16s | %24s | %16s | %14s |\n", "ID DOCUMENT", "TIPO DOCU", "FECHA", "RUT / PASAPORTE", "CLIENTE", "CANT BOLETOS", "TOTAL VENTA");
+        System.out.println("*----------------*------------*------------------*------------------*--------------------------------*------------------*----------------*");
+        System.out.printf("| %14s | %10s | %16s | %16s | %30s | %16s | %14s |\n", "ID DOCUMENT", "TIPO DOCU", "FECHA", "RUT / PASAPORTE", "CLIENTE", "CANT BOLETOS", "TOTAL VENTA");
         for (String[] pasajero : pasajeros_arreglo) {
-            System.out.println("|----------------+------------+------------------+------------------+--------------------------+------------------+----------------|");
+            System.out.println("*----------------*------------*------------------*------------------*--------------------------------*------------------*----------------*");
             System.out.printf("| %14s |", pasajero[0]);
             System.out.printf(" %10s |", pasajero[1]);
             System.out.printf(" %-16s |", pasajero[2]);
             System.out.printf(" %-16s |", pasajero[3]);
-            System.out.printf(" %-24s |", pasajero[4]);
+            System.out.printf(" %-30s |", pasajero[4]);
             System.out.printf(" %16s |", pasajero[5]);
             System.out.printf(" %14s |\n", pasajero[6]);
         }
-        System.out.println("*----------------*------------*------------------*------------------*--------------------------*------------------*----------------*\n\n");
+        System.out.println("*----------------*------------*------------------*------------------*--------------------------------*------------------*----------------*\n\n");
     }
 
     private void listViajes() {
@@ -622,28 +650,45 @@ public class UISVP {
     }
 
     private void listVentasEmpresa() {
+        System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
+        System.out.print("Ingrese rut: ");
+        Rut rut = Rut.of(sc.next());
 
+
+
+        try {
+            String[][] listas = ControladorEmpresas.getInstance().listVentasEmpresa(rut);
+            System.out.println("*--------------*--------------*--------------*--------------*");
+            System.out.printf("| %12s | %12s | %12s | %12s |\n", "FECHA", "TIPO", "MONTO PAGADO", "TIPO PAGO");
+            for (String[] lista : listas) {
+                System.out.println("*--------------+--------------+--------------+--------------*");
+                System.out.printf("| %12s | %12s | %12s | %12s |\n", lista[0], lista[1], lista[2], lista[3]);
+            }
+            System.out.println("*--------------*--------------*--------------*--------------*\n\n");
+        } catch (SistemaVentaPasajesException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void listEmpresas() {
         System.out.println("\n...:::: Listado de empresas::::...\n");
-        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*--------------------------*");
-        System.out.printf("| %10s | %20s | %30s | %20s | %15s | %15s |\n", "RUT EMPRESA", "NOMBRE", "URL", "NRO. TRIPULANTES", "NRO. BUSES", "NRO. VENTAS");
+        System.out.println("*----------------*----------------------*--------------------------------*----------------------*-----------------*-----------------*");
+        System.out.printf("| %14s | %20s | %30s | %20s | %15s | %15s |\n", "RUT EMPRESA", "NOMBRE", "URL", "NRO. TRIPULANTES", "NRO. BUSES", "NRO. VENTAS");
 
 
         String[][] empresas_arreglo = ControladorEmpresas.getInstance().listEmpresas();
 
 
         for (String[] empresa : empresas_arreglo) {
-            System.out.println("*----------+------------------+--------------------------+--------------------------+----------------------+--------------------------*");
-            System.out.printf(" %10s |", empresa[0]);
+            System.out.println("*----------------+----------------------+--------------------------------+----------------------+-----------------+-----------------*");
+            System.out.printf("| %14s |", empresa[0]);
             System.out.printf(" %20s |", empresa[1]);
             System.out.printf(" %30s |", empresa[2]);
             System.out.printf(" %20s |", empresa[3]);
             System.out.printf(" %15s |", empresa[4]);
             System.out.printf(" %15s |\n", empresa[5]);
         }
-        System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*--------------------------*\n\n");
+        System.out.println("*----------------*----------------------*--------------------------------*----------------------*-----------------*-----------------*\n\n");
     }
 
     private void listLlegadasSalidasTerminal() {
@@ -656,18 +701,19 @@ public class UISVP {
 
         try {
             String[][] llegadasSalidas = ControladorEmpresas.getInstance().listLlegadasSalidasTerminal(nombre_terminal, fecha);
-            System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*");
-            System.out.printf("| %8s | %16s | %24s | %24s | %20s |\n", "LLEGADA/SALIDA", "HORA", "PATENTE BUS", "NOMBRE EMPRESA", "NRO. PASAJEROS");
+            System.out.println("*--------------------------*--------------------------*--------------------------*--------------------------*--------------------------*");
+            System.out.printf("| %24s | %24s | %24s | %24s | %24s |\n", "LLEGADA/SALIDA", "HORA", "PATENTE BUS", "NOMBRE EMPRESA", "NRO. PASAJEROS");
 
 
-            for (int i = 0; i < llegadasSalidas.length; i++) {
-                String[] llegadasSalida = llegadasSalidas[i];
-                System.out.println("*----------+------------------+----------------------------+------------------------+----------------------*");
+            for (String[] llegadasSalida : llegadasSalidas) {
+                System.out.println("*--------------------------+--------------------------+--------------------------+--------------------------+--------------------------*");
+                System.out.print("|");
                 for (int x = 0; x < 5; x++) {
-                    System.out.printf("| %8s |", llegadasSalida[x]);
+                    System.out.printf(" %24s |", llegadasSalida[x]);
                 }
+                System.out.println();
             }
-            System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
+            System.out.println("*--------------------------*--------------------------*--------------------------*--------------------------*--------------------------*\n\n");
 
 
         } catch (SistemaVentaPasajesException e) {
@@ -759,56 +805,53 @@ public class UISVP {
 
     /* jsjsajsja */
 
-    private void jesse(){
+    private void jesse() {
         System.out.println("""
-              \s
-                               : ⠄⠄⠄⠄ ⠄⠄⠄⠄ ⠄⠄⠄⠄
-                               ⠄⠄⡔⠙⠢⡀⠄⠄⠄⢀⠼⠅⠈⢂⠄⠄⠄⠄
-                               ⠄⠄⡌⠄⢰⠉⢙⢗⣲⡖⡋⢐⡺⡄⠈⢆⠄⠄⠄
-                               ⠄⡜⠄⢀⠆⢠⣿⣿⣿⣿⢡⢣⢿⡱⡀⠈⠆⠄⠄
-                               ⠄⠧⠤⠂⠄⣼⢧⢻⣿⣿⣞⢸⣮⠳⣕⢤⡆⠄⠄
-                               ⢺⣿⣿⣶⣦⡇⡌⣰⣍⠚⢿⠄⢩⣧⠉⢷⡇⠄⠄
-                               ⠘⣿⣿⣯⡙⣧⢎⢨⣶⣶⣶⣶⢸⣼⡻⡎⡇⠄⠄
-                               ⠄⠘⣿⣿⣷⡀⠎⡮⡙⠶⠟⣫⣶⠛⠧⠁⠄⠄⠄
-                               ⠄⠄⠘⣿⣿⣿⣦⣤⡀⢿⣿⣿⣿⣄⠄⠄⠄⠄⠄
-                               ⠄⠄⠄⠈⢿⣿⣿⣿⣿⣷⣯⣿⣿⣷⣾⣿⣷⡄⠄
-                               ⠄⠄⠄⠄⠄⢻⠏⣼⣿⣿⣿⣿⡿⣿⣿⣏⢾⠇⠄
-                               ⠄⠄⠄⠄⠄⠈⡼⠿⠿⢿⣿⣦⡝⣿⣿⣿⠷⢀⠄
-                               ⠄⠄⠄⠄⠄⠄⡇⠄⠄⠄⠈⠻⠇⠿⠋⠄⠄⢘⡆
-                               ⠄⠄⠄⠄⠄⠄⠱⣀⠄⠄⠄⣀⢼⡀⠄⢀⣀⡜⠄
-                               ⠄⠄⠄⠄⠄⠄⠄⢸⣉⠉⠉⠄⢀⠈⠉⢏⠁⠄⠄
-                               ⠄⠄⠄⠄⠄⠄⡰⠃⠄⠄⠄⠄⢸⠄⠄⢸⣧⠄⠄
-                               ⠄⠄⠄⠄⠄⣼⣧⠄⠄⠄⠄⠄⣼⠄⠄⡘⣿⡆⠄
-                               ⠄⠄⠄⢀⣼⣿⡙⣷⡄⠄⠄⠄⠃⠄⢠⣿⢸⣿⡀
-                               ⠄⠄⢀⣾⣿⣿⣷⣝⠿⡀⠄⠄⠄⢀⡞⢍⣼⣿⠇
-                               ⠄⠄⣼⣿⣿⣿⣿⣿⣷⣄⠄⠄⠠⡊⠴⠋⠹⡜⠄
-                               ⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⡆⣤⣾⣿⣿⣧⠹⠄⠄
-                               ⠄⠄⢿⣿⣿⣿⣿⣿⣿⣿⢃⣿⣿⣿⣿⣿⡇⠄⠄
-                               ⠄⠄⠐⡏⠉⠉⠉⠉⠉⠄⢸⠛⠿⣿⣿⡟⠄⠄⠄
-                               ⠄⠄⠄⠹⡖⠒⠒⠒⠒⠊⢹⠒⠤⢤⡜⠁⠄⠄⠄
-                               ⠄⠄⠄⠄⠱⠄⠄⠄⠄⠄⢸
-              9             \s
-                            ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠆⠜⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⠿⠿⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿
-                            ⣿⣿⡏⠁⠀⠀⠀⠀⠀⣀⣠⣤⣤⣶⣶⣶⣶⣶⣦⣤⡄⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿
-                            ⣿⣿⣷⣄⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⡧⠇⢀⣤⣶⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⣾⣮⣭⣿⡻⣽⣒⠀⣤⣜⣭⠐⢐⣒⠢⢰⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⣿⣏⣿⣿⣿⣿⣿⣿⡟⣾⣿⠂⢈⢿⣷⣞⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⣿⣿⣽⣿⣿⣷⣶⣾⡿⠿⣿⠗⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠻⠋⠉⠑⠀⠀⢘⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⣿⡿⠟⢹⣿⣿⡇⢀⣶⣶⠴⠶⠀⠀⢽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⣿⣿⣿⡿⠀⠀⢸⣿⣿⠀⠀⠣⠀⠀⠀⠀⠀⡟⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⣿⣿⣿⡿⠟⠋⠀⠀⠀⠀⠹⣿⣧⣀⠀⠀⠀⠀⡀⣴⠁⢘⡙⢿⣿⣿⣿⣿⣿⣿⣿⣿
-                            ⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⠗⠂⠄⠀⣴⡟⠀⠀⡃⠀⠉⠉⠟⡿⣿⣿⣿⣿
-                            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⠾⠛⠂⢹⠀⠀⠀⢡⠀⠀⠀⠀⠀⠙⠛⠿⢿
-                           \s
-                            Jesse, we need a 7,0
-                           \s
-                           \s
-                           \s
-               \s""");
+                \s
+                                 : ⠄⠄⠄⠄ ⠄⠄⠄⠄ ⠄⠄⠄⠄
+                                 ⠄⠄⡔⠙⠢⡀⠄⠄⠄⢀⠼⠅⠈⢂⠄⠄⠄⠄
+                                 ⠄⠄⡌⠄⢰⠉⢙⢗⣲⡖⡋⢐⡺⡄⠈⢆⠄⠄⠄
+                                 ⠄⡜⠄⢀⠆⢠⣿⣿⣿⣿⢡⢣⢿⡱⡀⠈⠆⠄⠄
+                                 ⠄⠧⠤⠂⠄⣼⢧⢻⣿⣿⣞⢸⣮⠳⣕⢤⡆⠄⠄
+                                 ⢺⣿⣿⣶⣦⡇⡌⣰⣍⠚⢿⠄⢩⣧⠉⢷⡇⠄⠄
+                                 ⠘⣿⣿⣯⡙⣧⢎⢨⣶⣶⣶⣶⢸⣼⡻⡎⡇⠄⠄
+                                 ⠄⠘⣿⣿⣷⡀⠎⡮⡙⠶⠟⣫⣶⠛⠧⠁⠄⠄⠄
+                                 ⠄⠄⠘⣿⣿⣿⣦⣤⡀⢿⣿⣿⣿⣄⠄⠄⠄⠄⠄
+                                 ⠄⠄⠄⠈⢿⣿⣿⣿⣿⣷⣯⣿⣿⣷⣾⣿⣷⡄⠄
+                                 ⠄⠄⠄⠄⠄⢻⠏⣼⣿⣿⣿⣿⡿⣿⣿⣏⢾⠇⠄
+                                 ⠄⠄⠄⠄⠄⠈⡼⠿⠿⢿⣿⣦⡝⣿⣿⣿⠷⢀⠄
+                                 ⠄⠄⠄⠄⠄⠄⡇⠄⠄⠄⠈⠻⠇⠿⠋⠄⠄⢘⡆
+                                 ⠄⠄⠄⠄⠄⠄⠱⣀⠄⠄⠄⣀⢼⡀⠄⢀⣀⡜⠄
+                                 ⠄⠄⠄⠄⠄⠄⠄⢸⣉⠉⠉⠄⢀⠈⠉⢏⠁⠄⠄
+                                 ⠄⠄⠄⠄⠄⠄⡰⠃⠄⠄⠄⠄⢸⠄⠄⢸⣧⠄⠄
+                                 ⠄⠄⠄⠄⠄⣼⣧⠄⠄⠄⠄⠄⣼⠄⠄⡘⣿⡆⠄
+                                 ⠄⠄⠄⢀⣼⣿⡙⣷⡄⠄⠄⠄⠃⠄⢠⣿⢸⣿⡀
+                                 ⠄⠄⢀⣾⣿⣿⣷⣝⠿⡀⠄⠄⠄⢀⡞⢍⣼⣿⠇
+                                 ⠄⠄⣼⣿⣿⣿⣿⣿⣷⣄⠄⠄⠠⡊⠴⠋⠹⡜⠄
+                                 ⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⡆⣤⣾⣿⣿⣧⠹⠄⠄
+                                 ⠄⠄⢿⣿⣿⣿⣿⣿⣿⣿⢃⣿⣿⣿⣿⣿⡇⠄⠄
+                                 ⠄⠄⠐⡏⠉⠉⠉⠉⠉⠄⢸⠛⠿⣿⣿⡟⠄⠄⠄
+                                 ⠄⠄⠄⠹⡖⠒⠒⠒⠒⠊⢹⠒⠤⢤⡜⠁⠄⠄⠄
+                                 ⠄⠄⠄⠄⠱⠄⠄⠄⠄⠄⢸
+                                \s
+                              ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠆⠜⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⠿⠿⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿
+                              ⣿⣿⡏⠁⠀⠀⠀⠀⠀⣀⣠⣤⣤⣶⣶⣶⣶⣶⣦⣤⡄⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿
+                              ⣿⣿⣷⣄⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⡧⠇⢀⣤⣶⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⣾⣮⣭⣿⡻⣽⣒⠀⣤⣜⣭⠐⢐⣒⠢⢰⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⣿⣏⣿⣿⣿⣿⣿⣿⡟⣾⣿⠂⢈⢿⣷⣞⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⣿⣿⣽⣿⣿⣷⣶⣾⡿⠿⣿⠗⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠻⠋⠉⠑⠀⠀⢘⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⣿⡿⠟⢹⣿⣿⡇⢀⣶⣶⠴⠶⠀⠀⢽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⣿⣿⣿⡿⠀⠀⢸⣿⣿⠀⠀⠣⠀⠀⠀⠀⠀⡟⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⣿⣿⣿⡿⠟⠋⠀⠀⠀⠀⠹⣿⣧⣀⠀⠀⠀⠀⡀⣴⠁⢘⡙⢿⣿⣿⣿⣿⣿⣿⣿⣿
+                              ⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⠗⠂⠄⠀⣴⡟⠀⠀⡃⠀⠉⠉⠟⡿⣿⣿⣿⣿
+                              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⠾⠛⠂⢹⠀⠀⠀⢡⠀⠀⠀⠀⠀⠙⠛⠿⢿
+                             \s
+                              Jesse, we need a 7,0
+                 \s""");
     }
 }

@@ -6,6 +6,7 @@ import utilidades.*;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -178,17 +179,16 @@ public class ControladorEmpresas {
             throw new SistemaVentaPasajesException("No existe empresa con el rut indicado");
         }
 
-        Empresa e = empresaExist.get();
-
-        Venta[] ventas = e.getVentas();
+        Venta[] ventas = empresaExist.get().getVentas();
         String[][] out = new String[ventas.length][4];
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         for (int i = 0; i < ventas.length; i++) {
             Venta venta = ventas[i];
-            out[i][0] = sdf.format(venta.getFecha());
+
+            out[i][0] = fechaFormateada.format(venta.getFecha());
             out[i][1] = venta.getTipo().toString();
-            out[i][2] = String.valueOf(venta.getMontoPagado());
+            out[i][2] = String.valueOf(venta.getMonto());
             out[i][3] = venta.getTipoPago();
         }
         return out;
