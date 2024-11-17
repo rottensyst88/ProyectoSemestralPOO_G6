@@ -9,13 +9,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class UISVP {
-    private static UISVP instancia = new UISVP();
-
-    public static UISVP getInstancia() {
-        return instancia;
+    private static UISVP instance = new UISVP();
+    public static UISVP getInstance() {
+        return instance;
     }
-
-    private Scanner sc = new Scanner(System.in).useDelimiter("\t|\r\n|[\n\r\u2028\u2029\u0085]");
+    private Scanner sc = new Scanner(System.in).useDelimiter("\t|\r\n|[\n\r\u2028\u2029\u0085]"); //TODO PUEDE GENERAR ERRORES!
 
     /*
     ==================================================================
@@ -24,8 +22,8 @@ public class UISVP {
      */
 
     public void menu() {
-        boolean verificador = true;
         //datosPrueba(); //todo DESACTIVAR ANTES DE ENTREGAR!
+        boolean verificador = true;
         do {
             System.out.println("""
                     ============================
@@ -79,6 +77,9 @@ public class UISVP {
         try {
             ControladorEmpresas.getInstance().createEmpresa(Rut.of(rut_st), nombre, url);
             System.out.println("\n...:::: Empresa guardada exitosamente ::::....");
+            
+
+
         } catch (SistemaVentaPasajesException e) {
             imprimirErrores(e);
         }
@@ -499,6 +500,8 @@ public class UISVP {
         System.out.println("*------------------*------------------*------------------*------------------*------------------*------------------*------------------*------------------*\n\n");
     }
     private void listPasajerosViaje() {
+        String[][] pasajeros_arreglo = null;
+
         System.out.println("\n...:::: Listado de pasajeros de un viaje ::::...\n");
 
         LocalDate fecha = LocalDate.parse(entradaDatos("Fecha de viaje[dd/mm/yyyy]",2), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -506,7 +509,12 @@ public class UISVP {
         String patente = entradaDatos("Patente del bus",2);
         patente = patente.substring(0, 2) + patente.substring(3, 5) + patente.substring(6, 8);
 
-        String[][] pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajerosViaje(fecha, hora, patente);
+        try{
+            pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajerosViaje(fecha, hora, patente);
+        } catch (SistemaVentaPasajesException e){
+            imprimirErrores(e);
+            return;
+        }
 
         if (pasajeros_arreglo.length == 0) {
             System.out.println(":::: Error! No hay pasajeros para el viaje seleccionado!");
@@ -642,6 +650,7 @@ public class UISVP {
     private void imprimirErrores(SistemaVentaPasajesException e){
         System.out.println("\n:::: " + e.getMessage());
         System.out.println("*** Error encontrado, no se pudo concretar la operación! ***\n");
+        sc.next();
     }
     private void datosPrueba() {
         ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
