@@ -28,7 +28,7 @@ public class SistemaVentaPasajes {
     private DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH:mm");
 
-    public void createCliente(IdPersona id, Nombre nom, String fono, String email) throws SistemaVentaPasajesException {
+    public void createCliente(IdPersona id, Nombre nom, String fono, String email) throws SVPException {
 
         Cliente c = new Cliente(id, nom, email);
         c.setTelefono(fono);
@@ -36,12 +36,12 @@ public class SistemaVentaPasajes {
         if (findCliente(id).isEmpty()) {
             clientes.add(c);
         } else {
-            throw new SistemaVentaPasajesException("Ya existe cliente con el ID indicado!");
+            throw new SVPException("Ya existe cliente con el ID indicado!");
         }
     }
 
     public void createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
-            fonoContacto) throws SistemaVentaPasajesException {
+            fonoContacto) throws SVPException {
 
         Pasajero p = new Pasajero(id, nom, fonoContacto);
         p.setNomContacto(nomContacto);
@@ -50,15 +50,15 @@ public class SistemaVentaPasajes {
         if (findPasajero(id).isEmpty()) {
             pasajeros.add(p);
         } else {
-            throw new SistemaVentaPasajesException("Ya existe pasajero con el ID indicado!");
+            throw new SVPException("Ya existe pasajero con el ID indicado!");
         }
     }
 
     public void createViaje(LocalDate fecha, LocalTime hora, int precio, int duracion, String patBus, IdPersona[]
-            idTripulantes, String[] nomComunas) throws SistemaVentaPasajesException {
+            idTripulantes, String[] nomComunas) throws SVPException {
 
         if (findViaje(fecha.toString(), hora.toString(), patBus).isPresent()) {
-            throw new SistemaVentaPasajesException("Ya existe viaje con fecha, hora y patente de bus indicados");
+            throw new SVPException("Ya existe viaje con fecha, hora y patente de bus indicados");
         }
 
         Optional<Bus> bus = ControladorEmpresas.getInstance().findBus(patBus);
@@ -66,12 +66,12 @@ public class SistemaVentaPasajes {
         Conductor con = null;
 
         if (bus.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe bus con la patente indicada");
+            throw new SVPException("No existe bus con la patente indicada");
         }
 
 
         if (ControladorEmpresas.getInstance().findAuxiliar(idTripulantes[0], bus.get().getEmp().getRut()).isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe auxiliar con el ID indicado en la empresa con el RUT indicado");
+            throw new SVPException("No existe auxiliar con el ID indicado en la empresa con el RUT indicado");
         } else {
             aux = ControladorEmpresas.getInstance().findAuxiliar(idTripulantes[0], bus.get().getEmp().getRut()).get();
         }
@@ -80,17 +80,17 @@ public class SistemaVentaPasajes {
             if (ControladorEmpresas.getInstance().findConductor(idTripulantes[1], bus.get().getEmp().getRut()).isPresent()) {
                 con = ControladorEmpresas.getInstance().findConductor(idTripulantes[1], bus.get().getEmp().getRut()).get();
             } else {
-                throw new SistemaVentaPasajesException("No existe conductor con el ID indicado en la empresa con el RUT indicado");
+                throw new SVPException("No existe conductor con el ID indicado en la empresa con el RUT indicado");
             }
         }
 
         if (ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[0]).isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe terminal de salida en la comuna indicada");
+            throw new SVPException("No existe terminal de salida en la comuna indicada");
         }
         Terminal tSalida = ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[0]).get();
 
         if (ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[1]).isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe terminal de llegada en la comuna indicada");
+            throw new SVPException("No existe terminal de llegada en la comuna indicada");
         }
         Terminal tEntrada = ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[1]).get();
 
@@ -102,27 +102,27 @@ public class SistemaVentaPasajes {
                 con = ControladorEmpresas.getInstance().findConductor(idTripulantes[2], bus.get().getEmp().getRut()).get();
                 viaje.addConductor(con);
             } else {
-                throw new SistemaVentaPasajesException("No existe conductor con el ID indicado en la empresa con el RUT indicado");
+                throw new SVPException("No existe conductor con el ID indicado en la empresa con el RUT indicado");
             }
         }
 
         if (findViaje(fecha.toString(), hora.toString(), patBus).isEmpty()) {
             viajes.add(viaje);
         } else {
-            throw new SistemaVentaPasajesException("Ya existe pasaje viaje con fecha, hora y patente de bus indicados");
+            throw new SVPException("Ya existe pasaje viaje con fecha, hora y patente de bus indicados");
         }
     }
 
     public void iniciaVenta(String idDocumento, TipoDocumento tipo, LocalDate fecha, String comSalida, String comLlegada, IdPersona idCliente, int nroPasajes)
-            throws SistemaVentaPasajesException {
+            throws SVPException {
 
         Optional<Venta> venta = findVenta(idDocumento, tipo);
         if (venta.isPresent()) {
-            throw new SistemaVentaPasajesException("Ya existe venta con ID y Tipo de Doc. indicado");
+            throw new SVPException("Ya existe venta con ID y Tipo de Doc. indicado");
         }
         Optional<Cliente> cliente = findCliente(idCliente);
         if (cliente.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe un cliente con ID integrado!");
+            throw new SVPException("No existe un cliente con ID integrado!");
         }
 
         boolean centinela = false;
@@ -137,7 +137,7 @@ public class SistemaVentaPasajes {
             }
         }
         if (!centinela) {
-            throw new SistemaVentaPasajesException("No existen viajes disponibles en la fecha y con terminales en las comunas de salida y llegada indicados");
+            throw new SVPException("No existen viajes disponibles en la fecha y con terminales en las comunas de salida y llegada indicados");
         }
 
         Venta nuevaVenta = new Venta(idDocumento, tipo, fecha, cliente.get());
@@ -210,7 +210,7 @@ public class SistemaVentaPasajes {
     }
 
     public void vendePasaje(String idDoc, TipoDocumento tipo, LocalTime hora, LocalDate fecha,
-                            String patBus, int asiento, IdPersona idPasajero) throws SistemaVentaPasajesException {
+                            String patBus, int asiento, IdPersona idPasajero) throws SVPException {
 
         String horaComoString = hora.toString();
         String fechaComoString = fecha.toString();
@@ -219,40 +219,40 @@ public class SistemaVentaPasajes {
         Optional<Pasajero> pasajero = findPasajero(idPasajero);
 
         if (venta.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe venta con el ID y Tipo de Doc. indicados");
+            throw new SVPException("No existe venta con el ID y Tipo de Doc. indicados");
         }
         if (pasajero.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe pasajero con el ID indicado");
+            throw new SVPException("No existe pasajero con el ID indicado");
 
         }
         if (viaje.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe viaje con la fecha, hora y patente de bus indicados");
+            throw new SVPException("No existe viaje con la fecha, hora y patente de bus indicados");
         }
 
         venta.get().createPasaje(asiento, viaje.get(), pasajero.get());
     }
 
-    public void pagaVenta(String idDocumento, TipoDocumento tipo) throws SistemaVentaPasajesException {
+    public void pagaVenta(String idDocumento, TipoDocumento tipo) throws SVPException {
         Optional<Venta> venta = findVenta(idDocumento, tipo);
 
         if (venta.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe venta con el ID y Tipo de Doc. indicados");
+            throw new SVPException("No existe venta con el ID y Tipo de Doc. indicados");
         }
 
         if (venta.get().getMontoPagado() != 0) {
-            throw new SistemaVentaPasajesException("La venta ya fue pagada");
+            throw new SVPException("La venta ya fue pagada");
         }
         venta.get().pagaMonto();
     }
 
-    public void pagaVenta(String idDocumento, TipoDocumento tipo, long nroTarjeta) throws SistemaVentaPasajesException {
+    public void pagaVenta(String idDocumento, TipoDocumento tipo, long nroTarjeta) throws SVPException {
         Optional<Venta> venta = findVenta(idDocumento, tipo);
 
         if (venta.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe venta con el ID y Tipo de Doc. indicados");
+            throw new SVPException("No existe venta con el ID y Tipo de Doc. indicados");
         }
         if (venta.get().getMontoPagado() != 0) {
-            throw new SistemaVentaPasajesException("La venta ya fue pagada");
+            throw new SVPException("La venta ya fue pagada");
         }
         venta.get().pagaMonto(nroTarjeta);
     }
@@ -307,12 +307,12 @@ public class SistemaVentaPasajes {
         return arregloViajes;
     }
 
-    public String[][] listPasajerosViaje(LocalDate fecha, LocalTime hora, String patBus) throws SistemaVentaPasajesException {
+    public String[][] listPasajerosViaje(LocalDate fecha, LocalTime hora, String patBus) throws SVPException {
 
         Optional<Viaje> viajes = findViaje(fecha.toString(),hora.toString(),patBus);
 
         if(viajes.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe viaje con la fecha, hora y patente de bus indicadas");
+            throw new SVPException("No existe viaje con la fecha, hora y patente de bus indicadas");
         }
 
         String[][] arregloPasajeros = new String[pasajeros.size()][5];
