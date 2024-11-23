@@ -166,18 +166,24 @@ public class IOSVP implements Serializable {
         return objetos.toArray();
     }
 
-    public void saveControladores(Object[] controladores) {
+    public void saveControladores(Object[] controladores) throws SVPException {
+        ObjectOutputStream objetoArch = null;
 
+        try {
+            objetoArch = new ObjectOutputStream(new FileOutputStream("SVPObjetos.obj"));
+
+            for (Object o : controladores) {
+                objetoArch.writeObject(o);
+            }
+
+            objetoArch.close();
+
+        } catch (IOException e) {
+            throw new SVPException("");
+        }
     }
 
     public Object[] readControladores() {
-        ObjectInputStream archivo = null;
-
-        try {
-            archivo = new ObjectInputStream(new FileInputStream("archivo.obj"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
