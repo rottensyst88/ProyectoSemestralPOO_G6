@@ -1,131 +1,179 @@
 package persistencia;
+
 import controlador.SistemaVentaPasajes;
+import excepciones.SVPException;
 import utilidades.*;
 import modelo.*;
 
 import java.io.Serializable;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class IOSVP implements Serializable {
     private static IOSVP instance = new IOSVP();
+
     public static IOSVP getInstance() {
         return instance;
     }
 
-    public Object[] readDatosIniciales(){
+    public Object[] readDatosIniciales() throws SVPException {
+        List<String> datosArchivo = new ArrayList<>();
 
+        List<String> clientes_pasajeros = new ArrayList<>();
+        List<String> empresas = new ArrayList<>();
+        List<String> tripulantes = new ArrayList<>();
+        List<String> terminales = new ArrayList<>();
+        List<String> buses = new ArrayList<>();
+        List<String> viajes = new ArrayList<>();
 
         List<Object> objetos = new ArrayList<>();
-        List<String> datosArchivo = new ArrayList<>();
+
         Scanner archivo = null;
         byte contador_pos = 0;
 
-        try{
+        try {
             archivo = new Scanner(new File("SVPDatosIniciales.txt"));
 
             archivo.useLocale(Locale.ENGLISH);
-            while(archivo.hasNextLine()){
+            while (archivo.hasNextLine()) {
                 datosArchivo.add(archivo.next());
             }
 
-            for(String linea : datosArchivo){
-
-            }
-
-
-            // SECCION DE CLIENTES O PASAJEROS
-            while(archivo.hasNextLine()){
-                String[] temporal = archivo.nextLine().split(";");
-                if(archivo.next().equals("+")){
+            for (String linea : datosArchivo) {
+                if (linea.equals("+")) {
                     contador_pos++;
-                    break; // CONTADOR DE POSICIONES
-                }
-                switch(temporal[0]){
-                    case "CP":{ //CLIENTE Y PASAJERO
-                        Nombre nombre = new Nombre();
-                        Nombre nContacto = new Nombre();
-                        IdPersona id = Rut.of(temporal[1]);
-                        nombre.setTratamiento(Enum.valueOf(Tratamiento.class, temporal[2]));
-                        nombre.setNombre(temporal[3]);
-                        nombre.setApellidoPaterno(temporal[4]);
-                        nombre.setApellidoMaterno(temporal[5]);
-                        String tel = temporal[6];
-                        String email = temporal[7];
-                        nContacto.setTratamiento(Enum.valueOf(Tratamiento.class, temporal[8]));
-                        nContacto.setNombre(temporal[9]);
-                        nContacto.setApellidoPaterno(temporal[10]);
-                        nContacto.setApellidoMaterno(temporal[11]);
-                        String telContacto = temporal[12];
-
-                        Cliente c = new Cliente(id,nombre,email);
-                        c.setTelefono(tel);
-
-                        Pasajero p = new Pasajero(id,nombre,tel);
-                        p.setTelefono(tel);
-                        p.setNomContacto(nContacto);
-                        p.setFonoContacto(telContacto);
-                        break;
-                    }
-                    case "C":{ //CLIENTE
-                        Nombre nombre = new Nombre();
-                        IdPersona id = Rut.of(temporal[1]);
-                        nombre.setTratamiento(Enum.valueOf(Tratamiento.class, temporal[2]));
-                        nombre.setNombre(temporal[3]);
-                        nombre.setApellidoPaterno(temporal[4]);
-                        nombre.setApellidoMaterno(temporal[5]);
-                        String tel = temporal[6];
-                        String email = temporal[7];
-
-                        Cliente c = new Cliente(id,nombre,email);
-                        c.setTelefono(tel);
-                        break;
-                    }
-                    case "P":{ //PASAJERO
-                        Nombre nombre = new Nombre();
-                        Nombre nContacto = new Nombre();
-                        IdPersona id = Rut.of(temporal[1]);
-                        nombre.setTratamiento(Enum.valueOf(Tratamiento.class, temporal[2]));
-                        nombre.setNombre(temporal[3]);
-                        nombre.setApellidoPaterno(temporal[4]);
-                        nombre.setApellidoMaterno(temporal[5]);
-                        String tel = temporal[6];
-                        nContacto.setTratamiento(Enum.valueOf(Tratamiento.class, temporal[7]));
-                        nContacto.setNombre(temporal[8]);
-                        nContacto.setApellidoPaterno(temporal[9]);
-                        nContacto.setApellidoMaterno(temporal[10]);
-                        String telContacto = temporal[11];
-
-                        Pasajero p = new Pasajero(id,nombre,telContacto);
-                        p.setTelefono(tel);
-                        p.setNomContacto(nContacto);
-                        break;
-                    }
-                    default:{
-                        System.out.println("ERROR! ESTO NO DEBERIA PASAR!");
+                } else {
+                    switch (contador_pos) {
+                        case 0 -> clientes_pasajeros.add(linea);
+                        case 1 -> empresas.add(linea);
+                        case 2 -> tripulantes.add(linea);
+                        case 3 -> terminales.add(linea);
+                        case 4 -> buses.add(linea);
+                        case 5 -> viajes.add(linea);
                     }
                 }
+                datosArchivo.remove(linea);
             }
-            while(archivo.hasNextLine() && )
-
-            while()
-
-
-
-        } catch (FileNotFoundException e){
-            System.out.println("Error! El archivo requerido no ha sido encontrado!");
-            return null;
+        } catch (FileNotFoundException e) {
+            throw new SVPException("No existe o no se puede abrir el archivo SVPDatosIniciales.txt");
         }
+
+        for (String s : clientes_pasajeros) {
+            String[] x = s.split(";");
+
+            IdPersona rut = Rut.of(x[1]);
+            Nombre nombre = new Nombre();
+            nombre.setTratamiento(Tratamiento.valueOf(x[2]));
+            nombre.setNombre(x[3]);
+            nombre.setApellidoPaterno(x[4]);
+            nombre.setApellidoMaterno(x[5]);
+            String telefono = x[6];
+
+            if (x[0].equals("C") || x[0].equals("CP")) {
+                String email = x[7];
+                if (x[0].equals("CP")) {
+                    Nombre nContacto = new Nombre();
+                    nContacto.setTratamiento(Tratamiento.valueOf(x[8]));
+                    nContacto.setNombre(x[9]);
+                    nContacto.setApellidoPaterno(x[10]);
+                    nContacto.setApellidoMaterno(x[11]);
+                    String telContacto = x[12];
+
+                    Cliente c = new Cliente(rut, nombre, email);
+                    c.setTelefono(telefono);
+                    objetos.add(c);
+
+                    Pasajero p = new Pasajero(rut, nombre, telContacto);
+                    p.setTelefono(telefono);
+                    p.setNomContacto(nContacto);
+                    objetos.add(p);
+                } else {
+                    Cliente c = new Cliente(rut, nombre, email);
+                    c.setTelefono(telefono);
+                    objetos.add(c);
+                }
+            } else {
+                Nombre nContacto = new Nombre();
+                nContacto.setTratamiento(Tratamiento.valueOf(x[7]));
+                nContacto.setNombre(x[8]);
+                nContacto.setApellidoPaterno(x[9]);
+                nContacto.setApellidoMaterno(x[10]);
+                String telContacto = x[11];
+
+                Pasajero p = new Pasajero(rut, nombre, telContacto);
+                p.setTelefono(telefono);
+                p.setNomContacto(nContacto);
+                objetos.add(p);
+            }
+        }
+
+        for (String s : empresas) {
+            String[] x = s.split(";");
+            Empresa e = new Empresa(Rut.of(x[0]), x[1], x[2]);
+            objetos.add(e);
+        }
+
+        for (String s : tripulantes) {
+            String[] x = s.split(";");
+
+            Nombre nombre = new Nombre();
+            Rut rut = Rut.of(x[1]);
+            nombre.setTratamiento(Tratamiento.valueOf(x[2]));
+            nombre.setNombre(x[3]);
+            nombre.setApellidoPaterno(x[4]);
+            nombre.setApellidoMaterno(x[5]);
+
+            Direccion dir = new Direccion(x[6], Integer.parseInt(x[7]), x[8]);
+            String rutEmpresa = x[9];
+
+            if (x[0].equals("A")) {
+                Auxiliar a = new Auxiliar(rut, nombre, dir);
+                // FALTA EL METODO FIND
+                objetos.add(a);
+            } else {
+                Conductor c = new Conductor(rut, nombre, dir);
+                // FALTA LO MISMO
+                objetos.add(c);
+            }
+        }
+
+        for (String s : terminales) {
+            String[] x = s.split(";");
+            Direccion dir = new Direccion(x[1], Integer.parseInt(x[2]), x[3]);
+            Terminal t = new Terminal(x[0], dir);
+            objetos.add(t);
+        }
+
+        for (String s : buses) {
+            String[] x = s.split(";");
+            Bus b = new Bus(x[0], Integer.parseInt(x[3]));
+            b.setMarca(x[1]);
+            b.setModelo(x[2]);
+            String rutEmpresa = x[4];
+            objetos.add(b);
+        }
+
+        for (String s : viajes) {
+            String[] x = s.split(";");
+            LocalDate fecha = LocalDate.parse(x[0], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            LocalTime hora = LocalTime.parse(x[1], DateTimeFormatter.ofPattern("hh:mm"));
+            Viaje v = new Viaje(fecha, hora, Integer.parseInt(x[2]), Integer.parseInt(x[3]), null, null, null, null, null); //TODO FALTAN LOS FIND
+            objetos.add(v);
+        }
+        return objetos.toArray();
     }
 
-    public void saveControladores(Object[] controladores){
+    public void saveControladores(Object[] controladores) {
 
     }
 
-    public Object[] readControladores(){
+    public Object[] readControladores() {
         ObjectInputStream archivo = null;
 
-        try{
+        try {
             archivo = new ObjectInputStream(new FileInputStream("archivo.obj"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -133,23 +181,23 @@ public class IOSVP implements Serializable {
 
     }
 
-    public void savePasajesDeVenta(Pasaje[] pasajes, String nombreArchivos){
+    public void savePasajesDeVenta(Pasaje[] pasajes, String nombreArchivos) {
 
     }
 
-    private Optional<Empresa> findEmpresa(List<Empresa> empresas, Rut rut){
+    private Optional<Empresa> findEmpresa(List<Empresa> empresas, Rut rut) {
 
     }
 
-    private Optional<Tripulante> findTripulante(Empresa empresa, IdPersona id){
+    private Optional<Tripulante> findTripulante(Empresa empresa, IdPersona id) {
 
     }
 
-    private Optional<Bus> findBus(List<Bus> buses, String patente){
+    private Optional<Bus> findBus(List<Bus> buses, String patente) {
 
     }
 
-    private Optional<Terminal> findTerminal(List<Terminal> terminales, String nombre){
+    private Optional<Terminal> findTerminal(List<Terminal> terminales, String nombre) {
 
     }
 }
