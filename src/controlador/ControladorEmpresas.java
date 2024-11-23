@@ -72,30 +72,32 @@ public class ControladorEmpresas {
     public void hireConductorForEmpresa(Rut rutEmp, IdPersona id, Nombre nom, Direccion dir) throws SVPException {
         Optional<Empresa> empresaExist = findEmpresa(rutEmp);
         Optional<Conductor> conductorExist = findConductor(id, rutEmp);
-        if (empresaExist.isEmpty()) {
-            throw new SVPException("No existe empresa con el rut indicado");
-        }
 
-        if (conductorExist.isPresent()) {
-            throw new SVPException("Ya está contratado conductor/auxiliar con el id dado en la empresa señalada");
-        }
-
-        Empresa e = empresaExist.get();
-        e.addConductor(id, nom, dir);
-
-    }
-
-
-    public void hireAuxiliarForEmpresa(Rut rutEmp, IdPersona id, Nombre nom, Direccion dir) throws SVPException {
-        Optional<Empresa> empresaExist = findEmpresa(rutEmp);
         Optional<Auxiliar> auxiliarExist = findAuxiliar(id, rutEmp);
 
         if (empresaExist.isEmpty()) {
             throw new SVPException("No existe empresa con el rut indicado");
         }
-        if (auxiliarExist.isPresent()) {
-            throw new SVPException("Ya está contratado auxiliar/conductor con el id dado en la empresa señalada");
 
+        if (conductorExist.isPresent() || auxiliarExist.isPresent()) {
+            throw new SVPException("Ya está contratado conductor/auxiliar con el id dado en la empresa señalada");
+        }
+
+        Empresa e = empresaExist.get();
+        e.addConductor(id, nom, dir);
+    }
+
+    public void hireAuxiliarForEmpresa(Rut rutEmp, IdPersona id, Nombre nom, Direccion dir) throws SVPException {
+        Optional<Empresa> empresaExist = findEmpresa(rutEmp);
+        Optional<Auxiliar> auxiliarExist = findAuxiliar(id, rutEmp);
+
+        Optional<Conductor> conductorExist = findConductor(id, rutEmp);
+
+        if (empresaExist.isEmpty()) {
+            throw new SVPException("No existe empresa con el rut indicado");
+        }
+        if (auxiliarExist.isPresent() || conductorExist.isPresent()) {
+            throw new SVPException("Ya está contratado auxiliar/conductor con el id dado en la empresa señalada");
         }
 
         Empresa e = empresaExist.get();
@@ -235,6 +237,8 @@ public class ControladorEmpresas {
     }
 
     protected Optional<Conductor> findConductor(IdPersona id, Rut rutEmpresa) {
+        /*
+
         for (Bus bus : buses) {
             if (bus.getEmp().getRut().equals(rutEmpresa)) {
                 Tripulante[] trip = bus.getEmp().getTripulantes();
@@ -247,10 +251,26 @@ public class ControladorEmpresas {
                 }
             }
         }
+         */
+
+        for (Empresa e : empresas){
+            if (e.getRut().equals(rutEmpresa)) {
+                Tripulante[] trip = e.getTripulantes();
+                for (Tripulante t : trip) {
+                    if (t instanceof Conductor) {
+                        if (t.getIdPersona().equals(id)) {
+                            return Optional.of((Conductor) t);
+                        }
+                    }
+                }
+            }
+        }
+
         return Optional.empty();
     }
 
     protected Optional<Auxiliar> findAuxiliar(IdPersona id, Rut rutEmpresa) {
+        /*
         for (Bus bus : buses) {
             if (bus.getEmp().getRut().equals(rutEmpresa)) {
                 Tripulante[] trip = bus.getEmp().getTripulantes();
@@ -263,6 +283,22 @@ public class ControladorEmpresas {
                 }
             }
         }
+         */
+
+        for(Empresa e : empresas) {
+            if (e.getRut().equals(rutEmpresa)) {
+                Tripulante[] trip = e.getTripulantes();
+                for (Tripulante t : trip) {
+                    if (t instanceof Auxiliar) {
+                        if (t.getIdPersona().equals(id)) {
+                            return Optional.of((Auxiliar) t);
+                        }
+                    }
+                }
+            }
+        }
+
         return Optional.empty();
+
     }
 }

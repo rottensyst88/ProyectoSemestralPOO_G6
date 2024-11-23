@@ -33,9 +33,7 @@ public class UISVP {
                     ║ 5) Crear bus                             ║
                     ║ 6) Crear viaje                           ║
                     ║ 7) Vender pasajes                        ║
-                    ║ 8) Listar ventas        finally {
-            
-        }                  ║
+                    ║ 8) Listar ventas                         ║
                     ║ 9) Listar viajes                         ║
                     ║10) Listar pasajeros de viaje             ║
                     ║11) Listar empresas                       ║
