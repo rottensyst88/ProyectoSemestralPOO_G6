@@ -42,23 +42,26 @@ public class IOSVP implements Serializable {
                 datosArchivo.add(archivo.next());
             }
 
-            for (String linea : datosArchivo) {
-                if (linea.equals("+")) {
-                    contador_pos++;
-                } else {
-                    switch (contador_pos) {
-                        case 0 -> clientes_pasajeros.add(linea);
-                        case 1 -> empresas.add(linea);
-                        case 2 -> tripulantes.add(linea);
-                        case 3 -> terminales.add(linea);
-                        case 4 -> buses.add(linea);
-                        case 5 -> viajes.add(linea);
-                    }
-                }
-                datosArchivo.remove(linea);
-            }
         } catch (FileNotFoundException e) {
             throw new SVPException("No existe o no se puede abrir el archivo SVPDatosIniciales.txt");
+        }
+
+        archivo.close();
+
+        for (String linea : datosArchivo) {
+            if (linea.equals("+")) {
+                contador_pos++;
+            } else {
+                switch (contador_pos) {
+                    case 0 -> clientes_pasajeros.add(linea);
+                    case 1 -> empresas.add(linea);
+                    case 2 -> tripulantes.add(linea);
+                    case 3 -> terminales.add(linea);
+                    case 4 -> buses.add(linea);
+                    case 5 -> viajes.add(linea);
+                }
+            }
+            datosArchivo.remove(linea);
         }
 
         for (String s : clientes_pasajeros) {
@@ -183,8 +186,27 @@ public class IOSVP implements Serializable {
         }
     }
 
-    public Object[] readControladores() {
+    public Object[] readControladores() throws SVPException {
+        ObjectInputStream objetoArch = null;
+        List<Object> objetosLeidos = new ArrayList<>();
 
+        try {
+            objetoArch = new ObjectInputStream(new FileInputStream("SVPObjetos.obj"));
+
+            while (true) {
+                objetosLeidos.add(objetoArch.readObject());
+            }
+
+        } catch (EOFException ex){
+            try{
+                objetoArch.close();
+            } catch (IOException ex2){
+                throw new SVPException("");
+            }
+            return objetosLeidos.toArray();
+        } catch (ClassNotFoundException | IOException exFinal){
+            throw new SVPException("");
+        }
     }
 
     public void savePasajesDeVenta(Pasaje[] pasajes, String nombreArchivos) {
