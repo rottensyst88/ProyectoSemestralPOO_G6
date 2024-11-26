@@ -142,13 +142,9 @@ public class IOSVP implements Serializable {
 
             if (e.isPresent()) {
                 if (x[0].equals("A")) {
-                    //Auxiliar a = new Auxiliar(rut, nombre, dir);
                     e.get().addAuxiliar(rut, nombre, dir);
-                    //objetos.add(a);
                 } else {
-                    //Conductor c = new Conductor(rut, nombre, dir);
                     e.get().addConductor(rut, nombre, dir);
-                    //objetos.add(c);
                 }
             }
         }
@@ -190,10 +186,36 @@ public class IOSVP implements Serializable {
             String nTerminalSalida = x[7];
             String nTerminalLlegada = x[8];
 
+            List<Bus> busesF = new ArrayList<>();
+            for(Object o : objetos){
+                if(o instanceof Bus){
+                    busesF.add((Bus) o);
+                }
+            }
+            Optional<Bus> busBuscado = findBus(busesF, patenteBus);
+
+            Optional<Tripulante> auxBusqueda = null;
+            Optional<Tripulante> condBusqueda = null;
+
+            if(busBuscado.isPresent()){
+                Empresa eV = busBuscado.get().getEmp();
+                auxBusqueda = findTripulante(eV,Rut.of(rutAuxiliar),"Auxiliar");
+                condBusqueda = findTripulante(eV,Rut.of(rutConductor),"Conductor");
+            }
+
+            List<Terminal> terminalF = new ArrayList<>();
+            for(Object o : objetos){
+                if(o instanceof Terminal){
+                    terminalF.add((Terminal) o);
+                }
+            }
+
+            Optional<Terminal> termSalida = findTerminal(terminalF,nTerminalSalida);
+            Optional<Terminal> termLlegada = findTerminal(terminalF,nTerminalLlegada);
 
 
-
-            Viaje v = new Viaje(fecha, hora, Integer.parseInt(x[2]), Integer.parseInt(x[3]), null, null, null, null, null); //TODO FALTAN LOS FIND
+            Viaje v = new Viaje(fecha, hora, Integer.parseInt(x[2]), Integer.parseInt(x[3]), busBuscado.get(),
+                    (Auxiliar) auxBusqueda.get(), (Conductor) condBusqueda.get(), termSalida.get(), termLlegada.get()); //TODO FALTAN LOS FIND
             objetos.add(v);
         }
         return objetos.toArray();
