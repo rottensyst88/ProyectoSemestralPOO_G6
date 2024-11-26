@@ -1,11 +1,9 @@
 package persistencia;
 
-import controlador.SistemaVentaPasajes;
 import excepciones.SVPException;
 import utilidades.*;
 import modelo.*;
 
-import javax.swing.text.html.Option;
 import java.io.Serializable;
 import java.io.*;
 import java.time.LocalDate;
