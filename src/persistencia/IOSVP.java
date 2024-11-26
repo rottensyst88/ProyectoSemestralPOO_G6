@@ -209,8 +209,21 @@ public class IOSVP implements Serializable {
         }
     }
 
-    public void savePasajesDeVenta(Pasaje[] pasajes, String nombreArchivos) {
+    public void savePasajesDeVenta(Pasaje[] pasajes, String nombreArchivos) throws SVPException{
+        PrintStream out = null;
 
+        try{
+            out = new PrintStream(new File(nombreArchivos));
+
+            for(Pasaje p : pasajes){
+                out.println(p.toString());
+            }
+
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            throw new SVPException("");
+        }
     }
 
     private Optional<Empresa> findEmpresa(List<Empresa> empresas, Rut rut) {
