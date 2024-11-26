@@ -30,7 +30,7 @@ public class IOSVP implements Serializable {
 
         List<Object> objetos = new ArrayList<>();
 
-        Scanner archivo = null;
+        Scanner archivo;
         byte contador_pos = 0;
 
         try {
@@ -131,14 +131,25 @@ public class IOSVP implements Serializable {
             Direccion dir = new Direccion(x[6], Integer.parseInt(x[7]), x[8]);
             String rutEmpresa = x[9];
 
-            if (x[0].equals("A")) {
-                Auxiliar a = new Auxiliar(rut, nombre, dir);
-                // FALTA EL METODO FIND
-                objetos.add(a);
-            } else {
-                Conductor c = new Conductor(rut, nombre, dir);
-                // FALTA LO MISMO
-                objetos.add(c);
+            List<Empresa> empresasF = new ArrayList<>();
+            for (Object emp : objetos) {
+                if (emp instanceof Empresa) {
+                    empresasF.add((Empresa) emp);
+                }
+            }
+
+            Optional<Empresa> e = findEmpresa(empresasF, Rut.of(rutEmpresa));
+
+            if (e.isPresent()) {
+                if (x[0].equals("A")) {
+                    //Auxiliar a = new Auxiliar(rut, nombre, dir);
+                    e.get().addAuxiliar(rut, nombre, dir);
+                    //objetos.add(a);
+                } else {
+                    //Conductor c = new Conductor(rut, nombre, dir);
+                    e.get().addConductor(rut, nombre, dir);
+                    //objetos.add(c);
+                }
             }
         }
 
@@ -155,13 +166,33 @@ public class IOSVP implements Serializable {
             b.setMarca(x[1]);
             b.setModelo(x[2]);
             String rutEmpresa = x[4];
-            objetos.add(b);
+
+            List<Empresa> empresasF = new ArrayList<>();
+            for (Object emp : objetos) {
+                if (emp instanceof Empresa) {
+                    empresasF.add((Empresa) emp);
+                }
+            }
+            Optional<Empresa> e = findEmpresa(empresasF, Rut.of(rutEmpresa));
+            if (e.isPresent()) {
+                e.get().addBus(b);
+                objetos.add(b);
+            }
         }
 
         for (String s : viajes) {
             String[] x = s.split(";");
             LocalDate fecha = LocalDate.parse(x[0], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             LocalTime hora = LocalTime.parse(x[1], DateTimeFormatter.ofPattern("hh:mm"));
+            String patenteBus = x[4];
+            String rutAuxiliar = x[5];
+            String rutConductor = x[6];
+            String nTerminalSalida = x[7];
+            String nTerminalLlegada = x[8];
+
+
+
+
             Viaje v = new Viaje(fecha, hora, Integer.parseInt(x[2]), Integer.parseInt(x[3]), null, null, null, null, null); //TODO FALTAN LOS FIND
             objetos.add(v);
         }
@@ -196,25 +227,25 @@ public class IOSVP implements Serializable {
                 objetosLeidos.add(objetoArch.readObject());
             }
 
-        } catch (EOFException ex){
-            try{
+        } catch (EOFException ex) {
+            try {
                 objetoArch.close();
-            } catch (IOException ex2){
+            } catch (IOException ex2) {
                 throw new SVPException("");
             }
             return objetosLeidos.toArray();
-        } catch (ClassNotFoundException | IOException exFinal){
+        } catch (ClassNotFoundException | IOException exFinal) {
             throw new SVPException("");
         }
     }
 
-    public void savePasajesDeVenta(Pasaje[] pasajes, String nombreArchivos) throws SVPException{
+    public void savePasajesDeVenta(Pasaje[] pasajes, String nombreArchivos) throws SVPException {
         PrintStream out = null;
 
-        try{
+        try {
             out = new PrintStream(new File(nombreArchivos));
 
-            for(Pasaje p : pasajes){
+            for (Pasaje p : pasajes) {
                 out.println(p.toString());
             }
 
@@ -241,14 +272,14 @@ public class IOSVP implements Serializable {
         Optional<Tripulante> valor = Optional.empty();
         Tripulante[] trip = empresa.getTripulantes();
 
-        for(Tripulante t : trip){
-            if(t.getIdPersona().equals(id)){
-                if(t instanceof Auxiliar && tipoDato.equalsIgnoreCase("Auxiliar")){
+        for (Tripulante t : trip) {
+            if (t.getIdPersona().equals(id)) {
+                if (t instanceof Auxiliar && tipoDato.equalsIgnoreCase("Auxiliar")) {
                     valor = Optional.of(t);
                     break;
                 }
 
-                if(t instanceof Conductor && tipoDato.equalsIgnoreCase("Conductor")){
+                if (t instanceof Conductor && tipoDato.equalsIgnoreCase("Conductor")) {
                     valor = Optional.of(t);
                     break;
                 }
@@ -259,8 +290,8 @@ public class IOSVP implements Serializable {
 
     private Optional<Bus> findBus(List<Bus> buses, String patente) {
         Optional<Bus> valor = Optional.empty();
-        for(Bus b : buses){
-            if(b.getPatente().equals(patente)){
+        for (Bus b : buses) {
+            if (b.getPatente().equals(patente)) {
                 valor = Optional.of(b);
                 break;
             }
@@ -271,8 +302,8 @@ public class IOSVP implements Serializable {
     private Optional<Terminal> findTerminal(List<Terminal> terminales, String nombre) {
         Optional<Terminal> valor = Optional.empty();
 
-        for(Terminal t : terminales){
-            if(t.getNombre().equals(nombre)){
+        for (Terminal t : terminales) {
+            if (t.getNombre().equals(nombre)) {
                 valor = Optional.of(t);
             }
         }
