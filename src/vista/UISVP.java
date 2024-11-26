@@ -50,7 +50,7 @@ public class UISVP {
                     ╚══════════════════════════════════════════╝
                     """);
 
-            try{
+            try {
                 valor = Integer.parseInt(entradaDatos("  ..:: Ingrese número de opción", 1));
 
                 switch (valor) {
@@ -68,94 +68,126 @@ public class UISVP {
                     case 12 -> listLlegadasSalidasTerminal();
                     case 13 -> listVentasEmpresa();
                     case 14 -> verificador = false;
-                    default -> System.out.println(":::: Valor ingresado no es valido ::::");
+                    default -> System.out.println(":::: Numero ingresado no es valido, reintente ::::");
                 }
 
             } catch (NumberFormatException e) {
-                System.out.println(":::: Valor no valido!");
+                imprimirErrores(new SVPException(":::: El valor ingresado no es valido ::::"));
             }
         } while (verificador);
     }
 
     private void createEmpresas() {
+        boolean verif = true;
         System.out.println("...:::: Creando una nueva Empresa ::::....\n");
-        String rut_st = entradaDatos("R.U.T", 1);
-        String nombre = entradaDatos("Nombre", 1);
-        String url = entradaDatos("URL", 1);
-        try {
-            ControladorEmpresas.getInstance().createEmpresa(Rut.of(rut_st), nombre, url);
-            System.out.println("\n...:::: Empresa guardada exitosamente ::::....");
-        } catch (SVPException e) {
-            imprimirErrores(e);
-        }
+        do {
+            String rut_st = entradaDatos("R.U.T", 1);
+            Rut rutEmpresa = Rut.of(rut_st);
+
+            if (rutEmpresa == null) {
+                imprimirErrores(new SVPException(":::: Formato de rut ingresado no es valido ::::"));
+            } else {
+                String nombre = entradaDatos("Nombre", 1);
+                String url = entradaDatos("URL", 1);
+                try {
+                    ControladorEmpresas.getInstance().createEmpresa(Rut.of(rut_st), nombre, url);
+                    System.out.println("\n...:::: Empresa guardada exitosamente ::::....");
+                } catch (SVPException e) {
+                    imprimirErrores(e);
+                } finally {
+                    verif = false;
+                }
+            }
+        } while (verif);
     }
 
     private void contrataTripulante() {
         Nombre tripulante = new Nombre();
         IdPersona id;
         Tratamiento tratamiento;
-
+        boolean verif = true;
         System.out.println("...:::: Creando un nuevo Tripulante ...::::\n");
-        System.out.println(":::: Dato de la Empresa");
-        Rut rut = Rut.of(entradaDatos("R.U.T", 1));
-
-        System.out.println("\n:::: Datos tripulante");
-        int opcion = Integer.parseInt(entradaDatos("Auxiliar[1] o Conductor[2]", 2));
 
         do {
-            id = SelectorRut_Pasaporte(2);
-        } while (id == null);
-        do {
-            tratamiento = SelectorTratamiento(2);
-        } while (tratamiento == null);
-
-        tripulante.setNombre(entradaDatos("Nombres", 2));
-        tripulante.setApellidoPaterno(entradaDatos("Apellido Paterno", 2));
-        tripulante.setApellidoMaterno(entradaDatos("Apellido Materno", 2));
-
-        String calle = entradaDatos("Calle", 2);
-        int numero = Integer.parseInt(entradaDatos("Numero", 2));
-        String comuna = entradaDatos("Comuna", 2);
-
-        Direccion direccion = new Direccion(calle, numero, comuna);
-
-        try {
-            if (opcion == 1) {
-                ControladorEmpresas.getInstance().hireAuxiliarForEmpresa(rut, id, tripulante, direccion);
-                System.out.println("...:::: Auxiliar contratado exitosamente ::::....");
+            System.out.println(":::: Dato de la Empresa");
+            Rut rut = Rut.of(entradaDatos("R.U.T", 1));
+            if (rut == null) {
+                imprimirErrores(new SVPException(":::: Formato de rut ingresado no es valido ::::"));
             } else {
-                ControladorEmpresas.getInstance().hireConductorForEmpresa(rut, id, tripulante, direccion);
-                System.out.println("...:::: Conductor contratado exitosamente ::::....");
+                try {
+                    System.out.println("\n:::: Datos tripulante");
+                    int opcion = Integer.parseInt(entradaDatos("Auxiliar[1] o Conductor[2]", 2));
+
+                    do {
+                        id = SelectorRut_Pasaporte(2);
+                    } while (id == null);
+                    do {
+                        tratamiento = SelectorTratamiento(2);
+                    } while (tratamiento == null);
+
+                    tripulante.setNombre(entradaDatos("Nombres", 2));
+                    tripulante.setApellidoPaterno(entradaDatos("Apellido Paterno", 2));
+                    tripulante.setApellidoMaterno(entradaDatos("Apellido Materno", 2));
+
+                    String calle = entradaDatos("Calle", 2);
+                    int numero = Integer.parseInt(entradaDatos("Numero", 2));
+                    String comuna = entradaDatos("Comuna", 2);
+
+                    Direccion direccion = new Direccion(calle, numero, comuna);
+
+                    try {
+                        if (opcion == 1) {
+                            ControladorEmpresas.getInstance().hireAuxiliarForEmpresa(rut, id, tripulante, direccion);
+                            System.out.println("...:::: Auxiliar contratado exitosamente ::::....");
+                        } else {
+                            ControladorEmpresas.getInstance().hireConductorForEmpresa(rut, id, tripulante, direccion);
+                            System.out.println("...:::: Conductor contratado exitosamente ::::....");
+                        }
+                    } catch (SVPException e) {
+                        imprimirErrores(e);
+                    } finally {
+                        verif = false;
+                    }
+                } catch (NumberFormatException e) {
+                    imprimirErrores(new SVPException(":::: El valor ingresado no es valido ::::"));
+                }
             }
-        } catch (SVPException e) {
-            imprimirErrores(e);
-        }
+        } while (verif);
     }
 
     private void createTerminal() {
         System.out.println("...:::: Creando un nuevo Terminal\n");
+        boolean verif = true;
 
-        String nombre = entradaDatos("Nombre", 1);
-        String calle = entradaDatos("Calle", 1);
-        int numero = Integer.parseInt(entradaDatos("Numero", 1));
-        String comuna = entradaDatos("Comuna", 1);
+        do {
+            try {
+                String nombre = entradaDatos("Nombre", 1);
+                String calle = entradaDatos("Calle", 1);
+                int numero = Integer.parseInt(entradaDatos("Numero", 1));
+                String comuna = entradaDatos("Comuna", 1);
 
-        Direccion direccion = new Direccion(calle, numero, comuna);
+                Direccion direccion = new Direccion(calle, numero, comuna);
 
-        try {
-            ControladorEmpresas.getInstance().createTerminal(nombre, direccion);
-            System.out.println("....:::: Terminal guardado exitosamente ::::....");
-        } catch (SVPException e) {
-            imprimirErrores(e);
-        }
+                try {
+                    ControladorEmpresas.getInstance().createTerminal(nombre, direccion);
+                    System.out.println("....:::: Terminal guardado exitosamente ::::....");
+                } catch (SVPException e) {
+                    imprimirErrores(e);
+                } finally{
+                    verif = false;
+                }
+            } catch (NumberFormatException e) {
+                imprimirErrores(new SVPException(":::: El valor ingresado no es valido ::::"));
+            }
+        } while (verif);
     }
 
     private void createCliente() {
         Nombre usuario = new Nombre();
         Tratamiento tratamiento;
         IdPersona id;
-        System.out.println("\n...:::: Crear un nuevo Cliente ::::...\n");
 
+        System.out.println("\n...:::: Crear un nuevo Cliente ::::...\n");
         do {
             id = SelectorRut_Pasaporte(1);
         } while (id == null);
@@ -178,22 +210,27 @@ public class UISVP {
     }
 
     private void createBus() {
+
+        boolean verif = true;
         System.out.println("\n...:::: Creación de un nuevo bus ::::...\n");
 
-        String patente = entradaDatos("Patente", 1);
-        String marca = entradaDatos("Marca", 1);
-        String modelo = entradaDatos("Modelo", 1);
-        int nroAsientos = Integer.parseInt(entradaDatos("Numero de asientos", 1));
+        do{
+            String patente = entradaDatos("Patente", 1);
+            String marca = entradaDatos("Marca", 1);
+            String modelo = entradaDatos("Modelo", 1);
+            int nroAsientos = Integer.parseInt(entradaDatos("Numero de asientos", 1));
 
-        System.out.println("\n:::: Dato de la empresa");
-        String rut_st = entradaDatos("R.U.T", 1);
+            System.out.println("\n:::: Dato de la empresa");
+            String rut_st = entradaDatos("R.U.T", 1);
 
-        try {
-            ControladorEmpresas.getInstance().createBus(patente, marca, modelo, nroAsientos, Rut.of(rut_st));
-            System.out.println("\n...:::: Bus guardado exitosamente ::::...");
-        } catch (SVPException e) {
-            imprimirErrores(e);
-        }
+            try {
+                ControladorEmpresas.getInstance().createBus(patente, marca, modelo, nroAsientos, Rut.of(rut_st));
+                System.out.println("\n...:::: Bus guardado exitosamente ::::...");
+            } catch (SVPException e) {
+                imprimirErrores(e);
+            }
+
+        }while(verif);
     }
 
     private void createViaje() {
@@ -676,7 +713,6 @@ public class UISVP {
             return sc.next();
         }
         return "";
-
     }
 
     private void imprimirErrores(SVPException e) {
