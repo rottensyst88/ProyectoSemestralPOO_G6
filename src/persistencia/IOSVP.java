@@ -5,6 +5,7 @@ import excepciones.SVPException;
 import utilidades.*;
 import modelo.*;
 
+import javax.swing.text.html.Option;
 import java.io.Serializable;
 import java.io.*;
 import java.time.LocalDate;
@@ -227,18 +228,56 @@ public class IOSVP implements Serializable {
     }
 
     private Optional<Empresa> findEmpresa(List<Empresa> empresas, Rut rut) {
+        Optional<Empresa> valor = Optional.empty();
+        for (Empresa e : empresas) {
+            if (e.getRut().equals(rut)) {
+                valor = Optional.of(e);
+                break;
+            }
+        }
 
+        return valor;
     }
 
-    private Optional<Tripulante> findTripulante(Empresa empresa, IdPersona id) {
+    private Optional<Tripulante> findTripulante(Empresa empresa, IdPersona id, String tipoDato) {
+        Optional<Tripulante> valor = Optional.empty();
+        Tripulante[] trip = empresa.getTripulantes();
 
+        for(Tripulante t : trip){
+            if(t.getIdPersona().equals(id)){
+                if(t instanceof Auxiliar && tipoDato.equalsIgnoreCase("Auxiliar")){
+                    valor = Optional.of(t);
+                    break;
+                }
+
+                if(t instanceof Conductor && tipoDato.equalsIgnoreCase("Conductor")){
+                    valor = Optional.of(t);
+                    break;
+                }
+            }
+        }
+        return valor;
     }
 
     private Optional<Bus> findBus(List<Bus> buses, String patente) {
-
+        Optional<Bus> valor = Optional.empty();
+        for(Bus b : buses){
+            if(b.getPatente().equals(patente)){
+                valor = Optional.of(b);
+                break;
+            }
+        }
+        return valor;
     }
 
     private Optional<Terminal> findTerminal(List<Terminal> terminales, String nombre) {
+        Optional<Terminal> valor = Optional.empty();
 
+        for(Terminal t : terminales){
+            if(t.getNombre().equals(nombre)){
+                valor = Optional.of(t);
+            }
+        }
+        return valor;
     }
 }
