@@ -160,22 +160,10 @@ public class UISVP {
         }
     }
     private void createBus() {
-        System.out.println("\n...:::: Creación de un nuevo bus ::::...\n");
-
-        String patente = entradaDatos("Patente",1);
-        String marca = entradaDatos("Marca",1);
-        String modelo = entradaDatos("Modelo",1);
-        int nroAsientos = Integer.parseInt(entradaDatos("Numero de asientos",1));
-
-        System.out.println("\n:::: Dato de la empresa");
-        String rut_st = entradaDatos("R.U.T",1);
-
-        try {
-            ControladorEmpresas.getInstance().createBus(patente, marca, modelo, nroAsientos, Rut.of(rut_st));
-            System.out.println("\n...:::: Bus guardado exitosamente ::::...");
-        } catch (SistemaVentaPasajesException e) {
-            imprimirErrores(e);
-        }
+        GUICreaBus dialog = new GUICreaBus();
+        dialog.setLocationRelativeTo(null);
+        dialog.pack();
+        dialog.setVisible(true);
     }
     private void createViaje() {
         IdPersona id_aux; IdPersona id_con; IdPersona[] datos_id; String[] datos = new String[2];

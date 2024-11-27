@@ -41,6 +41,9 @@ public class ControladorEmpresas {
     }
 
     public void createBus(String pat, String marca, String modelo, int nroAsientos, Rut rutEmp) throws SistemaVentaPasajesException {
+        if(rutEmp==null){
+            throw new SistemaVentaPasajesException("Rut invalido");
+        }
 
         Optional<Bus> busExist = findBus(pat);
         Optional<Empresa> empresaExist = findEmpresa(rutEmp);
