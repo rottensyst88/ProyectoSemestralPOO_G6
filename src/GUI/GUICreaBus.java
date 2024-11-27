@@ -66,7 +66,11 @@ public class GUICreaBus extends JDialog {
             JOptionPane.showMessageDialog(this, "Damian weko", "¡¡¡¡¡¡¡ATENCION!!!!!!", JOptionPane.INFORMATION_MESSAGE);
         } catch (SistemaVentaPasajesException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "sexo gratis", JOptionPane.ERROR_MESSAGE);
+        }catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Datos invalidos", "sexo gratis", JOptionPane.ERROR_MESSAGE);
         }
+
+
     }
 
     public void onCancel() {
