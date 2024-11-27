@@ -1,5 +1,6 @@
 package vista;
-
+import GUI.GUICreaEmpresa.*;
+import GUI.*;
 import controlador.*;
 import excepciones.*;
 import utilidades.*;
@@ -72,16 +73,11 @@ public class UISVP {
         } while (verificador);
     }
     private void createEmpresas() {
-        System.out.println("...:::: Creando una nueva Empresa ::::....\n");
-        String rut_st = entradaDatos("R.U.T",1);
-        String nombre = entradaDatos("Nombre",1);
-        String url = entradaDatos("URL",1);
-        try {
-            ControladorEmpresas.getInstance().createEmpresa(Rut.of(rut_st), nombre, url);
-            System.out.println("\n...:::: Empresa guardada exitosamente ::::....");
-        } catch (SistemaVentaPasajesException e) {
-            imprimirErrores(e);
-        }
+        GUICreaEmpresa dialog = new GUICreaEmpresa();
+        dialog.setLocationRelativeTo(null);
+        dialog.pack();
+        dialog.setVisible(true);
+
     }
     private void contrataTripulante() {
         Nombre tripulante = new Nombre(); IdPersona id; Tratamiento tratamiento;

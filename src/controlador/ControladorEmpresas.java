@@ -31,6 +31,7 @@ public class ControladorEmpresas {
     //METODOS
 
     public void createEmpresa(Rut rut, String nombre, String url) throws SistemaVentaPasajesException {
+        if(rut==null){ throw new SistemaVentaPasajesException("Rut invalido"); }
         Optional<Empresa> empresaExist = findEmpresa(rut);
         if (empresaExist.isPresent()) {
             throw new SistemaVentaPasajesException("Ya existe empresa con el rut indicado");
