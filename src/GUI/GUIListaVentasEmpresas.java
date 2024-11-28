@@ -31,16 +31,18 @@ public class GUIListaVentasEmpresas extends JDialog{
             {"11.111.111-1", "PRUEBA"}
     };
 
+    private String[][] empresas2 = new String[0][0];
+
     private String [] columnas= {"FECHA", "TIPO", "MONTO PAGADO", "TIPO PAGO"};
 
     private String[][] ventasPorEmpresa = {
             // Empresa A (RUT: 12345678-9)
             {"12345678-9", "12/11/2024", "Factura", "100000", "Tarjeta"},
             {"12345678-9", "13/11/2024", "Boleta", "150000", "Efectivo"},
-            {"12345678-9", "14/11/2024", "Factura", "200000", "Tarjeta"}, // Transferencia eliminada
+            {"12345678-9", "14/11/2024", "Factura", "200000", "Tarjeta"},
             {"12345678-9", "15/11/2024", "Boleta", "300000", "Tarjeta"},
             {"12345678-9", "16/11/2024", "Factura", "50000", "Efectivo"},
-            {"12345678-9", "17/11/2024", "Boleta", "250000", "Efectivo"}, // Transferencia eliminada
+            {"12345678-9", "17/11/2024", "Boleta", "250000", "Efectivo"},
             {"12345678-9", "18/11/2024", "Factura", "120000", "Efectivo"},
 
             // Empresa B (RUT: 98765432-1)
@@ -67,8 +69,13 @@ public class GUIListaVentasEmpresas extends JDialog{
 
 
 
-    public GUIListaVentasEmpresas() {
-        cargarEmpresas();
+    public GUIListaVentasEmpresas() throws SistemaVentaPasajesException{
+        try{
+            cargarEmpresas();
+        } catch (SistemaVentaPasajesException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+            System.exit(0);
+        }
         setContentPane(panel1);
         setLocationRelativeTo(null);
         setModal(true);
@@ -105,10 +112,10 @@ public class GUIListaVentasEmpresas extends JDialog{
         setLocationRelativeTo(null);
     }
 
-    private void onOK() throws IllegalArgumentException {
+    private void onOK() throws SistemaVentaPasajesException {
         try {
             generarReporte();
-        } catch (IllegalArgumentException e) {
+        } catch (SistemaVentaPasajesException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
@@ -118,18 +125,15 @@ public class GUIListaVentasEmpresas extends JDialog{
         dispose();
     }
 
-    private void cargarEmpresas() {
+    private void cargarEmpresas() throws  SistemaVentaPasajesException {
 
-        DefaultComboBoxModel<String> modeloEmpresas = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<String> modeloRuts = new DefaultComboBoxModel<>();
-
-        for (String[] empresa : empresas) {
-
-            modeloEmpresas.addElement(empresa[1]); // Nombre de la empresa
-            modeloRuts.addElement(empresa[0]); // RUT de la empresa
+        if(empresas.length == 0){
+            throw new SistemaVentaPasajesException("No hay empresas en el registro");
         }
-        boxNombreEmp.setModel(modeloEmpresas);
-        boxRut.setModel(modeloRuts);
+        for (String[] empresa : empresas) {
+            boxNombreEmp.addItem(empresa[1]);
+            boxRut.addItem(empresa[0]);
+        }
     }
 
 
@@ -167,13 +171,13 @@ public class GUIListaVentasEmpresas extends JDialog{
     }
 
 
-    private void generarReporte() throws IllegalArgumentException {
+    private void generarReporte() throws SistemaVentaPasajesException {
         String rutSeleccionado = (String) boxRut.getSelectedItem();
         // String [][] ventasPorEmpresa = ControladorEmpresas.getInstance().listVentasEmpresa(rutSeleccionado);
         String[][] empresaSeleccionada = imprimirPorRut(rutSeleccionado);
 
         /*if (ventasPorEmpresa.length == 0) {
-            throw new IllegalArgumentException("La empresa seleccionada no posee ventas");
+            throw new SistemaVentaPasajesException("La empresa seleccionada no posee ventas");
         }
 
          */
@@ -187,7 +191,7 @@ public class GUIListaVentasEmpresas extends JDialog{
             }
         }
         if (!tieneVentas) {
-            throw new IllegalArgumentException("La empresa seleccionada no posee ventas, porfavor seleccione otra empresa");
+            throw new SistemaVentaPasajesException("La empresa seleccionada no posee ventas, porfavor seleccione otra empresa");
         }
 
         tablaVentas.setModel(new DefaultTableModel(empresaSeleccionada, columnas));
