@@ -35,16 +35,13 @@ public class IOSVP implements Serializable {
 
         try {
             archivo = new Scanner(new File("SVPDatosIniciales.txt"));
-
-            archivo.useLocale(Locale.ENGLISH);
             while (archivo.hasNextLine()) {
-                datosArchivo.add(archivo.next());
+                datosArchivo.add(archivo.nextLine());
             }
 
         } catch (FileNotFoundException e) {
             throw new SVPException("No existe o no se puede abrir el archivo SVPDatosIniciales.txt");
         }
-
         archivo.close();
 
         for (String linea : datosArchivo) {
@@ -60,9 +57,7 @@ public class IOSVP implements Serializable {
                     case 5 -> viajes.add(linea);
                 }
             }
-            datosArchivo.remove(linea);
         }
-
         for (String s : clientes_pasajeros) {
             String[] x = s.split(";");
 
@@ -111,12 +106,16 @@ public class IOSVP implements Serializable {
                 objetos.add(p);
             }
         }
+        //System.out.println("Clientes - Pasajeros");
+        //imprimeArreglos(clientes_pasajeros);
 
         for (String s : empresas) {
             String[] x = s.split(";");
             Empresa e = new Empresa(Rut.of(x[0]), x[1], x[2]);
             objetos.add(e);
         }
+        //System.out.println("Empresas");
+        //imprimeArreglos(empresas);
 
         for (String s : tripulantes) {
             String[] x = s.split(";");
@@ -138,23 +137,42 @@ public class IOSVP implements Serializable {
                 }
             }
 
+            Tripulante var = null;
             Optional<Empresa> e = findEmpresa(empresasF, Rut.of(rutEmpresa));
-
             if (e.isPresent()) {
+                //System.out.println("EMPRESA BUSCADA TRIP. -> " + e.get());
                 if (x[0].equals("A")) {
-                    e.get().addAuxiliar(rut, nombre, dir);
+                    var = new Auxiliar(rut,nombre,dir);
+                    e.get().addAuxiliar(var.getIdPersona(), var.getNombreCompleto(), var.getDireccion());
                 } else {
-                    e.get().addConductor(rut, nombre, dir);
+                    var = new Conductor(rut,nombre,dir);
+                    e.get().addConductor(var.getIdPersona(), var.getNombreCompleto(), var.getDireccion());
+                }
+            }
+            objetos.add(var);
+        }
+        //System.out.println("Tripulantes");
+        //imprimeArreglos(tripulantes);
+/*
+        //todo REVISAR ESTO!
+        for (Object o : objetos) {
+            if(o instanceof Empresa){
+                for(Tripulante a : ((Empresa) o).getTripulantes()){
+                    System.out.println(a.toString());
                 }
             }
         }
+        System.out.println("===================================check_tripulantes====");
 
+ */
         for (String s : terminales) {
             String[] x = s.split(";");
             Direccion dir = new Direccion(x[1], Integer.parseInt(x[2]), x[3]);
             Terminal t = new Terminal(x[0], dir);
             objetos.add(t);
         }
+        //System.out.println("Terminales");
+        //imprimeArreglos(terminales);
 
         for (String s : buses) {
             String[] x = s.split(";");
@@ -171,15 +189,28 @@ public class IOSVP implements Serializable {
             }
             Optional<Empresa> e = findEmpresa(empresasF, Rut.of(rutEmpresa));
             if (e.isPresent()) {
+                //System.out.println("EMPRESA BUSCADA BUSES. -> " + e.get());
                 e.get().addBus(b);
-                objetos.add(b);
+            }
+            objetos.add(b);
+        }
+        //System.out.println("Buses");
+        //imprimeArreglos(buses);
+
+        /*
+        for (Object o : objetos) {
+            if(o instanceof Empresa){
+                for(Bus a : ((Empresa) o).getBuses()){
+                    System.out.println(a.getPatente() + a.getEmp()+ a.getMarca() + a.getModelo());
+                }
             }
         }
+        System.out.println("===================================check_buses====");*/
 
         for (String s : viajes) {
             String[] x = s.split(";");
             LocalDate fecha = LocalDate.parse(x[0], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            LocalTime hora = LocalTime.parse(x[1], DateTimeFormatter.ofPattern("hh:mm"));
+            LocalTime hora = LocalTime.parse(x[1], DateTimeFormatter.ofPattern("HH:mm"));
             String patenteBus = x[4];
             String rutAuxiliar = x[5];
             String rutConductor = x[6];
@@ -194,11 +225,22 @@ public class IOSVP implements Serializable {
             }
             Optional<Bus> busBuscado = findBus(busesF, patenteBus);
 
-            Optional<Tripulante> auxBusqueda = null;
-            Optional<Tripulante> condBusqueda = null;
+            Optional<Tripulante> auxBusqueda = Optional.empty();
+            Optional<Tripulante> condBusqueda = Optional.empty();
 
             if(busBuscado.isPresent()){
-                Empresa eV = busBuscado.get().getEmp();
+                Empresa eV = null;
+
+                for (Object o : objetos) {
+                    if(o instanceof Empresa){
+                        for (Bus b : ((Empresa) o).getBuses()){
+                            if(b.equals(busBuscado.get())){
+                                eV = (Empresa) o;
+                            }
+                        }
+                    }
+                }
+
                 auxBusqueda = findTripulante(eV,Rut.of(rutAuxiliar),"Auxiliar");
                 condBusqueda = findTripulante(eV,Rut.of(rutConductor),"Conductor");
             }
@@ -215,7 +257,7 @@ public class IOSVP implements Serializable {
 
 
             Viaje v = new Viaje(fecha, hora, Integer.parseInt(x[2]), Integer.parseInt(x[3]), busBuscado.get(),
-                    (Auxiliar) auxBusqueda.get(), (Conductor) condBusqueda.get(), termSalida.get(), termLlegada.get()); //TODO FALTAN LOS FIND
+                    (Auxiliar) auxBusqueda.get(), (Conductor) condBusqueda.get(), termSalida.get(), termLlegada.get());
             objetos.add(v);
         }
         return objetos.toArray();
@@ -330,5 +372,17 @@ public class IOSVP implements Serializable {
             }
         }
         return valor;
+    }
+
+    // METODO PRIVADO USADO PARA DEBUGEAR!
+
+    private void imprimeArreglos(List<String> s) {
+        System.out.println("______________________________________");
+
+        for(String f : s){
+            System.out.println(f);
+        }
+
+        System.out.println("______________________________________");
     }
 }

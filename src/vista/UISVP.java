@@ -2,6 +2,7 @@ package vista;
 import controlador.*;
 import excepciones.*;
 import utilidades.*;
+import persistencia.IOSVP;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -23,6 +24,7 @@ public class UISVP {
         boolean verificador = true;
         do {
             System.out.println("""
+                    COMPILACION FINAL - PERSISTENCIA DEBUG_1
                     ╔══════════════════════════════════════════╗
                     ║       ...::: Menú principal :::...       ║
                     ║                                          ║
@@ -33,19 +35,21 @@ public class UISVP {
                     ║ 5) Crear bus                             ║
                     ║ 6) Crear viaje                           ║
                     ║ 7) Vender pasajes                        ║
-                    ║ 8) Listar ventas        finally {
-            
-        }                  ║
+                    ║ 8) Listar ventas                         ║
                     ║ 9) Listar viajes                         ║
                     ║10) Listar pasajeros de viaje             ║
                     ║11) Listar empresas                       ║
                     ║12) Listar llegadas/salidas de terminal   ║
                     ║13) Listar ventas de empresa              ║
                     ║14) Salir                                 ║
+                    ║15) PERSISTENCIA PRUEBA                   ║
                     ╚══════════════════════════════════════════╝
                     """);
 
             System.out.print("  ..:: Ingrese número de opción: ");
+
+            IOSVP.getInstance().readDatosIniciales();
+
             int valor = sc.nextInt();
 
             switch (valor) {
@@ -62,7 +66,11 @@ public class UISVP {
                 case 11 -> listEmpresas();
                 case 12 -> listLlegadasSalidasTerminal();
                 case 13 -> listVentasEmpresa();
-                case 14 -> verificador = false;
+                case 14 -> generatePasajesVenta();
+                case 15 -> readDatosIniciales();
+                case 16 -> saveDatosSistema();
+                case 17 -> readDatosSistema();
+                case 18 -> verificador = false;
                 default -> System.out.println(":::: Valor ingresado no es valido ::::");
             }
         } while (verificador);
@@ -597,6 +605,28 @@ public class UISVP {
         }
     }
 
+    private void generatePasajesVenta(){
+
+    }
+
+    private void readDatosIniciales() throws SVPException {
+        Object[] datosCreados = null;
+
+        try{
+            datosCreados = IOSVP.getInstance().readDatosIniciales();
+
+        } catch (SVPException e) {
+            imprimirErrores(e);
+        }
+    }
+
+    private void saveDatosSistema(){
+
+    }
+
+    private void readDatosSistema(){
+
+    }
     /*
     ==============================================================================
     |METODOS PRIVADOS, CREADOS PARA OPTIMIZAR EL CODIGO DE LA MEJOR FORMA POSIBLE|
