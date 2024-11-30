@@ -37,4 +37,15 @@ public class Pasaje {
     public Viaje getViaje() {
         return viaje;
     }
+
+    @Override
+    public String toString(){
+        String cabecera_inicio = "------------------------------ PASAJE ELECTRONICO ------------------------------";
+        String linea1 = String.format("%15s %10s %15s", "Nombre Empresa","","Numero de pasaje");
+        String linea2 = String.format("%15s %10s %15s", this.viaje.getBus().getEmp().getNombre().toUpperCase(),"",this.numero);
+        String linea3 = String.format("%30s %10s %15s","Nombre Pasajero","","Rut/Pasaporte");
+        String linea5 = String.format("%30s %10s %15s",this.pasajero.getNombreCompleto().toString(),"",this.pasajero.getIdPersona().toString());
+
+        return String.join("\n",cabecera_inicio, linea1, linea2, linea3, linea5);
+    }
 }

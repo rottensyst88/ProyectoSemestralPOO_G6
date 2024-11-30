@@ -611,7 +611,13 @@ public class UISVP {
     }
 
     private void generatePasajesVenta(){
+        System.out.println("DEBUG ingrese id? ");
+        String x = sc.next();
 
+        System.out.println("DEBUG ingrese tipo? ");
+        String y = sc.next();
+
+        SistemaVentaPasajes.getInstancia().generatePasajesVenta(x,TipoDocumento.valueOf(y));
     }
 
     private void readDatosIniciales() {

@@ -170,6 +170,7 @@ public class IOSVP implements Serializable {
             String[] x = s.split(";");
             Direccion dir = new Direccion(x[1], Integer.parseInt(x[2]), x[3]);
             Terminal t = new Terminal(x[0], dir);
+
             objetos.add(t);
         }
         //System.out.println("Terminales");
@@ -241,11 +242,16 @@ public class IOSVP implements Serializable {
 
             Optional<Tripulante> aux = findTripulante(e,Rut.of(rutAuxiliar),"Auxiliar");
             Optional<Tripulante> cond = findTripulante(e,Rut.of(rutConductor),"Conductor");
+
+
             Optional<Terminal> tLlegada = findTerminal(listaTerminal,nTerminalLlegada);
             Optional<Terminal> tSalida = findTerminal(listaTerminal,nTerminalSalida);
 
             Viaje v = new Viaje(fecha,hora,Integer.parseInt(precio),Integer.parseInt(duracion),bus.get(),(
                     Auxiliar) aux.get(),(Conductor) cond.get(),tSalida.get(),tLlegada.get());
+
+            System.out.println(" DATA TERMINALES VIAJE ->" + v.getTerminalLlegada().toString() + v.getTerminalLlegada().toString());
+
             objetos.add(v);
         }
         return objetos.toArray();
