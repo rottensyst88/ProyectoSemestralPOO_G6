@@ -6,6 +6,7 @@ import modelo.*;
 
 import java.io.Serializable;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -176,9 +177,6 @@ public class IOSVP implements Serializable {
 
         for (String s : buses) {
             String[] x = s.split(";");
-            Bus b = new Bus(x[0], Integer.parseInt(x[3]));
-            b.setMarca(x[1]);
-            b.setModelo(x[2]);
             String rutEmpresa = x[4];
 
             List<Empresa> empresasF = new ArrayList<>();
@@ -189,10 +187,14 @@ public class IOSVP implements Serializable {
             }
             Optional<Empresa> e = findEmpresa(empresasF, Rut.of(rutEmpresa));
             if (e.isPresent()) {
-                //System.out.println("EMPRESA BUSCADA BUSES. -> " + e.get());
+                Bus b = new Bus(x[0], Integer.parseInt(x[3]),e.get());
+                b.setMarca(x[1]);
+                b.setModelo(x[2]);
                 e.get().addBus(b);
+                objetos.add(b);
             }
-            objetos.add(b);
+            //System.out.println("RESULTADO FINAL ->  " + b.getEmp());
+
         }
         //System.out.println("Buses");
         //imprimeArreglos(buses);
@@ -211,54 +213,39 @@ public class IOSVP implements Serializable {
             String[] x = s.split(";");
             LocalDate fecha = LocalDate.parse(x[0], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             LocalTime hora = LocalTime.parse(x[1], DateTimeFormatter.ofPattern("HH:mm"));
+            String precio = x[2];
+            String duracion = x[3];
             String patenteBus = x[4];
             String rutAuxiliar = x[5];
             String rutConductor = x[6];
             String nTerminalSalida = x[7];
             String nTerminalLlegada = x[8];
 
-            List<Bus> busesF = new ArrayList<>();
+
+            ArrayList<Bus> listaBuses = new ArrayList<>();
+            ArrayList<Terminal> listaTerminal = new ArrayList<>();
+
             for(Object o : objetos){
                 if(o instanceof Bus){
-                    busesF.add((Bus) o);
+                    listaBuses.add((Bus) o);
                 }
-            }
-            Optional<Bus> busBuscado = findBus(busesF, patenteBus);
-
-            Optional<Tripulante> auxBusqueda = Optional.empty();
-            Optional<Tripulante> condBusqueda = Optional.empty();
-
-            if(busBuscado.isPresent()){
-                Empresa eV = null;
-
-                for (Object o : objetos) {
-                    if(o instanceof Empresa){
-                        for (Bus b : ((Empresa) o).getBuses()){
-                            if(b.equals(busBuscado.get())){
-                                eV = (Empresa) o;
-                            }
-                        }
-                    }
-                }
-
-                auxBusqueda = findTripulante(eV,Rut.of(rutAuxiliar),"Auxiliar");
-                condBusqueda = findTripulante(eV,Rut.of(rutConductor),"Conductor");
-            }
-
-            List<Terminal> terminalF = new ArrayList<>();
-            for(Object o : objetos){
                 if(o instanceof Terminal){
-                    terminalF.add((Terminal) o);
+                    listaTerminal.add((Terminal) o);
                 }
             }
+            Empresa e = null;
+            Optional<Bus> bus = findBus(listaBuses,patenteBus);
 
-            Optional<Terminal> termSalida = findTerminal(terminalF,nTerminalSalida);
-            Optional<Terminal> termLlegada = findTerminal(terminalF,nTerminalLlegada);
+            if (bus.isPresent()) {
+
+                Viaje v = new Viaje(fecha,hora,Integer.parseInt(precio),Integer.parseInt(duracion),null,null,null,null,null);
+                e = bus.get().getEmp();
+
+                objetos.add(v);
+            }
+            //Optional<Tripulante> trip = findTripulante(e,)
 
 
-            Viaje v = new Viaje(fecha, hora, Integer.parseInt(x[2]), Integer.parseInt(x[3]), busBuscado.get(),
-                    (Auxiliar) auxBusqueda.get(), (Conductor) condBusqueda.get(), termSalida.get(), termLlegada.get());
-            objetos.add(v);
         }
         return objetos.toArray();
     }

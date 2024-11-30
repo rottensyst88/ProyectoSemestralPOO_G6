@@ -41,14 +41,17 @@ public class UISVP {
                     ║11) Listar empresas                       ║
                     ║12) Listar llegadas/salidas de terminal   ║
                     ║13) Listar ventas de empresa              ║
-                    ║14) Salir                                 ║
-                    ║15) PERSISTENCIA PRUEBA                   ║
+                    ║14) Generar pasajes venta                 ║
+                    ║15) Leer datos iniciales                  ║
+                    ║16) Guardar datos del sistema             ║
+                    ║17) Leer datos del sistema                ║
+                    ║18) Salir                                 ║
                     ╚══════════════════════════════════════════╝
                     """);
 
             System.out.print("  ..:: Ingrese número de opción: ");
 
-            IOSVP.getInstance().readDatosIniciales();
+            //IOSVP.getInstance().readDatosIniciales();
 
             int valor = sc.nextInt();
 
@@ -70,7 +73,7 @@ public class UISVP {
                 case 15 -> readDatosIniciales();
                 case 16 -> saveDatosSistema();
                 case 17 -> readDatosSistema();
-                case 18 -> verificador = false;
+                case 18 -> verificador = false; //salir
                 default -> System.out.println(":::: Valor ingresado no es valido ::::");
             }
         } while (verificador);
@@ -534,29 +537,7 @@ public class UISVP {
         }
         System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
     }
-    private void listVentasEmpresa() {
-        System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
-        Rut rut = Rut.of(entradaDatos("R.U.T",2));
 
-        try {
-            String[][] listas = ControladorEmpresas.getInstance().listVentasEmpresa(rut);
-
-            if (listas.length == 0) {
-                System.out.println(":::: Error! No hay ventas para la empresa seleccionada!");
-                return;
-            }
-
-            System.out.println("*--------------*--------------*--------------*--------------*");
-            System.out.printf("| %12s | %12s | %12s | %12s |\n", "FECHA", "TIPO", "MONTO PAGADO", "TIPO PAGO");
-            for (String[] lista : listas) {
-                System.out.println("*--------------+--------------+--------------+--------------*");
-                System.out.printf("| %12s | %12s | %12s | %12s |\n", lista[0], lista[1], lista[2], lista[3]);
-            }
-            System.out.println("*--------------*--------------*--------------*--------------*\n\n");
-        } catch (SVPException e) {
-            imprimirErrores(e);
-        }
-    }
     private void listEmpresas() {
         System.out.println("\n...:::: Listado de empresas::::...\n");
         System.out.println("*----------------*----------------------*--------------------------------*----------------------*-----------------*-----------------*");
@@ -605,16 +586,40 @@ public class UISVP {
         }
     }
 
+    private void listVentasEmpresa() {
+        System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
+        Rut rut = Rut.of(entradaDatos("R.U.T",2));
+
+        try {
+            String[][] listas = ControladorEmpresas.getInstance().listVentasEmpresa(rut);
+
+            if (listas.length == 0) {
+                System.out.println(":::: Error! No hay ventas para la empresa seleccionada!");
+                return;
+            }
+
+            System.out.println("*--------------*--------------*--------------*--------------*");
+            System.out.printf("| %12s | %12s | %12s | %12s |\n", "FECHA", "TIPO", "MONTO PAGADO", "TIPO PAGO");
+            for (String[] lista : listas) {
+                System.out.println("*--------------+--------------+--------------+--------------*");
+                System.out.printf("| %12s | %12s | %12s | %12s |\n", lista[0], lista[1], lista[2], lista[3]);
+            }
+            System.out.println("*--------------*--------------*--------------*--------------*\n\n");
+        } catch (SVPException e) {
+            imprimirErrores(e);
+        }
+    }
+
     private void generatePasajesVenta(){
 
     }
 
-    private void readDatosIniciales() throws SVPException {
-        Object[] datosCreados = null;
-
+    private void readDatosIniciales() {
+        System.out.println("\n...:::: Lectura de datos iniciales ::::...\n");
         try{
-            datosCreados = IOSVP.getInstance().readDatosIniciales();
-
+            System.out.println("::Leyendo archivo solicitado::");
+            SistemaVentaPasajes.getInstancia().readDatosIniciales();
+            System.out.println("::Lectura finalizada exitosamente!\n\n::");
         } catch (SVPException e) {
             imprimirErrores(e);
         }

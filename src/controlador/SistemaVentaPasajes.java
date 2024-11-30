@@ -3,6 +3,7 @@ package controlador;
 import modelo.*;
 import utilidades.*;
 import excepciones.*;
+import persistencia.IOSVP;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -339,6 +340,54 @@ public class SistemaVentaPasajes {
             arregloPasajeros[i][4] = pasajero.getFonoContacto();
         }
         return arregloPasajeros;
+    }
+
+    /* CLASES REFERENTES A MANEJO DE IO*/
+
+    public void generatePasajesVenta(String idDocumento, TipoDocumento tipo) throws SVPException {
+        Optional<Venta> venta = findVenta(idDocumento, tipo);
+
+        if(venta.isEmpty()) {
+            throw new SVPException("La venta no existe"); //todo Revisar mensaje en excepcion! Vease tabla
+        }
+
+        try{
+            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(),"File.txt"); //preguntar al profesor!
+        } catch (SVPException e) {
+            throw new SVPException(e.getMessage());
+        }
+    }
+
+    public void readDatosIniciales() throws SVPException {
+        Object[] objetosDesdeIO = null;
+
+        try{
+            objetosDesdeIO = IOSVP.getInstance().readDatosIniciales();
+
+            if(objetosDesdeIO == null){
+                throw new SVPException("No se encontro el objeto de desde");
+            }
+
+            for(Object o : objetosDesdeIO){
+                if(o instanceof Pasajero){
+                    System.out.println(o);
+                    pasajeros.add((Pasajero)o);
+                }
+                if(o instanceof Venta){
+                    System.out.println(o);
+                    ventas.add((Venta)o);
+                }
+                if(o instanceof Cliente){
+                    System.out.println(o);
+                    clientes.add((Cliente)o);
+                }
+            }
+
+
+
+        } catch (SVPException e) {
+            throw new SVPException(e.getMessage());
+        }
     }
 
     private Optional<Cliente> findCliente(IdPersona id) {
