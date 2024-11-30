@@ -233,19 +233,20 @@ public class IOSVP implements Serializable {
                     listaTerminal.add((Terminal) o);
                 }
             }
+            //Bus b = null;
             Empresa e = null;
             Optional<Bus> bus = findBus(listaBuses,patenteBus);
 
-            if (bus.isPresent()) {
+            e = bus.get().getEmp();
 
-                Viaje v = new Viaje(fecha,hora,Integer.parseInt(precio),Integer.parseInt(duracion),null,null,null,null,null);
-                e = bus.get().getEmp();
+            Optional<Tripulante> aux = findTripulante(e,Rut.of(rutAuxiliar),"Auxiliar");
+            Optional<Tripulante> cond = findTripulante(e,Rut.of(rutConductor),"Conductor");
+            Optional<Terminal> tLlegada = findTerminal(listaTerminal,nTerminalLlegada);
+            Optional<Terminal> tSalida = findTerminal(listaTerminal,nTerminalSalida);
 
-                objetos.add(v);
-            }
-            //Optional<Tripulante> trip = findTripulante(e,)
-
-
+            Viaje v = new Viaje(fecha,hora,Integer.parseInt(precio),Integer.parseInt(duracion),bus.get(),(
+                    Auxiliar) aux.get(),(Conductor) cond.get(),tSalida.get(),tLlegada.get());
+            objetos.add(v);
         }
         return objetos.toArray();
     }

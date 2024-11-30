@@ -373,17 +373,15 @@ public class SistemaVentaPasajes {
                     System.out.println(o);
                     pasajeros.add((Pasajero)o);
                 }
-                if(o instanceof Venta){
+                if(o instanceof Viaje){
                     System.out.println(o);
-                    ventas.add((Venta)o);
+                    viajes.add((Viaje)o);
                 }
                 if(o instanceof Cliente){
                     System.out.println(o);
                     clientes.add((Cliente)o);
                 }
             }
-
-
 
         } catch (SVPException e) {
             throw new SVPException(e.getMessage());
