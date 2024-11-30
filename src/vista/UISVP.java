@@ -26,7 +26,7 @@ public class UISVP {
 
     public void menu() {
         boolean verificador = true;
-        //datosPrueba(); //todo DESACTIVAR ANTES DE ENTREGAR!
+        datosPrueba(); //todo DESACTIVAR ANTES DE ENTREGAR!
         do {
             System.out.println("""
                     ============================
@@ -80,6 +80,9 @@ public class UISVP {
 
     }
     private void contrataTripulante() {
+
+        //GUIContrataTripulante.display();
+
         Nombre tripulante = new Nombre(); IdPersona id; Tratamiento tratamiento;
 
         System.out.println("...:::: Creando un nuevo Tripulante ...::::\n");
@@ -117,6 +120,8 @@ public class UISVP {
         } catch (SistemaVentaPasajesException e) {
             imprimirErrores(e);
         }
+
+
     }
     private void createTerminal() {
         System.out.println("...:::: Creando un nuevo Terminal\n");
@@ -509,7 +514,10 @@ public class UISVP {
         System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
     }
     private void listVentasEmpresa() {
-        System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
+
+        GUIListaVentasEmpresas.display();
+
+        /*System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
         Rut rut = Rut.of(entradaDatos("R.U.T",2));
 
         try {
@@ -530,6 +538,8 @@ public class UISVP {
         } catch (SistemaVentaPasajesException e) {
             imprimirErrores(e);
         }
+
+         */
     }
     private void listEmpresas() {
         System.out.println("\n...:::: Listado de empresas::::...\n");
@@ -628,6 +638,7 @@ public class UISVP {
         System.out.println("*** Error encontrado, no se pudo concretar la operación! ***\n");
     }
     private void datosPrueba() {
+        ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-1"), "mibus2", "mibus.pe");
         ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
         Nombre aux_test = new Nombre();
         aux_test.setTratamiento(Tratamiento.SR);
