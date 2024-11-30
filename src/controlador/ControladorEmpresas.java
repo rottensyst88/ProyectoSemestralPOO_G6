@@ -198,6 +198,22 @@ public class ControladorEmpresas {
         return out;
     }
 
+    protected void setInstanciaPersistente(ControladorEmpresas instanciaPersistente){
+        instanciaPersistente = this;
+    }
+
+    protected void setDatosIniciales(Object[] objetos){
+        for(Object o : objetos){
+            switch(o){
+                case Empresa empresa -> empresas.add(empresa);
+                case Terminal terminal -> terminales.add(terminal);
+                case Bus bus -> buses.add(bus);
+                default -> {
+                }
+            }
+        }
+    }
+
     protected Optional<Empresa> findEmpresa(Rut rut) {
         for (Empresa e : empresas) {
             if (e.getRut().equals(rut)) {

@@ -360,6 +360,7 @@ public class SistemaVentaPasajes {
 
     public void readDatosIniciales() throws SVPException {
         Object[] objetosDesdeIO = null;
+        ArrayList<Object> objetosEmpresa = new ArrayList<>();
 
         try{
             objetosDesdeIO = IOSVP.getInstance().readDatosIniciales();
@@ -369,23 +370,18 @@ public class SistemaVentaPasajes {
             }
 
             for(Object o : objetosDesdeIO){
-                if(o instanceof Pasajero){
-                    System.out.println(o);
-                    pasajeros.add((Pasajero)o);
-                }
-                if(o instanceof Viaje){
-                    System.out.println(o);
-                    viajes.add((Viaje)o);
-                }
-                if(o instanceof Cliente){
-                    System.out.println(o);
-                    clientes.add((Cliente)o);
+                switch (o) {
+                    case Pasajero pasajero -> pasajeros.add(pasajero);
+                    case Viaje viaje -> viajes.add(viaje);
+                    case Cliente cliente -> clientes.add(cliente);
+                    case null, default -> objetosEmpresa.add(o);
                 }
             }
-
         } catch (SVPException e) {
             throw new SVPException(e.getMessage());
         }
+
+        ControladorEmpresas.getInstance().setDatosIniciales(objetosEmpresa.toArray());
     }
 
     private Optional<Cliente> findCliente(IdPersona id) {
