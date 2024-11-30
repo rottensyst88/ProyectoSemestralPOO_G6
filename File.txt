@@ -1,0 +1,5 @@
+------------------------------ PASAJE ELECTRONICO ------------------------------
+ Nombre Empresa            Numero de pasaje
+    BUSES ÑUBLE               682745550827
+               Nombre Pasajero              Rut/Pasaporte
+SR Carlos Patricio Orellana Godoy               44.444.444-4

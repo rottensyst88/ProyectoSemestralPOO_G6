@@ -210,9 +210,8 @@ public class UISVP {
             datos_id[z] = id_con;
         }
 
-        //todo Ojo
-        datos[0] = entradaDatos("Nombre comuna llegada",1).substring(0,1).toUpperCase().substring(2).toLowerCase();
-        datos[1] = entradaDatos("Nombre comuna salida",1).substring(0,1).toUpperCase().substring(2).toLowerCase();
+        datos[0] = entradaDatos("Nombre comuna llegada",1);
+        datos[1] = entradaDatos("Nombre comuna salida",1);
 
         try {
             SistemaVentaPasajes.getInstancia().createViaje(fecha, hora, precio, duracion, patente, datos_id, datos);
@@ -622,25 +621,31 @@ public class UISVP {
         try{
             System.out.println("::Leyendo archivo solicitado::");
             SistemaVentaPasajes.getInstancia().readDatosIniciales();
-            System.out.println("::Lectura finalizada exitosamente!\n\n::");
+            System.out.println("::Lectura finalizada exitosamente!::\n\n");
         } catch (SVPException e) {
             imprimirErrores(e);
         }
     }
 
     private void saveDatosSistema(){
+        System.out.println("\n...:::: Guardado de datos de sistema ::::...\n");
 
+        try{
+            SistemaVentaPasajes.getInstancia().saveDatosSistema();
+        } catch (SVPException e) {
+            imprimirErrores(e);
+        }
     }
 
     private void readDatosSistema(){
 
     }
+
     /*
     ==============================================================================
     |METODOS PRIVADOS, CREADOS PARA OPTIMIZAR EL CODIGO DE LA MEJOR FORMA POSIBLE|
     ==============================================================================
      */
-
     private IdPersona SelectorRut_Pasaporte(int tamanno) {
 
         int rut_o_pasaporte = Integer.parseInt(entradaDatos("Rut[1] o Pasaporte[2]",tamanno));

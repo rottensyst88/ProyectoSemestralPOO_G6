@@ -1,8 +1,10 @@
 package modelo;
 import utilidades.Direccion;
+
+import java.io.Serializable;
 import java.util.*;
 
-public class Terminal {
+public class Terminal implements Serializable {
     String nombre;
     Direccion direccion;
     private List<Viaje> llegadas = new ArrayList<>();

@@ -4,13 +4,14 @@ import modelo.*;
 import excepciones.*;
 import utilidades.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ControladorEmpresas {
+public class ControladorEmpresas implements Serializable {
     //SINGLETON
     private static final ControladorEmpresas instance = new ControladorEmpresas();
 

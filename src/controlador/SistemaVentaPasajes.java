@@ -5,13 +5,14 @@ import utilidades.*;
 import excepciones.*;
 import persistencia.IOSVP;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class SistemaVentaPasajes {
+public class SistemaVentaPasajes implements Serializable {
     private static SistemaVentaPasajes instancia;
 
     public static SistemaVentaPasajes getInstancia() {
@@ -26,8 +27,10 @@ public class SistemaVentaPasajes {
     private ArrayList<Viaje> viajes = new ArrayList<>();
     private ArrayList<Venta> ventas = new ArrayList<>();
 
-    private DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH:mm");
+    private String fechaFormateada = "dd/MM/yyyy";
+    //private DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private String horaFormateada = "HH:mm";
+    //private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH:mm");
 
     public void createCliente(IdPersona id, Nombre nom, String fono, String email) throws SVPException {
 
@@ -270,7 +273,8 @@ public class SistemaVentaPasajes {
             arregloVentas[i][0] = venta.getIdDocumento();
             arregloVentas[i][1] = venta.getTipo().toString();
             //DEBE SER EN FORMATO DD/MM/AAAA
-            arregloVentas[i][2] = fechaFormateada.format(venta.getFecha());
+            //arregloVentas[i][2] = fechaFormateada.format(venta.getFecha());
+            arregloVentas[i][2] = venta.getFecha().format(DateTimeFormatter.ofPattern(fechaFormateada));
             //REVISAR ID PERSONA debería dar RUT/PASAPORTE
             arregloVentas[i][3] = venta.getCliente().getIdPersona().toString();
             //REVISAR SI TRAE TRATAMIENTO
@@ -295,9 +299,9 @@ public class SistemaVentaPasajes {
 
         for (int i = 0; i < viajes.size(); i++) {
             Viaje viaje = viajes.get(i);
-            arregloViajes[i][0] = fechaFormateada.format(viaje.getFecha());
-            arregloViajes[i][1] = horaFormateada.format(viaje.getHora());
-            arregloViajes[i][2] = horaFormateada.format(viaje.getFechaHoraTermino());
+            arregloViajes[i][0] = viaje.getFecha().format(DateTimeFormatter.ofPattern(fechaFormateada));
+            arregloViajes[i][1] = viaje.getHora().format(DateTimeFormatter.ofPattern(horaFormateada));
+            arregloViajes[i][2] = viaje.getFechaHoraTermino().format(DateTimeFormatter.ofPattern(horaFormateada));
             arregloViajes[i][3] = String.valueOf(viaje.getPrecio());
             arregloViajes[i][4] = String.valueOf(viaje.getNroAsientosDisponibles());
             arregloViajes[i][5] = viaje.getBus().getPatente();
@@ -346,11 +350,9 @@ public class SistemaVentaPasajes {
 
     public void generatePasajesVenta(String idDocumento, TipoDocumento tipo) throws SVPException {
         Optional<Venta> venta = findVenta(idDocumento, tipo);
-
         if(venta.isEmpty()) {
-            throw new SVPException("La venta no existe"); //todo Revisar mensaje en excepcion! Vease tabla
+            throw new SVPException("La venta no existe");
         }
-
         try{
             IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(),"File.txt"); //todo preguntar al profesor!
         } catch (SVPException e) {
@@ -359,7 +361,7 @@ public class SistemaVentaPasajes {
     }
 
     public void readDatosIniciales() throws SVPException {
-        Object[] objetosDesdeIO = null;
+        Object[] objetosDesdeIO;
         ArrayList<Object> objetosEmpresa = new ArrayList<>();
 
         try{
@@ -383,6 +385,21 @@ public class SistemaVentaPasajes {
 
         ControladorEmpresas.getInstance().setDatosIniciales(objetosEmpresa.toArray());
     }
+
+    public void saveDatosSistema() throws SVPException {
+        ArrayList<Object> objetosEmpresa = new ArrayList<>();
+
+        objetosEmpresa.add(this);
+        objetosEmpresa.add(ControladorEmpresas.getInstance());
+
+        try{
+            IOSVP.getInstance().saveControladores(objetosEmpresa.toArray());
+        } catch (SVPException e) {
+            throw new SVPException(e.getMessage());
+        }
+    }
+
+    /* METODOS FIND */
 
     private Optional<Cliente> findCliente(IdPersona id) {
         for (Cliente cliente : clientes) {
