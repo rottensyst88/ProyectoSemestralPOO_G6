@@ -352,7 +352,7 @@ public class SistemaVentaPasajes {
         }
 
         try{
-            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(),"File.txt"); //preguntar al profesor!
+            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(),"File.txt"); //todo preguntar al profesor!
         } catch (SVPException e) {
             throw new SVPException(e.getMessage());
         }

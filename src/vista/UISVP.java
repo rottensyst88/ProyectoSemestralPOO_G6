@@ -2,7 +2,6 @@ package vista;
 import controlador.*;
 import excepciones.*;
 import utilidades.*;
-import persistencia.IOSVP;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -50,9 +49,6 @@ public class UISVP {
                     """);
 
             System.out.print("  ..:: Ingrese número de opción: ");
-
-            //IOSVP.getInstance().readDatosIniciales();
-
             int valor = sc.nextInt();
 
             switch (valor) {
@@ -92,11 +88,9 @@ public class UISVP {
     }
     private void contrataTripulante() {
         Nombre tripulante = new Nombre(); IdPersona id; Tratamiento tratamiento;
-
         System.out.println("...:::: Creando un nuevo Tripulante ...::::\n");
         System.out.println(":::: Dato de la Empresa");
         Rut rut = Rut.of(entradaDatos("R.U.T",1));
-
         System.out.println("\n:::: Datos tripulante");
         int opcion = Integer.parseInt(entradaDatos("Auxiliar[1] o Conductor[2]",2));
 
@@ -110,11 +104,9 @@ public class UISVP {
         tripulante.setNombre(entradaDatos("Nombres",2));
         tripulante.setApellidoPaterno(entradaDatos("Apellido Paterno",2));
         tripulante.setApellidoMaterno(entradaDatos("Apellido Materno",2));
-
         String calle = entradaDatos("Calle",2);
         int numero = Integer.parseInt(entradaDatos("Numero",2));
         String comuna = entradaDatos("Comuna",2);
-
         Direccion direccion = new Direccion(calle, numero, comuna);
 
         try {
@@ -131,12 +123,10 @@ public class UISVP {
     }
     private void createTerminal() {
         System.out.println("...:::: Creando un nuevo Terminal\n");
-
         String nombre = entradaDatos("Nombre",1);
         String calle = entradaDatos("Calle",1);
         int numero = Integer.parseInt(entradaDatos("Numero",1));
         String comuna = entradaDatos("Comuna",1);
-
         Direccion direccion = new Direccion(calle, numero, comuna);
 
         try {
@@ -220,8 +210,9 @@ public class UISVP {
             datos_id[z] = id_con;
         }
 
-        datos[0] = entradaDatos("Nombre comuna llegada",1);
-        datos[1] = entradaDatos("Nombre comuna salida",1);
+        //todo Ojo
+        datos[0] = entradaDatos("Nombre comuna llegada",1).substring(0,1).toUpperCase().substring(2).toLowerCase();
+        datos[1] = entradaDatos("Nombre comuna salida",1).substring(0,1).toUpperCase().substring(2).toLowerCase();
 
         try {
             SistemaVentaPasajes.getInstancia().createViaje(fecha, hora, precio, duracion, patente, datos_id, datos);
@@ -254,7 +245,10 @@ public class UISVP {
         LocalDate fec = LocalDate.parse(entradaDatos("Fecha de viaje[dd/mm/yyyy]",2), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         String origen = entradaDatos("Origen (comuna)",2);
+        origen = origen.substring(0, 1).toUpperCase() + origen.substring(1).toLowerCase();
+
         String destino = entradaDatos("Destino (comuna)",2);
+        destino = destino.substring(0, 1).toUpperCase() + destino.substring(1).toLowerCase();
 
         System.out.println("\n:::: Datos del cliente\n");
 
@@ -611,13 +605,16 @@ public class UISVP {
     }
 
     private void generatePasajesVenta(){
-        System.out.println("DEBUG ingrese id? ");
-        String x = sc.next();
+        System.out.println("\n...:::: Generar pasajes de venta ::::...\n");
 
-        System.out.println("DEBUG ingrese tipo? ");
-        String y = sc.next();
+        String idDoc = entradaDatos("ID Documento:",1);
+        TipoDocumento tipoDoc = TipoDocumento.valueOf(entradaDatos("Tipo Documento:",1));
 
-        SistemaVentaPasajes.getInstancia().generatePasajesVenta(x,TipoDocumento.valueOf(y));
+        try{
+            SistemaVentaPasajes.getInstancia().generatePasajesVenta(idDoc,tipoDoc);
+        } catch (SVPException e) {
+            imprimirErrores(e);
+        }
     }
 
     private void readDatosIniciales() {

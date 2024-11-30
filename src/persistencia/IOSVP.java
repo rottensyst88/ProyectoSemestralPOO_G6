@@ -303,8 +303,8 @@ public class IOSVP implements Serializable {
         try {
             out = new PrintStream(new File(nombreArchivos));
 
-            for (Pasaje p : pasajes) {
-                out.println(p.toString());
+            for (Pasaje pasaje : pasajes) {
+                out.println(pasaje.toString());
             }
 
             out.close();
