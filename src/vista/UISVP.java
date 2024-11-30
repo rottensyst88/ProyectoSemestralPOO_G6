@@ -442,7 +442,8 @@ public class UISVP {
                         verifPago = true;
                         break;
                     case 2:
-                        long nTarjeta = Long.getLong(entradaDatos("Nro. tarjeta",2));
+                        String numTarjeta = entradaDatos("Nro. tarjeta",2);
+                        long nTarjeta = Long.parseLong(numTarjeta);
                         SistemaVentaPasajes.getInstancia().pagaVenta(idDocumento, tipo, nTarjeta);
                         verifPago = true;
                         break;

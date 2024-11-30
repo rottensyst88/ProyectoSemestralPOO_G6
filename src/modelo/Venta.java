@@ -2,11 +2,12 @@ package modelo;
 
 import utilidades.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Venta {
+public class Venta implements Serializable {
     private String idDocumento;
     private TipoDocumento tipo;
     private LocalDate fecha;
