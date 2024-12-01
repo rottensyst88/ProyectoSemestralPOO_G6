@@ -1,0 +1,10 @@
+------------------------------ PASAJE ELECTRONICO ------------------------------
+Nombre Empresa       Número de pasaje    
+BUSES ÑUBLE          269482765519        
+Nombre Pasajero                          RUT/Pasaporte       
+SR Carlos Patricio Orellana Godoy        44.444.444-4        
+Patente bus     Asiento         Valor Pagado   
+EFGH34          45              3500           
+Terminal origen      Terminal destino     Fecha                Hora                
+EL PINAR             EL NEVADO ALTO       2024-12-15           08:00               
+-------------------------------------------------------------------------------

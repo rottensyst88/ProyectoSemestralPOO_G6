@@ -606,18 +606,29 @@ public class UISVP {
 
     private void generatePasajesVenta(){ //todo Consultar a profesor!
         System.out.println("\n...:::: Generar pasajes de venta ::::...\n");
+        String idDoc = entradaDatos("ID Documento",2);
+        TipoDocumento tipo = null;
+        do {
+            int tipoDoc = Integer.parseInt(entradaDatos("Tipo doc. [1]Boleta [2]Factura",2));
+            if (tipoDoc == 1 || tipoDoc == 2) {
+                if (tipoDoc == 1) {
+                    tipo = TipoDocumento.BOLETA;
+                } else {
+                    tipo = TipoDocumento.FACTURA;
+                }
+            } else {
+                System.out.println(":::: Error! Valor invalido!");
+            }
+        } while (tipo == null);
+        String nombre = entradaDatos("Nombre Archivo (* * *.txt)",2);
 
-        String idDoc = entradaDatos("ID Documento:",1);
-        TipoDocumento tipoDoc = TipoDocumento.valueOf(entradaDatos("Tipo Documento:",1));
-        String nombre = entradaDatos("Nombre Documento (No incluya extensión):",1);
-
-        if(nombre.endsWith(".txt")){
-            nombre = nombre.substring(0, nombre.length()-4);
+        if(!nombre.endsWith(".txt")){
+            nombre = nombre + ".txt";
         }
 
         try{
-            SistemaVentaPasajes.getInstancia().generatePasajesVenta(idDoc,tipoDoc,nombre);
-            System.out.println("::Archivo generado exitosamente, busque " + nombre + ".txt::\n\n");
+            SistemaVentaPasajes.getInstancia().generatePasajesVenta(idDoc,tipo,nombre);
+            System.out.println("::Archivo generado exitosamente, busque " + nombre +"::\n\n");
         } catch (SVPException e) {
             imprimirErrores(e);
         }

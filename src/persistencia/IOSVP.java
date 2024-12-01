@@ -228,17 +228,31 @@ public class IOSVP implements Serializable {
     }
 
     public Object[] readControladores() throws SVPException {
-        ObjectInputStream objetoArch;
+        ObjectInputStream objetoArch = null;
         List<Object> objetosLeidos = new ArrayList<>();
         try {
             objetoArch = new ObjectInputStream(new FileInputStream("SVPObjetos.obj"));
-            while (objetoArch.readObject() != null) {
-                objetosLeidos.add(objetoArch.readObject());
+            Object objeto;
+            while (true) {
+                try {
+                    objeto = objetoArch.readObject();
+                    objetosLeidos.add(objeto);
+                } catch (EOFException e) {
+                    break;
+                }
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new SVPException("No existe o no se puede abrir el archivo SVPObjetos.obj");
         } catch (ClassNotFoundException e) {
             throw new SVPException("No se puede leer el archivo SVPObjetos.obj");
+        } finally {
+            if (objetoArch != null) {
+                try {
+                    objetoArch.close();
+                } catch (IOException e) {
+                    throw new SVPException("No se puede leer el archivo SVPObjetos.obj");
+                }
+            }
         }
         return objetosLeidos.toArray();
     }

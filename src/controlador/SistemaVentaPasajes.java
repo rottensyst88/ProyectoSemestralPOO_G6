@@ -335,7 +335,7 @@ public class SistemaVentaPasajes implements Serializable {
             if (venta.isEmpty()) {
                 throw new SVPException("La venta no existe"); //todo PREGUNTAR AL PROFESOR!
             }
-            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(), String.join(nombreObjeto, ".txt")); //todo preguntar al profesor!
+            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(),nombreObjeto); //todo preguntar al profesor!
         } catch (SVPException e) {
             throw new SVPException(e.getMessage());
         }
