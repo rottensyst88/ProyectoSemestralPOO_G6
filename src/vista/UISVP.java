@@ -81,9 +81,9 @@ public class UISVP {
     }
     private void contrataTripulante() {
 
-        //GUIContrataTripulante.display();
+        GUIContrataTripulante.display();
 
-        Nombre tripulante = new Nombre(); IdPersona id; Tratamiento tratamiento;
+        /*Nombre tripulante = new Nombre(); IdPersona id; Tratamiento tratamiento;
 
         System.out.println("...:::: Creando un nuevo Tripulante ...::::\n");
         System.out.println(":::: Dato de la Empresa");
@@ -120,6 +120,12 @@ public class UISVP {
         } catch (SistemaVentaPasajesException e) {
             imprimirErrores(e);
         }
+
+         */
+
+
+
+
 
 
     }
@@ -640,6 +646,7 @@ public class UISVP {
     private void datosPrueba() {
         ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-1"), "mibus2", "mibus.pe");
         ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
+        ControladorEmpresas.getInstance().createEmpresa(Rut.of("22.727.777-7"), "elpepe", "elpepe.cl");
         Nombre aux_test = new Nombre();
         aux_test.setTratamiento(Tratamiento.SR);
         aux_test.setNombre("Ery Flores");
@@ -657,6 +664,10 @@ public class UISVP {
         ControladorEmpresas.getInstance().createTerminal("Santo Milagro", new Direccion("Placido", 1, "Talquipen"));
         ControladorEmpresas.getInstance().createTerminal("Pecado Milenio", new Direccion("Milenio", 2, "Nuble"));
         ControladorEmpresas.getInstance().createBus("AABB12", "VOLVO", "GEN", 35, Rut.of("77.777.777-7"));
+        // Crear buses para las empresas que no tienen uno
+        //ControladorEmpresas.getInstance().createBus("BBCC34", "Mercedes-Benz", "GEN", 50, Rut.of("77.777.777-1")); // Para "mibus2"
+        //ControladorEmpresas.getInstance().createBus("CCDD56", "Scania", "PREMIUM", 45, Rut.of("22.727.777-7")); // Para "elpepe"
+
         Nombre cli_test = new Nombre();
         cli_test.setTratamiento(Tratamiento.SR);
         cli_test.setNombre("Juan Perez");
