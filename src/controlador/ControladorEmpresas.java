@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class ControladorEmpresas implements Serializable {
     //SINGLETON
-    private static final ControladorEmpresas instance = new ControladorEmpresas();
+    private static ControladorEmpresas instance = new ControladorEmpresas();
 
     public static ControladorEmpresas getInstance() {
         return instance;
@@ -200,7 +200,7 @@ public class ControladorEmpresas implements Serializable {
     }
 
     protected void setInstanciaPersistente(ControladorEmpresas instanciaPersistente){
-        instanciaPersistente = this;
+        instance = instanciaPersistente;
     }
 
     protected void setDatosIniciales(Object[] objetos){

@@ -399,6 +399,24 @@ public class SistemaVentaPasajes implements Serializable {
         }
     }
 
+    public void readDatosSistema() throws SVPException {
+        Object[] controladoresIO;
+
+        try{
+            controladoresIO = IOSVP.getInstance().readControladores();
+            for(Object o : controladoresIO){
+                if(o instanceof SistemaVentaPasajes){
+                    instancia = (SistemaVentaPasajes) o;
+                }
+                if(o instanceof ControladorEmpresas){
+                    ControladorEmpresas.getInstance().setInstanciaPersistente((ControladorEmpresas) o);
+                }
+            }
+        } catch (SVPException e) {
+            throw new SVPException(e.getMessage());
+        }
+    }
+
     /* METODOS FIND */
 
     private Optional<Cliente> findCliente(IdPersona id) {

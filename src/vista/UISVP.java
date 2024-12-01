@@ -639,7 +639,14 @@ public class UISVP {
     }
 
     private void readDatosSistema(){
+        System.out.println("\n...:::: Lectura de datos de sistema ::::...\n");
 
+        try{
+            SistemaVentaPasajes.getInstancia().readDatosSistema();
+            System.out.println("Lectura exitosa!");
+        } catch (SVPException e) {
+            imprimirErrores(e);
+        }
     }
 
     /*

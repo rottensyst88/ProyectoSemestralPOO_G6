@@ -206,26 +206,6 @@ public class IOSVP implements Serializable {
         }
         return objetos.toArray();
     }
-    /*
-    public void saveControladores(Object[] controladores) throws SVPException {
-        ObjectOutputStream objetoArch = null;
-        try {
-            objetoArch = new ObjectOutputStream(new FileOutputStream("SVPObjetos.obj"));
-            for (Object o : controladores) {
-                objetoArch.writeObject(o);
-            }
-        } catch (IOException e) {
-            throw new SVPException(e.getMessage());
-        } finally{
-            if(objetoArch != null){
-                try{
-                    objetoArch.close();
-                } catch (IOException e) {
-                    throw new SVPException(e.getMessage());
-                }
-            }
-        }
-    }*/
 
     public void saveControladores(Object[] controladores) throws SVPException {
         ObjectOutputStream objetoArch = null;
@@ -282,7 +262,6 @@ public class IOSVP implements Serializable {
     }
 
     /* METODOS FIND USADOS PARA DIVERSOS MOTIVOS */
-
     private Optional<Empresa> findEmpresa(List<Empresa> empresas, Rut rut) {
         Optional<Empresa> valor = Optional.empty();
         for (Empresa e : empresas) {
