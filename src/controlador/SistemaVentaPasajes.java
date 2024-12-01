@@ -26,17 +26,12 @@ public class SistemaVentaPasajes implements Serializable {
     private ArrayList<Pasajero> pasajeros = new ArrayList<>();
     private ArrayList<Viaje> viajes = new ArrayList<>();
     private ArrayList<Venta> ventas = new ArrayList<>();
-
     private String fechaFormateada = "dd/MM/yyyy";
-    //private DateTimeFormatter fechaFormateada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private String horaFormateada = "HH:mm";
-    //private DateTimeFormatter horaFormateada = DateTimeFormatter.ofPattern("HH:mm");
 
     public void createCliente(IdPersona id, Nombre nom, String fono, String email) throws SVPException {
-
         Cliente c = new Cliente(id, nom, email);
         c.setTelefono(fono);
-
         if (findCliente(id).isEmpty()) {
             clientes.add(c);
         } else {
@@ -46,11 +41,9 @@ public class SistemaVentaPasajes implements Serializable {
 
     public void createPasajero(IdPersona id, Nombre nom, String fono, Nombre nomContacto, String
             fonoContacto) throws SVPException {
-
         Pasajero p = new Pasajero(id, nom, fonoContacto);
         p.setNomContacto(nomContacto);
         p.setTelefono(fono);
-
         if (findPasajero(id).isEmpty()) {
             pasajeros.add(p);
         } else {
@@ -60,26 +53,20 @@ public class SistemaVentaPasajes implements Serializable {
 
     public void createViaje(LocalDate fecha, LocalTime hora, int precio, int duracion, String patBus, IdPersona[]
             idTripulantes, String[] nomComunas) throws SVPException {
-
         if (findViaje(fecha.toString(), hora.toString(), patBus).isPresent()) {
             throw new SVPException("Ya existe viaje con fecha, hora y patente de bus indicados");
         }
-
         Optional<Bus> bus = ControladorEmpresas.getInstance().findBus(patBus);
         Auxiliar aux;
         Conductor con = null;
-
         if (bus.isEmpty()) {
             throw new SVPException("No existe bus con la patente indicada");
         }
-
-
         if (ControladorEmpresas.getInstance().findAuxiliar(idTripulantes[0], bus.get().getEmp().getRut()).isEmpty()) {
             throw new SVPException("No existe auxiliar con el ID indicado en la empresa con el RUT indicado");
         } else {
             aux = ControladorEmpresas.getInstance().findAuxiliar(idTripulantes[0], bus.get().getEmp().getRut()).get();
         }
-
         if (idTripulantes.length == 2) {
             if (ControladorEmpresas.getInstance().findConductor(idTripulantes[1], bus.get().getEmp().getRut()).isPresent()) {
                 con = ControladorEmpresas.getInstance().findConductor(idTripulantes[1], bus.get().getEmp().getRut()).get();
@@ -87,20 +74,15 @@ public class SistemaVentaPasajes implements Serializable {
                 throw new SVPException("No existe conductor con el ID indicado en la empresa con el RUT indicado");
             }
         }
-
         if (ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[0]).isEmpty()) {
             throw new SVPException("No existe terminal de salida en la comuna indicada");
         }
         Terminal tSalida = ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[0]).get();
-
         if (ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[1]).isEmpty()) {
             throw new SVPException("No existe terminal de llegada en la comuna indicada");
         }
         Terminal tEntrada = ControladorEmpresas.getInstance().findTerminalPorComuna(nomComunas[1]).get();
-
-
         Viaje viaje = new Viaje(fecha, hora, precio, duracion, bus.get(), aux, con, tSalida, tEntrada);
-
         if (idTripulantes.length == 3) {
             if (ControladorEmpresas.getInstance().findConductor(idTripulantes[2], bus.get().getEmp().getRut()).isPresent()) {
                 con = ControladorEmpresas.getInstance().findConductor(idTripulantes[2], bus.get().getEmp().getRut()).get();
@@ -109,11 +91,10 @@ public class SistemaVentaPasajes implements Serializable {
                 throw new SVPException("No existe conductor con el ID indicado en la empresa con el RUT indicado");
             }
         }
-
         if (findViaje(fecha.toString(), hora.toString(), patBus).isEmpty()) {
             viajes.add(viaje);
         } else {
-            throw new SVPException("Ya existe pasaje viaje con fecha, hora y patente de bus indicados");
+            throw new SVPException("Ya existe viaje con fecha, hora y patente de bus indicados");
         }
     }
 
@@ -314,9 +295,9 @@ public class SistemaVentaPasajes implements Serializable {
 
     public String[][] listPasajerosViaje(LocalDate fecha, LocalTime hora, String patBus) throws SVPException {
 
-        Optional<Viaje> viajes = findViaje(fecha.toString(),hora.toString(),patBus);
+        Optional<Viaje> viajes = findViaje(fecha.toString(), hora.toString(), patBus);
 
-        if(viajes.isEmpty()) {
+        if (viajes.isEmpty()) {
             throw new SVPException("No existe viaje con la fecha, hora y patente de bus indicadas");
         }
 
@@ -329,9 +310,9 @@ public class SistemaVentaPasajes implements Serializable {
         for (int i = 0; i < pasajeros.size(); i++) {
             Pasajero pasajero = pasajeros.get(i);
 
-            for (Venta venta : ventas){
-                for(Pasaje pasaje : venta.getPasajes()){
-                    if (pasaje.getPasajero().getIdPersona().equals(pasajero.getIdPersona())){
+            for (Venta venta : ventas) {
+                for (Pasaje pasaje : venta.getPasajes()) {
+                    if (pasaje.getPasajero().getIdPersona().equals(pasajero.getIdPersona())) {
                         arregloPasajeros[i][0] = String.valueOf(pasaje.getAsiento());
                         break;
                     }
@@ -348,13 +329,13 @@ public class SistemaVentaPasajes implements Serializable {
 
     /* CLASES REFERENTES A MANEJO DE IO*/
 
-    public void generatePasajesVenta(String idDocumento, TipoDocumento tipo) throws SVPException {
+    public void generatePasajesVenta(String idDocumento, TipoDocumento tipo, String nombreObjeto) throws SVPException {
         Optional<Venta> venta = findVenta(idDocumento, tipo);
-        if(venta.isEmpty()) {
-            throw new SVPException("La venta no existe");
-        }
-        try{
-            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(),"File.txt"); //todo preguntar al profesor!
+        try {
+            if (venta.isEmpty()) {
+                throw new SVPException("La venta no existe"); //todo PREGUNTAR AL PROFESOR!
+            }
+            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(), String.join(nombreObjeto, ".txt")); //todo preguntar al profesor!
         } catch (SVPException e) {
             throw new SVPException(e.getMessage());
         }
@@ -364,14 +345,9 @@ public class SistemaVentaPasajes implements Serializable {
         Object[] objetosDesdeIO;
         ArrayList<Object> objetosEmpresa = new ArrayList<>();
 
-        try{
+        try {
             objetosDesdeIO = IOSVP.getInstance().readDatosIniciales();
-
-            if(objetosDesdeIO == null){
-                throw new SVPException("No se encontro el objeto de desde");
-            }
-
-            for(Object o : objetosDesdeIO){
+            for (Object o : objetosDesdeIO) {
                 switch (o) {
                     case Pasajero pasajero -> pasajeros.add(pasajero);
                     case Viaje viaje -> viajes.add(viaje);
@@ -379,20 +355,17 @@ public class SistemaVentaPasajes implements Serializable {
                     case null, default -> objetosEmpresa.add(o);
                 }
             }
+            ControladorEmpresas.getInstance().setDatosIniciales(objetosEmpresa.toArray());
         } catch (SVPException e) {
             throw new SVPException(e.getMessage());
         }
-
-        ControladorEmpresas.getInstance().setDatosIniciales(objetosEmpresa.toArray());
     }
 
     public void saveDatosSistema() throws SVPException {
         ArrayList<Object> objetosEmpresa = new ArrayList<>();
-
-        objetosEmpresa.add(this);
-        objetosEmpresa.add(ControladorEmpresas.getInstance());
-
-        try{
+        try {
+            objetosEmpresa.add(this);
+            objetosEmpresa.add(ControladorEmpresas.getInstance());
             IOSVP.getInstance().saveControladores(objetosEmpresa.toArray());
         } catch (SVPException e) {
             throw new SVPException(e.getMessage());
@@ -401,14 +374,13 @@ public class SistemaVentaPasajes implements Serializable {
 
     public void readDatosSistema() throws SVPException {
         Object[] controladoresIO;
-
-        try{
+        try {
             controladoresIO = IOSVP.getInstance().readControladores();
-            for(Object o : controladoresIO){
-                if(o instanceof SistemaVentaPasajes){
+            for (Object o : controladoresIO) {
+                if (o instanceof SistemaVentaPasajes) {
                     instancia = (SistemaVentaPasajes) o;
                 }
-                if(o instanceof ControladorEmpresas){
+                if (o instanceof ControladorEmpresas) {
                     ControladorEmpresas.getInstance().setInstanciaPersistente((ControladorEmpresas) o);
                 }
             }
@@ -418,7 +390,6 @@ public class SistemaVentaPasajes implements Serializable {
     }
 
     /* METODOS FIND */
-
     private Optional<Cliente> findCliente(IdPersona id) {
         for (Cliente cliente : clientes) {
             if (cliente.getIdPersona().equals(id)) {

@@ -215,37 +215,32 @@ public class IOSVP implements Serializable {
                 objetoArch.writeObject(o);
             }
         } catch (IOException e) {
-            throw new SVPException("Error al guardar los controladores: " + e.getMessage());
+            throw new SVPException("No se puede abrir o crear el archivo SVPObjetos.obj");
         } finally {
             if (objetoArch != null) {
                 try {
                     objetoArch.close();
                 } catch (IOException e) {
-                    System.err.println("Error al cerrar el archivo: " + e.getMessage());
+                    throw new SVPException("No se puede grabar en el archivo SVPObjetos.obj");
                 }
             }
         }
     }
 
     public Object[] readControladores() throws SVPException {
-        ObjectInputStream objetoArch = null;
+        ObjectInputStream objetoArch;
         List<Object> objetosLeidos = new ArrayList<>();
-
         try {
             objetoArch = new ObjectInputStream(new FileInputStream("SVPObjetos.obj"));
-            while (true) {
+            while (objetoArch.readObject() != null) {
                 objetosLeidos.add(objetoArch.readObject());
             }
-        } catch (EOFException ex) {
-            try {
-                objetoArch.close();
-            } catch (IOException ex2) {
-                throw new SVPException("");
-            }
-            return objetosLeidos.toArray();
-        } catch (ClassNotFoundException | IOException exFinal) {
-            throw new SVPException("");
+        } catch (IOException e){
+            throw new SVPException("No existe o no se puede abrir el archivo SVPObjetos.obj");
+        } catch (ClassNotFoundException e) {
+            throw new SVPException("No se puede leer el archivo SVPObjetos.obj");
         }
+        return objetosLeidos.toArray();
     }
 
     public void savePasajesDeVenta(Pasaje[] pasajes, String nombreArchivos) throws SVPException {
@@ -257,7 +252,7 @@ public class IOSVP implements Serializable {
             }
             out.close();
         } catch (FileNotFoundException e) {
-            throw new SVPException("");
+            throw new SVPException("No se puede abrir o crear el archivo" + nombreArchivos);
         }
     }
 

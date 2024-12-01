@@ -604,14 +604,20 @@ public class UISVP {
         }
     }
 
-    private void generatePasajesVenta(){
+    private void generatePasajesVenta(){ //todo Consultar a profesor!
         System.out.println("\n...:::: Generar pasajes de venta ::::...\n");
 
         String idDoc = entradaDatos("ID Documento:",1);
         TipoDocumento tipoDoc = TipoDocumento.valueOf(entradaDatos("Tipo Documento:",1));
+        String nombre = entradaDatos("Nombre Documento (No incluya extensión):",1);
+
+        if(nombre.endsWith(".txt")){
+            nombre = nombre.substring(0, nombre.length()-4);
+        }
 
         try{
-            SistemaVentaPasajes.getInstancia().generatePasajesVenta(idDoc,tipoDoc);
+            SistemaVentaPasajes.getInstancia().generatePasajesVenta(idDoc,tipoDoc,nombre);
+            System.out.println("::Archivo generado exitosamente, busque " + nombre + ".txt::\n\n");
         } catch (SVPException e) {
             imprimirErrores(e);
         }
@@ -620,9 +626,9 @@ public class UISVP {
     private void readDatosIniciales() {
         System.out.println("\n...:::: Lectura de datos iniciales ::::...\n");
         try{
-            System.out.println("::Leyendo archivo solicitado::");
+            System.out.println("::Leyendo archivo solicitado, espere::");
             SistemaVentaPasajes.getInstancia().readDatosIniciales();
-            System.out.println("::Lectura finalizada exitosamente!::\n\n");
+            System.out.println("::Lectura finalizada exitosamente::\n\n");
         } catch (SVPException e) {
             imprimirErrores(e);
         }
@@ -630,9 +636,10 @@ public class UISVP {
 
     private void saveDatosSistema(){
         System.out.println("\n...:::: Guardado de datos de sistema ::::...\n");
-
         try{
+            System.out.println("::Grabando datos a archivo, espere::");
             SistemaVentaPasajes.getInstancia().saveDatosSistema();
+            System.out.println("::Grabado de datos finalizado exitosamente::\n\n");
         } catch (SVPException e) {
             imprimirErrores(e);
         }
@@ -640,10 +647,10 @@ public class UISVP {
 
     private void readDatosSistema(){
         System.out.println("\n...:::: Lectura de datos de sistema ::::...\n");
-
         try{
+            System.out.println("::Leyendo datos desde archivo, espere::");
             SistemaVentaPasajes.getInstancia().readDatosSistema();
-            System.out.println("Lectura exitosa!");
+            System.out.println("::Lectura finalizada exitosamente::\n\n");
         } catch (SVPException e) {
             imprimirErrores(e);
         }

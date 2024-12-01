@@ -83,20 +83,17 @@ public class ControladorEmpresas implements Serializable {
 
         Empresa e = empresaExist.get();
         e.addConductor(id, nom, dir);
-
     }
-
 
     public void hireAuxiliarForEmpresa(Rut rutEmp, IdPersona id, Nombre nom, Direccion dir) throws SVPException {
         Optional<Empresa> empresaExist = findEmpresa(rutEmp);
         Optional<Auxiliar> auxiliarExist = findAuxiliar(id, rutEmp);
 
         if (empresaExist.isEmpty()) {
-            throw new SVPException("No existe empresa con el rut indicado");
+            throw new SVPException("No existe empresa con el RUT indicado");
         }
         if (auxiliarExist.isPresent()) {
-            throw new SVPException("Ya está contratado auxiliar/conductor con el id dado en la empresa señalada");
-
+            throw new SVPException("Ya está contratado auxiliar con el ID dado en la empresa señalada");
         }
 
         Empresa e = empresaExist.get();
@@ -124,7 +121,6 @@ public class ControladorEmpresas implements Serializable {
 
     public String[][] listLlegadasSalidasTerminal(String nombre, LocalDate fecha) throws SVPException {
         Optional<Terminal> terminalNombre = findTerminal(nombre);
-
         if (terminalNombre.isEmpty()) {
             throw new SVPException("No existe terminal con el nombre indicado");
         }
@@ -132,7 +128,6 @@ public class ControladorEmpresas implements Serializable {
         Terminal t = terminalNombre.get();
         List<String[]> viajesFiltrados = new ArrayList<>();
 
-        //LLENO LA LISTA DE FILTRADOS CON LOS VIAJES QUE TENGAN LA MISMA FECHA
         for (Viaje viaje : t.getLlegadas()) {
             if (viaje.getFecha().equals(fecha)) {
                 String[] datosViaje = new String[5];
@@ -141,7 +136,6 @@ public class ControladorEmpresas implements Serializable {
                 datosViaje[2] = viaje.getBus().getPatente();
                 datosViaje[3] = viaje.getBus().getEmp().getNombre();
                 datosViaje[4] = String.valueOf(viaje.getListaPasajeros().length);
-
                 viajesFiltrados.add(datosViaje);
             }
         }
@@ -199,13 +193,13 @@ public class ControladorEmpresas implements Serializable {
         return out;
     }
 
-    protected void setInstanciaPersistente(ControladorEmpresas instanciaPersistente){
+    protected void setInstanciaPersistente(ControladorEmpresas instanciaPersistente) {
         instance = instanciaPersistente;
     }
 
-    protected void setDatosIniciales(Object[] objetos){
-        for(Object o : objetos){
-            switch(o){
+    protected void setDatosIniciales(Object[] objetos) {
+        for (Object o : objetos) {
+            switch (o) {
                 case Empresa empresa -> empresas.add(empresa);
                 case Terminal terminal -> terminales.add(terminal);
                 case Bus bus -> buses.add(bus);
