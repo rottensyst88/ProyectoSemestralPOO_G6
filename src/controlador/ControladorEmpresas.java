@@ -75,30 +75,32 @@ public class ControladorEmpresas {
     public void hireConductorForEmpresa(Rut rutEmp, IdPersona id, Nombre nom, Direccion dir) throws SistemaVentaPasajesException {
         Optional<Empresa> empresaExist = findEmpresa(rutEmp);
         Optional<Conductor> conductorExist = findConductor(id, rutEmp);
-        if (empresaExist.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe empresa con el rut indicado");
-        }
 
-        if (conductorExist.isPresent()) {
-            throw new SistemaVentaPasajesException("Ya está contratado conductor/auxiliar con el id dado en la empresa señalada");
-        }
-
-        Empresa e = empresaExist.get();
-        e.addConductor(id, nom, dir);
-
-    }
-
-
-    public void hireAuxiliarForEmpresa(Rut rutEmp, IdPersona id, Nombre nom, Direccion dir) throws SistemaVentaPasajesException {
-        Optional<Empresa> empresaExist = findEmpresa(rutEmp);
         Optional<Auxiliar> auxiliarExist = findAuxiliar(id, rutEmp);
 
         if (empresaExist.isEmpty()) {
             throw new SistemaVentaPasajesException("No existe empresa con el rut indicado");
         }
-        if (auxiliarExist.isPresent()) {
-            throw new SistemaVentaPasajesException("Ya está contratado auxiliar/conductor con el id dado en la empresa señalada");
 
+        if (conductorExist.isPresent() || auxiliarExist.isPresent()) {
+            throw new SistemaVentaPasajesException("Ya está contratado conductor/auxiliar con el id dado en la empresa señalada");
+        }
+
+        Empresa e = empresaExist.get();
+        e.addConductor(id, nom, dir);
+    }
+
+    public void hireAuxiliarForEmpresa(Rut rutEmp, IdPersona id, Nombre nom, Direccion dir) throws SistemaVentaPasajesException {
+        Optional<Empresa> empresaExist = findEmpresa(rutEmp);
+        Optional<Auxiliar> auxiliarExist = findAuxiliar(id, rutEmp);
+
+        Optional<Conductor> conductorExist = findConductor(id, rutEmp);
+
+        if (empresaExist.isEmpty()) {
+            throw new SistemaVentaPasajesException("No existe empresa con el rut indicado");
+        }
+        if (auxiliarExist.isPresent() || conductorExist.isPresent()) {
+            throw new SistemaVentaPasajesException("Ya está contratado auxiliar/conductor con el id dado en la empresa señalada");
         }
 
         Empresa e = empresaExist.get();
@@ -289,9 +291,8 @@ public class ControladorEmpresas {
     }
 
     protected Optional<Conductor> findConductor(IdPersona id, Rut rutEmpresa) {
-        return buses.stream()
-                .map(Bus::getEmp)
-                .filter(emp -> emp.getRut().equals(rutEmpresa))
+        return empresas.stream()
+                .filter(empresa -> empresa.getRut().equals(rutEmpresa))
                 .flatMap(empresa -> Arrays.stream(empresa.getTripulantes()))
                 .filter(tripulante -> tripulante instanceof Conductor)
                 .map(tripulante -> (Conductor) tripulante)
@@ -299,16 +300,15 @@ public class ControladorEmpresas {
                 .findFirst();
     }
 
-
     protected Optional<Auxiliar> findAuxiliar(IdPersona id, Rut rutEmpresa) {
-        return buses.stream()
-                .map(Bus::getEmp)
-                .filter(emp -> emp.getRut().equals(rutEmpresa))
+        return empresas.stream()
+                .filter(empresa -> empresa.getRut().equals(rutEmpresa))
                 .flatMap(empresa -> Arrays.stream(empresa.getTripulantes()))
                 .filter(tripulante -> tripulante instanceof Auxiliar)
                 .map(tripulante -> (Auxiliar) tripulante)
                 .filter(auxiliar -> auxiliar.getIdPersona().equals(id))
                 .findFirst();
     }
+
 
 }
