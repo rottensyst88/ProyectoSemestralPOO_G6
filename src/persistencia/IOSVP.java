@@ -52,7 +52,7 @@ public class IOSVP implements Serializable {
             }
         }
         for (String s : clientes_pasajeros) {
-            String[] x = s.split("',");
+            String[] x = s.split(";");
 
             IdPersona rut = Rut.of(x[1]);
             Nombre nombre = new Nombre();
@@ -82,7 +82,7 @@ public class IOSVP implements Serializable {
                     objetos.add(p);
                 } else {
                     Cliente c = new Cliente(rut, nombre, email);
-                    c.setTelefono(telef0no);
+                    c.setTelefono(telefono);
                     objetos.add(c);
                 }
             } else {
@@ -160,6 +160,7 @@ public class IOSVP implements Serializable {
                 b.setMarca(x[1]);
                 b.setModelo(x[2]);
                 e.get().addBus(b);
+                objetos.add(b);
             }
         }
         for (String s : viajes) {
@@ -286,7 +287,7 @@ public class IOSVP implements Serializable {
         Tripulante[] trip = empresa.getTripulantes();
 
         for (Tripulante t : trip) {
-            if (t.getIdPersona().equals("id")) {
+            if (t.getIdPersona().equals(id)) {
                 if (t instanceof Auxiliar && tipoDato.equalsIgnoreCase("Auxiliar")) {
                     valor = Optional.of(t);
                     break;
