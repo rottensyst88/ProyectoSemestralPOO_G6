@@ -223,6 +223,7 @@ public class UISVP {
             try {
                 ControladorEmpresas.getInstance().createBus(patente, marca, modelo, nroAsientos, Rut.of(rut_st));
                 System.out.println("\n...:::: Bus guardado exitosamente ::::...");
+                verif = false;
             } catch (SVPException e) {
                 imprimirErrores(e);
             }
@@ -656,7 +657,7 @@ public class UISVP {
         }
     }
 
-    private void generatePasajesVenta(){ //todo Consultar a profesor!
+    private void generatePasajesVenta() {
         System.out.println("\n...:::: Generar pasajes de venta ::::...\n");
         String idDoc = entradaDatos("ID Documento",2);
         TipoDocumento tipo = null;
@@ -672,15 +673,10 @@ public class UISVP {
                 System.out.println(":::: Error! Valor invalido!");
             }
         } while (tipo == null);
-        String nombre = entradaDatos("Nombre Archivo (* * *.txt)",2);
-
-        if(!nombre.endsWith(".txt")){
-            nombre = nombre + ".txt";
-        }
 
         try{
-            SistemaVentaPasajes.getInstancia().generatePasajesVenta(idDoc,tipo,nombre);
-            System.out.println("::Archivo generado exitosamente, busque " + nombre +"::\n\n");
+            SistemaVentaPasajes.getInstancia().generatePasajesVenta(idDoc,tipo);
+            System.out.println("::Archivo generado exitosamente, busque " + tipo.name()+"_"+ idDoc+".txt::\n\n");
         } catch (SVPException e) {
             imprimirErrores(e);
         }
@@ -769,7 +765,6 @@ public class UISVP {
         System.out.println("\n:::: " + e.getMessage());
         System.out.println("*** Error encontrado, no se pudo concretar la operación! ***\n");
     }
-
     private void datosPrueba() {
         ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
         Nombre aux_test = new Nombre();

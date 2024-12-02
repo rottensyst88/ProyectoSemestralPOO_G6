@@ -253,20 +253,13 @@ public class SistemaVentaPasajes implements Serializable {
             Venta venta = ventas.get(i);
             arregloVentas[i][0] = venta.getIdDocumento();
             arregloVentas[i][1] = venta.getTipo().toString();
-            //DEBE SER EN FORMATO DD/MM/AAAA
-            //arregloVentas[i][2] = fechaFormateada.format(venta.getFecha());
             arregloVentas[i][2] = venta.getFecha().format(DateTimeFormatter.ofPattern(fechaFormateada));
-            //REVISAR ID PERSONA debería dar RUT/PASAPORTE
             arregloVentas[i][3] = venta.getCliente().getIdPersona().toString();
-            //REVISAR SI TRAE TRATAMIENTO
             arregloVentas[i][4] = venta.getCliente().getNombreCompleto().toString();
-            //pasando int a String
             String stringCantBoletos = "" + venta.getPasajes().length;
             arregloVentas[i][5] = stringCantBoletos;
-            //convertir monto INT a String
             String stringTotalVenta = "" + venta.getMonto();
             arregloVentas[i][6] = stringTotalVenta;
-
         }
         return arregloVentas;
     }
@@ -329,13 +322,14 @@ public class SistemaVentaPasajes implements Serializable {
 
     /* CLASES REFERENTES A MANEJO DE IO*/
 
-    public void generatePasajesVenta(String idDocumento, TipoDocumento tipo, String nombreObjeto) throws SVPException {
+    public void generatePasajesVenta(String idDocumento, TipoDocumento tipo) throws SVPException {
         Optional<Venta> venta = findVenta(idDocumento, tipo);
         try {
             if (venta.isEmpty()) {
-                throw new SVPException("La venta no existe"); //todo PREGUNTAR AL PROFESOR!
+                throw new SVPException("La venta no existe");
             }
-            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(),nombreObjeto); //todo preguntar al profesor!
+            String nombreObjeto = tipo.name() + "_" + idDocumento + ".txt";
+            IOSVP.getInstance().savePasajesDeVenta(venta.get().getPasajes(),nombreObjeto);
         } catch (SVPException e) {
             throw new SVPException(e.getMessage());
         }
