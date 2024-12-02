@@ -127,7 +127,7 @@ public class IOSVP implements Serializable {
             Tripulante var = null;
             Optional<Empresa> e = findEmpresa(empresasF, Rut.of(rutEmpresa));
             if (e.isPresent()) {
-                if (x[0].equals("B")) {
+                if (x[0].equals("A")) {
                     var = new Auxiliar(rut, nombre, dir);
                     e.get().addAuxiliar(var.getIdPersona(), var.getNombreCompleto(), var.getDireccion());
                 } else {
@@ -166,13 +166,13 @@ public class IOSVP implements Serializable {
             String[] x = s.split(";");
             LocalDate fecha = LocalDate.parse(x[0], DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             LocalTime hora = LocalTime.parse(x[1], DateTimeFormatter.ofPattern("HH:mm"));
-            String precio = x[3];
+            String precio = x[2];
             String duracion = x[3];
-            String patenteBus = x[3];
+            String patenteBus = x[4];
             String rutAuxiliar = x[5];
-            String rutConductor = x[3];
-            String nTerminalSalida = x[3];
-            String nTerminalLlegada = x[3];
+            String rutConductor = x[6];
+            String nTerminalSalida = x[7];
+            String nTerminalLlegada = x[8];
 
 
             ArrayList<Bus> listaBuses = new ArrayList<>();
