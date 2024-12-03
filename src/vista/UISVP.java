@@ -693,23 +693,34 @@ public class UISVP {
     private void listPasajerosViaje() {
         String[][] pasajeros_arreglo = null;
         System.out.println("\n...:::: Listado de pasajeros de un viaje ::::...\n");
+        boolean verif = true;
 
-        LocalDate fecha = LocalDate.parse(entradaDatos("Fecha de viaje[dd/mm/yyyy]", 2), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        LocalTime hora = LocalTime.parse(entradaDatos("Hora de viaje[hh:mm]", 2), DateTimeFormatter.ofPattern("HH:mm"));
-        String patente = entradaDatos("Patente del bus", 2);
-        patente = patente.substring(0, 2) + patente.substring(3, 5) + patente.substring(6, 8);
+        do{
+            try{
+                LocalDate fecha = LocalDate.parse(entradaDatos("Fecha de viaje[dd/mm/yyyy]", 2), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalTime hora = LocalTime.parse(entradaDatos("Hora de viaje[hh:mm]", 2), DateTimeFormatter.ofPattern("HH:mm"));
+                String patente = entradaDatos("Patente del bus", 2);
+                patente = patente.substring(0, 2) + patente.substring(3, 5) + patente.substring(6, 8);
 
-        try {
-            pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajerosViaje(fecha, hora, patente);
-        } catch (SVPException e) {
-            System.out.println(e.getMessage());
-            return;
-        }
+                try {
+                    pasajeros_arreglo = SistemaVentaPasajes.getInstancia().listPasajerosViaje(fecha, hora, patente);
+                } catch (SVPException e) {
+                    imprimirErrores(e);
+                    return;
+                } finally {
+                    verif = false;
+                }
+            } catch (DateTimeParseException | IndexOutOfBoundsException e) {
+                System.out.println(":::: El valor ingresado no es valido! ::::");
+            }
+        } while(verif);
+
 
         if (pasajeros_arreglo.length == 0) {
             System.out.println(":::: Error! No hay pasajeros para el viaje seleccionado!");
             return;
         }
+
         System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*");
         System.out.printf("| %8s | %16s | %24s | %24s | %20s |\n", "ASIENTO", "RUT/PASS", "PASAJERO", "CONTACTO", "TELEFONO CONTACTO");
         for (String[] pasajero : pasajeros_arreglo) {
@@ -725,16 +736,14 @@ public class UISVP {
 
     private void listEmpresas() {
         System.out.println("\n...:::: Listado de empresas::::...\n");
-        System.out.println("*----------------*----------------------*--------------------------------*----------------------*-----------------*-----------------*");
-        System.out.printf("| %14s | %20s | %30s | %20s | %15s | %15s |\n", "RUT EMPRESA", "NOMBRE", "URL", "NRO. TRIPULANTES", "NRO. BUSES", "NRO. VENTAS");
-
         String[][] empresas_arreglo = ControladorEmpresas.getInstance().listEmpresas();
-
         if (empresas_arreglo.length == 0) {
             System.out.println(":::: Error! No existe datos de empresas!");
             return;
         }
 
+        System.out.println("*----------------*----------------------*--------------------------------*----------------------*-----------------*-----------------*");
+        System.out.printf("| %14s | %20s | %30s | %20s | %15s | %15s |\n", "RUT EMPRESA", "NOMBRE", "URL", "NRO. TRIPULANTES", "NRO. BUSES", "NRO. VENTAS");
 
         for (String[] empresa : empresas_arreglo) {
             System.out.println("*----------------+----------------------+--------------------------------+----------------------+-----------------+-----------------*");
@@ -749,32 +758,48 @@ public class UISVP {
     }
 
     private void listLlegadasSalidasTerminal() {
+        boolean verif = true;
+
         System.out.println("\n...:::: Listado de llegadas y salidas de un terminal::::...\n");
-        String nombre_terminal = entradaDatos("Nombre terminal", 1);
-        LocalDate fecha = LocalDate.parse(entradaDatos("Fecha[dd/MM/yyyy]", 1), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        do{
+            try{
+                String nombre_terminal = entradaDatos("Nombre terminal", 1);
+                LocalDate fecha = LocalDate.parse(entradaDatos("Fecha[dd/MM/yyyy]", 1), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        try {
-            String[][] llegadasSalidas = ControladorEmpresas.getInstance().listLlegadasSalidasTerminal(nombre_terminal, fecha);
-            System.out.println("*--------------------------*--------------------------*--------------------------*--------------------------*--------------------------*");
-            System.out.printf("| %24s | %24s | %24s | %24s | %24s |\n", "LLEGADA/SALIDA", "HORA", "PATENTE BUS", "NOMBRE EMPRESA", "NRO. PASAJEROS");
+                try {
+                    String[][] llegadasSalidas = ControladorEmpresas.getInstance().listLlegadasSalidasTerminal(nombre_terminal, fecha);
 
-            for (String[] llegadasSalida : llegadasSalidas) {
-                System.out.println("*--------------------------+--------------------------+--------------------------+--------------------------+--------------------------*");
-                System.out.print("|");
-                for (int x = 0; x < 5; x++) {
-                    System.out.printf(" %24s |", llegadasSalida[x]);
+                    System.out.println("*--------------------------*--------------------------*--------------------------*--------------------------*--------------------------*");
+                    System.out.printf("| %24s | %24s | %24s | %24s | %24s |\n", "LLEGADA/SALIDA", "HORA", "PATENTE BUS", "NOMBRE EMPRESA", "NRO. PASAJEROS");
+
+                    for (String[] llegadasSalida : llegadasSalidas) {
+                        System.out.println("*--------------------------+--------------------------+--------------------------+--------------------------+--------------------------*");
+                        System.out.print("|");
+                        for (int x = 0; x < 5; x++) {
+                            System.out.printf(" %24s |", llegadasSalida[x]);
+                        }
+                        System.out.println();
+                    }
+                    System.out.println("*--------------------------*--------------------------*--------------------------*--------------------------*--------------------------*\n\n");
+                } catch (SVPException e) {
+                    imprimirErrores(e);
+                    return;
+                } finally {
+                    verif = false;
                 }
-                System.out.println();
+            } catch(DateTimeParseException e){
+                System.out.println(":::: Fecha ingresada no es valida! ::::");
             }
-            System.out.println("*--------------------------*--------------------------*--------------------------*--------------------------*--------------------------*\n\n");
-        } catch (SVPException e) {
-            imprimirErrores(e);
-        }
+        }while(verif);
     }
 
     private void listVentasEmpresa() {
+        Rut rut = null;
+
         System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
-        Rut rut = Rut.of(entradaDatos("R.U.T", 2));
+        do{
+            rut = Rut.of(entradaDatos("R.U.T", 2));
+        }while(rut == null);
 
         try {
             String[][] listas = ControladorEmpresas.getInstance().listVentasEmpresa(rut);
@@ -800,16 +825,21 @@ public class UISVP {
         System.out.println("\n...:::: Generar pasajes de venta ::::...\n");
         String idDoc = entradaDatos("ID Documento", 2);
         TipoDocumento tipo = null;
+
         do {
-            int tipoDoc = Integer.parseInt(entradaDatos("Tipo doc. [1]Boleta [2]Factura", 2));
-            if (tipoDoc == 1 || tipoDoc == 2) {
-                if (tipoDoc == 1) {
-                    tipo = TipoDocumento.BOLETA;
+            try{
+                int tipoDoc = Integer.parseInt(entradaDatos("Tipo doc. [1]Boleta [2]Factura", 2));
+                if (tipoDoc == 1 || tipoDoc == 2) {
+                    if (tipoDoc == 1) {
+                        tipo = TipoDocumento.BOLETA;
+                    } else {
+                        tipo = TipoDocumento.FACTURA;
+                    }
                 } else {
-                    tipo = TipoDocumento.FACTURA;
+                    System.out.println(":::: Error! Valor invalido!");
                 }
-            } else {
-                System.out.println(":::: Error! Valor invalido!");
+            } catch (NumberFormatException e){
+                System.out.println(":::: El valor ingresado no es valido! ::::");
             }
         } while (tipo == null);
 
