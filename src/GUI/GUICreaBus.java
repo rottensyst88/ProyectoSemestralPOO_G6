@@ -26,6 +26,12 @@ public class GUICreaBus extends JDialog {
     Scanner sc = new Scanner(System.in);
 
     public GUICreaBus() {
+        try{
+            cargarDatos();
+        } catch (SistemaVentaPasajesException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+            System.exit(0);
+        }
         setContentPane(panel1);
         setModal(true);
         getRootPane().setDefaultButton(OKButton);
@@ -50,6 +56,21 @@ public class GUICreaBus extends JDialog {
                 onCancel();
             }
         });
+
+        //Solución original de Diego
+        NombreComboBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cambiarRutAutomatico();
+            }
+        });
+
+        RUTComboBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cambiarNombreAutomatico();
+            }
+        });
+        // Fin solución original de Diego
+
     }
 
     public void onOK() {
@@ -63,15 +84,50 @@ public class GUICreaBus extends JDialog {
             Rut rut = Rut.of(RUTComboBox.getSelectedItem().toString().trim());
 
             ControladorEmpresas.getInstance().createBus(patente, marca, modelo, nroAsientos, rut);
-            JOptionPane.showMessageDialog(this, "Damian weko", "¡¡¡¡¡¡¡ATENCION!!!!!!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Bus guardado exitosamente", "Información", JOptionPane.INFORMATION_MESSAGE);
         } catch (SistemaVentaPasajesException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "sexo gratis", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Datos invalidos", "sexo gratis", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Datos invalidos", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
 
     }
+    //Solución original de Diego
+    private String[][] empresas = ControladorEmpresas.getInstance().listEmpresas();
+
+    private void cambiarRutAutomatico() {
+        String empresaSelec = (String) NombreComboBox.getSelectedItem();
+
+        for (String[] empresa : empresas) {
+            if (empresa[1].equals(empresaSelec)) {
+                RUTComboBox.setSelectedItem(empresa[0]);
+                break;
+            }
+        }
+    }
+    private void cambiarNombreAutomatico() {
+        String rutSelec = (String) RUTComboBox.getSelectedItem();
+
+        for (String[] empresa : empresas) {
+            if (empresa[0].equals(rutSelec)) {
+                NombreComboBox.setSelectedItem(empresa[1]);
+                break;
+            }
+        }
+    }
+    private void cargarDatos() throws  SistemaVentaPasajesException {
+
+        if(empresas.length == 0){
+            throw new SistemaVentaPasajesException("No existen empresas en el registro");
+        }
+        for (String[] empresa : empresas) {
+            NombreComboBox.addItem(empresa[1]);
+            RUTComboBox.addItem(empresa[0]);
+        }
+    }
+
+    //Fin solucion original de Diego
 
     public void onCancel() {
         dispose();

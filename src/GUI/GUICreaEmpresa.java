@@ -6,10 +6,8 @@ import utilidades.Rut;
 import vista.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Scanner;
 
 public class GUICreaEmpresa extends JDialog {
@@ -45,6 +43,25 @@ public class GUICreaEmpresa extends JDialog {
 
             }
         });
+        RUTtextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (RUTtextField.getText().equals("11.111.111-1")) {
+                    RUTtextField.setText("");
+                    RUTtextField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (RUTtextField.getText().isEmpty()) {
+                    RUTtextField.setText("11.111.111-1");
+                    RUTtextField.setForeground(Color.LIGHT_GRAY);
+                }
+            }
+        });
+
+
     }
 
     private void onOK() {
@@ -56,7 +73,7 @@ public class GUICreaEmpresa extends JDialog {
 
             ControladorEmpresas.getInstance().createEmpresa(Rut.of(rut_st), nombre, url);
             //empresa creada
-            JOptionPane.showMessageDialog(this, "gracias por su atención", "Atención", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Empresa guardada exitosamente", "Atención", JOptionPane.INFORMATION_MESSAGE);
             dispose();
 
         } catch (SistemaVentaPasajesException e) {
