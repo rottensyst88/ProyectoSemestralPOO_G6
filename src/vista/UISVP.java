@@ -7,7 +7,6 @@ import utilidades.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.regex.PatternSyntaxException;
 
@@ -250,7 +249,7 @@ public class UISVP {
     private void createBus() {
         boolean verif = true;
         String patente = null, marca = null, modelo = null;
-        Rut rut_st = null;
+        Rut rut_st;
         int nroAsientos = 0;
 
         System.out.println("\n...:::: Creación de un nuevo bus ::::...\n");
@@ -794,7 +793,7 @@ public class UISVP {
     }
 
     private void listVentasEmpresa() {
-        Rut rut = null;
+        Rut rut;
 
         System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
         do{
