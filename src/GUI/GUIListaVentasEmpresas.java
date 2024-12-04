@@ -30,12 +30,8 @@ public class GUIListaVentasEmpresas extends JDialog{
 
 
     public GUIListaVentasEmpresas() throws SistemaVentaPasajesException{
-        try{
-            cargarDatos();
-        } catch (SistemaVentaPasajesException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            System.exit(0);
-        }
+        cargarDatos();
+
         setContentPane(panel1);
         setLocationRelativeTo(null);
         setModal(true);

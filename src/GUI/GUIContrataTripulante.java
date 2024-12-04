@@ -3,6 +3,7 @@ package GUI;
 import controlador.ControladorEmpresas;
 import excepciones.SistemaVentaPasajesException;
 import utilidades.*;
+import vista.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,12 +38,8 @@ public class GUIContrataTripulante extends JDialog {
 
     public GUIContrataTripulante() throws SistemaVentaPasajesException {
 
-        try {
-            cargarEmpresas();
-        } catch (SistemaVentaPasajesException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            System.exit(0);
-        }
+        cargarEmpresas();
+
         setContentPane(panel1);
         setLocationRelativeTo(null);
         setModal(true);
@@ -154,6 +151,7 @@ public class GUIContrataTripulante extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 nacionalidadCBox.setEnabled(true);
                 pasaporteOrut.setText("");
+                pasaporteOrut.setForeground(Color.BLACK);
             }
         });
 
@@ -192,7 +190,8 @@ public class GUIContrataTripulante extends JDialog {
                     }
 
 
-                    if (pasaporteOrut.getText().isEmpty()) {
+                    if ((!pasaporteRadioButton.isSelected()))
+                    {
                         pasaporteOrut.setText("00.000.000-0");
                         pasaporteOrut.setForeground(Color.LIGHT_GRAY);
                     }

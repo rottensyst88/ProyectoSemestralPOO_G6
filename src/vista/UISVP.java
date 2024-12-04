@@ -5,6 +5,7 @@ import controlador.*;
 import excepciones.*;
 import utilidades.*;
 
+import javax.swing.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -81,7 +82,14 @@ public class UISVP {
     }
     private void contrataTripulante() {
 
-        GUIContrataTripulante.display();
+
+
+        try{
+            GUIContrataTripulante.display();
+        }catch(SistemaVentaPasajesException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            UISVP.getInstancia().menu();
+        }
 
         /*Nombre tripulante = new Nombre(); IdPersona id; Tratamiento tratamiento;
 
@@ -521,7 +529,12 @@ public class UISVP {
     }
     private void listVentasEmpresa() {
 
-        GUIListaVentasEmpresas.display();
+        try{
+            GUIListaVentasEmpresas.display();
+        }catch(SistemaVentaPasajesException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            UISVP.getInstancia().menu();
+        }
 
         /*System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
         Rut rut = Rut.of(entradaDatos("R.U.T",2));
@@ -644,9 +657,9 @@ public class UISVP {
         System.out.println("*** Error encontrado, no se pudo concretar la operación! ***\n");
     }
     private void datosPrueba() {
-        ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-1"), "mibus2", "mibus.pe");
-        ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
-        ControladorEmpresas.getInstance().createEmpresa(Rut.of("22.727.777-7"), "elpepe", "elpepe.cl");
+       ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-1"), "mibus2", "mibus.pe");
+       ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
+       ControladorEmpresas.getInstance().createEmpresa(Rut.of("22.727.777-7"), "elpepe", "elpepe.cl");
         Nombre aux_test = new Nombre();
         aux_test.setTratamiento(Tratamiento.SR);
         aux_test.setNombre("Ery Flores");
@@ -665,8 +678,8 @@ public class UISVP {
         ControladorEmpresas.getInstance().createTerminal("Pecado Milenio", new Direccion("Milenio", 2, "Nuble"));
         ControladorEmpresas.getInstance().createBus("AABB12", "VOLVO", "GEN", 35, Rut.of("77.777.777-7"));
         // Crear buses para las empresas que no tienen uno
-        //ControladorEmpresas.getInstance().createBus("BBCC34", "Mercedes-Benz", "GEN", 50, Rut.of("77.777.777-1")); // Para "mibus2"
-        //ControladorEmpresas.getInstance().createBus("CCDD56", "Scania", "PREMIUM", 45, Rut.of("22.727.777-7")); // Para "elpepe"
+        ControladorEmpresas.getInstance().createBus("BBCC34", "Mercedes-Benz", "GEN", 50, Rut.of("77.777.777-1")); // Para "mibus2"
+        ControladorEmpresas.getInstance().createBus("CCDD56", "Scania", "PREMIUM", 45, Rut.of("22.727.777-7")); // Para "elpepe"
 
         Nombre cli_test = new Nombre();
         cli_test.setTratamiento(Tratamiento.SR);
