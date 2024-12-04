@@ -4,7 +4,6 @@ import excepciones.SVPException;
 import utilidades.*;
 import modelo.*;
 
-import java.io.Serializable;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;

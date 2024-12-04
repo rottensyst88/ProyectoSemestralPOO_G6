@@ -254,22 +254,6 @@ public class ControladorEmpresas implements Serializable {
     }
 
     protected Optional<Conductor> findConductor(IdPersona id, Rut rutEmpresa) {
-        /*
-
-        for (Bus bus : buses) {
-            if (bus.getEmp().getRut().equals(rutEmpresa)) {
-                Tripulante[] trip = bus.getEmp().getTripulantes();
-                for (Tripulante t : trip) {
-                    if (t instanceof Conductor) {
-                        if (t.getIdPersona().equals(id)) {
-                            return Optional.of((Conductor) t);
-                        }
-                    }
-                }
-            }
-        }
-         */
-
         for (Empresa e : empresas){
             if (e.getRut().equals(rutEmpresa)) {
                 Tripulante[] trip = e.getTripulantes();
@@ -287,21 +271,6 @@ public class ControladorEmpresas implements Serializable {
     }
 
     protected Optional<Auxiliar> findAuxiliar(IdPersona id, Rut rutEmpresa) {
-        /*
-        for (Bus bus : buses) {
-            if (bus.getEmp().getRut().equals(rutEmpresa)) {
-                Tripulante[] trip = bus.getEmp().getTripulantes();
-                for (Tripulante t : trip) {
-                    if (t instanceof Auxiliar) {
-                        if (t.getIdPersona().equals(id)) {
-                            return Optional.of((Auxiliar) t);
-                        }
-                    }
-                }
-            }
-        }
-         */
-
         for(Empresa e : empresas) {
             if (e.getRut().equals(rutEmpresa)) {
                 Tripulante[] trip = e.getTripulantes();
