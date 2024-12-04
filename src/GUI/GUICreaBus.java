@@ -5,10 +5,8 @@ import excepciones.SistemaVentaPasajesException;
 import utilidades.Rut;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Scanner;
 
 
@@ -23,9 +21,11 @@ public class GUICreaBus extends JDialog {
     private JComboBox NombreComboBox;
     private JComboBox RUTComboBox;
 
+
     Scanner sc = new Scanner(System.in);
 
     public GUICreaBus() {
+
         try{
             cargarDatos();
         } catch (SistemaVentaPasajesException e) {
@@ -41,7 +41,6 @@ public class GUICreaBus extends JDialog {
                 onCancel();
             }
         });
-
         OKButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,26 +70,59 @@ public class GUICreaBus extends JDialog {
         });
         // Fin solución original de Diego
 
+        PatenteTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (PatenteTextField.getText().equals("AA.BB-12")) {
+                    PatenteTextField.setText("");
+                    PatenteTextField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (PatenteTextField.getText().isEmpty()) {
+                    PatenteTextField.setText("AA.BB-12");
+                    PatenteTextField.setForeground(Color.LIGHT_GRAY);
+                }
+            }
+        });
     }
 
     public void onOK() {
-        try {
-            int nroAsientos = Integer.parseInt(NroAsientosTextField.getText().trim());
-            String modelo = ModeloTextField.getText();
-            String marca = MarcaTextField.getText();
-            String patente = PatenteTextField.getText();
+        boolean verif = true;
 
-            String nombre = NombreComboBox.getSelectedItem().toString();
-            Rut rut = Rut.of(RUTComboBox.getSelectedItem().toString().trim());
+        do {
+            try {
+                int nroAsientos = 1;
 
-            ControladorEmpresas.getInstance().createBus(patente, marca, modelo, nroAsientos, rut);
-            JOptionPane.showMessageDialog(this, "Bus guardado exitosamente", "Información", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SistemaVentaPasajesException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Datos invalidos", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+                nroAsientos = Integer.parseInt(NroAsientosTextField.getText().trim());
+                String modelo = ModeloTextField.getText();
+                String marca = MarcaTextField.getText();
+                String patente = PatenteTextField.getText();
 
+                String nombre = NombreComboBox.getSelectedItem().toString();
+                Rut rut = Rut.of(RUTComboBox.getSelectedItem().toString().trim());
+
+                if (nroAsientos < 0) {
+                    JOptionPane.showMessageDialog(this, "Numero de asientos invalido", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    NroAsientosTextField.setText("");
+                } else {
+                    ControladorEmpresas.getInstance().createBus(patente, marca, modelo, nroAsientos, rut);
+                    JOptionPane.showMessageDialog(this, "Bus guardado exitosamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+                    verif = false;
+                    dispose();
+                }
+
+            } catch (SistemaVentaPasajesException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                verif = false;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Datos invalidos", "Error", JOptionPane.ERROR_MESSAGE);
+                NroAsientosTextField.setText("");
+                verif = false;
+            }
+        } while (verif);
 
     }
     //Solución original de Diego
