@@ -1,6 +1,8 @@
 package utilidades;
 
-public interface IdPersona {
+import java.io.Serializable;
+
+public interface IdPersona extends Serializable {
     @Override
     String toString();
 

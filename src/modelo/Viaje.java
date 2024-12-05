@@ -1,11 +1,12 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal", "GrazieInspection"})
-public class Viaje {
+public class Viaje implements Serializable {
 
     private LocalDate fecha;
     private LocalTime hora;
