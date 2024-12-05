@@ -1,5 +1,6 @@
 package vista;
-
+import GUI.GUICreaEmpresa.*;
+import GUI.*;
 import controlador.*;
 import excepciones.*;
 import utilidades.*;
@@ -85,27 +86,11 @@ public class UISVP {
     }
 
     private void createEmpresas() {
-        boolean verif = true;
-        Rut rutEmpresa;
-        System.out.println("...:::: Creando una nueva Empresa ::::....\n");
-        do {
-            rutEmpresa = Rut.of(entradaDatos("R.U.T", 1));
-            if (rutEmpresa == null) {
-                System.out.println(":::: Formato de rut ingresado no es valido ::::");
-            } else {
-                verif = false;
-            }
-        } while (verif);
+        GUICreaEmpresa dialog = new GUICreaEmpresa();
+        dialog.setLocationRelativeTo(null);
+        dialog.pack();
+        dialog.setVisible(true);
 
-        String nombre = entradaDatos("Nombre", 1);
-        String url = entradaDatos("URL", 1);
-
-        try {
-            ControladorEmpresas.getInstance().createEmpresa(rutEmpresa, nombre, url);
-            System.out.println("\n...:::: Empresa guardada exitosamente ::::....");
-        } catch (SVPException e) {
-            imprimirErrores(e);
-        }
     }
 
     private void contrataTripulante() {
@@ -247,47 +232,10 @@ public class UISVP {
     }
 
     private void createBus() {
-        boolean verif = true;
-        String patente = null, marca = null, modelo = null;
-        Rut rut_st;
-        int nroAsientos = 0;
-
-        System.out.println("\n...:::: Creación de un nuevo bus ::::...\n");
-        do {
-            try {
-                patente = entradaDatos("Patente", 1);
-                marca = entradaDatos("Marca", 1);
-                modelo = entradaDatos("Modelo", 1);
-                nroAsientos = Integer.parseInt(entradaDatos("Numero de asientos", 1));
-
-                if (nroAsientos > 0) {
-                    verif = false;
-                } else {
-                    System.out.println(":::: El valor ingresado no es valido! ::::");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println(":::: El valor ingresado no es valido! ::::");
-            }
-        } while (verif);
-
-        verif = true;
-        System.out.println("\n:::: Dato de la empresa");
-
-        do {
-            rut_st = Rut.of(entradaDatos("R.U.T", 1));
-            if (rut_st == null) {
-                System.out.println(":::: Formato de rut ingresado no es valido ::::");
-            } else {
-                verif = false;
-            }
-        } while (verif);
-
-        try {
-            ControladorEmpresas.getInstance().createBus(patente, marca, modelo, nroAsientos, rut_st);
-            System.out.println("\n...:::: Bus guardado exitosamente ::::...");
-        } catch (SVPException e) {
-            imprimirErrores(e);
-        }
+        GUICreaBus dialog = new GUICreaBus();
+        dialog.setLocationRelativeTo(null);
+        dialog.pack();
+        dialog.setVisible(true);
     }
 
     private void createViaje() {

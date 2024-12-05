@@ -32,6 +32,7 @@ public class ControladorEmpresas implements Serializable {
     //METODOS
 
     public void createEmpresa(Rut rut, String nombre, String url) throws SVPException {
+        if(rut==null){ throw new SVPException("Rut invalido"); }
         Optional<Empresa> empresaExist = findEmpresa(rut);
         if (empresaExist.isPresent()) {
             throw new SVPException("Ya existe empresa con el rut indicado");
@@ -41,6 +42,9 @@ public class ControladorEmpresas implements Serializable {
     }
 
     public void createBus(String pat, String marca, String modelo, int nroAsientos, Rut rutEmp) throws SVPException {
+        if(rutEmp==null){
+            throw new SVPException("Rut invalido");
+        }
 
         Optional<Bus> busExist = findBus(pat);
         Optional<Empresa> empresaExist = findEmpresa(rutEmp);
