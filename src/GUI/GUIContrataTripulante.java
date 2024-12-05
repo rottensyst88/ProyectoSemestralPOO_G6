@@ -3,7 +3,6 @@ package GUI;
 import controlador.ControladorEmpresas;
 import excepciones.SistemaVentaPasajesException;
 import utilidades.*;
-import vista.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,8 +36,7 @@ public class GUIContrataTripulante extends JDialog {
 
 
     public GUIContrataTripulante() throws SistemaVentaPasajesException {
-
-        cargarEmpresas();
+        cargarDatos();
 
         setContentPane(panel1);
         setLocationRelativeTo(null);
@@ -64,14 +62,14 @@ public class GUIContrataTripulante extends JDialog {
         boxNombreEmp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarRutDesdeNombre();
+                cambiarRutAutomatico();
             }
         });
 
         boxRut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarNombreDesdeRut();
+                cambiarNombreAutomatico();
             }
         });
 
@@ -217,15 +215,12 @@ public class GUIContrataTripulante extends JDialog {
     private void onOK() throws SistemaVentaPasajesException {
 
         try {
-            verificacionDatos();
-
+            verificacion();
         } catch (SistemaVentaPasajesException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
-
-            limpiarDatos();
+            limpiarCasillas();
         }
-
     }
 
     private void onCancel() {
@@ -235,8 +230,7 @@ public class GUIContrataTripulante extends JDialog {
 
     //METODOS PRIVADOS
 
-    private void cargarEmpresas() throws SistemaVentaPasajesException {
-
+    private void cargarDatos() throws SistemaVentaPasajesException {
         if (empresas.length == 0) {
             throw new SistemaVentaPasajesException("No hay empresas en el registro");
         }
@@ -247,29 +241,27 @@ public class GUIContrataTripulante extends JDialog {
     }
 
 
-    private void actualizarRutDesdeNombre() {
-        String empresaSeleccionada = (String) boxNombreEmp.getSelectedItem();
-
+    private void cambiarRutAutomatico() {
+        String empresaSelec = (String) boxNombreEmp.getSelectedItem();
         for (String[] empresa : empresas) {
-            if (empresa[1].equals(empresaSeleccionada)) {
+            if (empresa[1].equals(empresaSelec)) {
                 boxRut.setSelectedItem(empresa[0]);
                 break;
             }
         }
     }
 
-    private void actualizarNombreDesdeRut() {
-        String rutSeleccionado = (String) boxRut.getSelectedItem();
-
+    private void cambiarNombreAutomatico() {
+        String rutSelec = (String) boxRut.getSelectedItem();
         for (String[] empresa : empresas) {
-            if (empresa[0].equals(rutSeleccionado)) {
+            if (empresa[0].equals(rutSelec)) {
                 boxNombreEmp.setSelectedItem(empresa[1]);
                 break;
             }
         }
     }
 
-    private void verificacionDatos() throws SistemaVentaPasajesException {
+    private void verificacion() throws SistemaVentaPasajesException {
         if (tipoTripulante.getSelection() == null || tipoGenero.getSelection() == null
                 || tipoIdentificacion.getSelection() == null || pasaporteOrut.getText().isEmpty()
                 || nombreTextField.getText().isEmpty() || apellidoPTextField.getText().isEmpty()
@@ -279,12 +271,9 @@ public class GUIContrataTripulante extends JDialog {
                     "Por favor, rellene todos los campos",
                     "Campos incompletos",
                     JOptionPane.WARNING_MESSAGE);
-
         } else {
             guardarDatos();
-
         }
-
     }
 
     private void guardarDatos() throws SistemaVentaPasajesException {
@@ -301,7 +290,6 @@ public class GUIContrataTripulante extends JDialog {
         } else if (sraRadioButton.isSelected()) {
             genero = "Sra.";
         }
-
 
         Direccion dir = new Direccion(calle, numCalle, comuna);
         Nombre tripulante = new Nombre();
@@ -346,7 +334,7 @@ public class GUIContrataTripulante extends JDialog {
 
 
 
-    private void limpiarDatos(){
+    private void limpiarCasillas(){
 
     tipoTripulante.clearSelection();
     tipoIdentificacion.clearSelection();

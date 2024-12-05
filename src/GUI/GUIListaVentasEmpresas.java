@@ -19,14 +19,8 @@ public class GUIListaVentasEmpresas extends JDialog{
     private JButton OKButton;
     private JComboBox boxNombreEmp;
 
-
-    // EL CODIGO QUE ESTA COMENTADO ES EXLUSIVAMENTE PARA CUANDO SE ESTE INTERACCIONANDO CON
-    // EL CONTROLADOR, POR AHORA ESTOY SOLO CON DATOS DE PRUEBA.
-
     private String[][] empresas = ControladorEmpresas.getInstance().listEmpresas();
     private String [] columnas= {"FECHA", "TIPO", "MONTO PAGADO", "TIPO PAGO"};
-
-
 
 
     public GUIListaVentasEmpresas() throws SistemaVentaPasajesException{
@@ -69,12 +63,11 @@ public class GUIListaVentasEmpresas extends JDialog{
 
     private void onOK() throws SistemaVentaPasajesException {
         try {
-            rellenarTabla();
+            cargarDatosEnTabla();
         } catch (SistemaVentaPasajesException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
-
 
     private void onCancel() {
         dispose();
@@ -114,7 +107,7 @@ public class GUIListaVentasEmpresas extends JDialog{
         }
     }
 
-    private void rellenarTabla() throws SistemaVentaPasajesException {
+    private void cargarDatosEnTabla() throws SistemaVentaPasajesException {
         String rutSeleccionado = (String) boxRut.getSelectedItem();
         String [][] ventasEmpresa = ControladorEmpresas.getInstance().listVentasEmpresa(Rut.of(rutSeleccionado));
 
