@@ -71,6 +71,12 @@ public class GUICreaEmpresa extends JDialog {
             String nombre = NombretextField.getText();
             String url = URLtextField.getText();
 
+
+            if (nombre.isEmpty() || url.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar un nombre y URL válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             ControladorEmpresas.getInstance().createEmpresa(Rut.of(rut_st), nombre, url);
             //empresa creada
             JOptionPane.showMessageDialog(this, "Empresa guardada exitosamente", "Atención", JOptionPane.INFORMATION_MESSAGE);

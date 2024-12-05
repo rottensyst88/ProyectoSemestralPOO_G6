@@ -100,7 +100,6 @@ public class GUICreaBus extends JDialog {
                 String modelo = ModeloTextField.getText();
                 String marca = MarcaTextField.getText();
                 String patente = PatenteTextField.getText();
-
                 String nombre = NombreComboBox.getSelectedItem().toString();
                 Rut rut = Rut.of(RUTComboBox.getSelectedItem().toString().trim());
 
