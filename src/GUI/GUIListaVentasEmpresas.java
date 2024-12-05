@@ -1,7 +1,7 @@
 package GUI;
 
 import controlador.ControladorEmpresas;
-import excepciones.SistemaVentaPasajesException;
+import excepciones.SVPException;
 import utilidades.Rut;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class GUIListaVentasEmpresas extends JDialog{
 
 
 
-    public GUIListaVentasEmpresas() throws SistemaVentaPasajesException{
+    public GUIListaVentasEmpresas() throws SVPException{
         cargarDatos();
 
         setContentPane(panel1);
@@ -67,10 +67,10 @@ public class GUIListaVentasEmpresas extends JDialog{
 
     }
 
-    private void onOK() throws SistemaVentaPasajesException {
+    private void onOK() throws SVPException {
         try {
             rellenarTabla();
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
@@ -80,10 +80,10 @@ public class GUIListaVentasEmpresas extends JDialog{
         dispose();
     }
 
-    private void cargarDatos() throws  SistemaVentaPasajesException {
+    private void cargarDatos() throws  SVPException {
 
         if(empresas.length == 0){
-            throw new SistemaVentaPasajesException("No existen empresas en el registro");
+            throw new SVPException("No existen empresas en el registro");
         }
         for (String[] empresa : empresas) {
             boxNombreEmp.addItem(empresa[1]);
@@ -114,13 +114,13 @@ public class GUIListaVentasEmpresas extends JDialog{
         }
     }
 
-    private void rellenarTabla() throws SistemaVentaPasajesException {
+    private void rellenarTabla() throws SVPException {
         String rutSeleccionado = (String) boxRut.getSelectedItem();
         String [][] ventasEmpresa = ControladorEmpresas.getInstance().listVentasEmpresa(Rut.of(rutSeleccionado));
 
 
         if (ventasEmpresa.length == 0) {
-            throw new SistemaVentaPasajesException("La empresa seleccionada no tiene ventas");
+            throw new SVPException("La empresa seleccionada no tiene ventas");
         }
 
         tablaVentas.setModel(new DefaultTableModel(ventasEmpresa, columnas));

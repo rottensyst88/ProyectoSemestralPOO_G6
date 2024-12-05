@@ -1,7 +1,7 @@
 package GUI;
 
 import controlador.ControladorEmpresas;
-import excepciones.SistemaVentaPasajesException;
+import excepciones.SVPException;
 import utilidades.*;
 import vista.*;
 
@@ -36,7 +36,7 @@ public class GUIContrataTripulante extends JDialog {
     private String[][] empresas = ControladorEmpresas.getInstance().listEmpresas();
 
 
-    public GUIContrataTripulante() throws SistemaVentaPasajesException {
+    public GUIContrataTripulante() throws SVPException {
 
         cargarEmpresas();
 
@@ -214,12 +214,12 @@ public class GUIContrataTripulante extends JDialog {
 
     }
 
-    private void onOK() throws SistemaVentaPasajesException {
+    private void onOK() throws SVPException {
 
         try {
             verificacionDatos();
 
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
 
@@ -235,10 +235,10 @@ public class GUIContrataTripulante extends JDialog {
 
     //METODOS PRIVADOS
 
-    private void cargarEmpresas() throws SistemaVentaPasajesException {
+    private void cargarEmpresas() throws SVPException {
 
         if (empresas.length == 0) {
-            throw new SistemaVentaPasajesException("No hay empresas en el registro");
+            throw new SVPException("No hay empresas en el registro");
         }
         for (String[] empresa : empresas) {
             boxNombreEmp.addItem(empresa[1]);
@@ -269,7 +269,7 @@ public class GUIContrataTripulante extends JDialog {
         }
     }
 
-    private void verificacionDatos() throws SistemaVentaPasajesException {
+    private void verificacionDatos() throws SVPException {
         if (tipoTripulante.getSelection() == null || tipoGenero.getSelection() == null
                 || tipoIdentificacion.getSelection() == null || pasaporteOrut.getText().isEmpty()
                 || nombreTextField.getText().isEmpty() || apellidoPTextField.getText().isEmpty()
@@ -287,7 +287,7 @@ public class GUIContrataTripulante extends JDialog {
 
     }
 
-    private void guardarDatos() throws SistemaVentaPasajesException {
+    private void guardarDatos() throws SVPException {
         String calle = calleTextField.getText().trim();
         int numCalle = Integer.parseInt(numCalleTextfield.getText());
         String nombre = nombreTextField.getText();

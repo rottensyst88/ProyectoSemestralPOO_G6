@@ -278,7 +278,7 @@ public class SistemaVentaPasajes implements Serializable {
                 .map(venta -> new String[]{
                         venta.getIdDocumento(),
                         venta.getTipo().toString(),
-                        fechaFormateada.format(venta.getFecha()),
+                        venta.getFecha().format(DateTimeFormatter.ofPattern(fechaFormateada)),
                         venta.getCliente().getIdPersona().toString(),
                         venta.getCliente().getNombreCompleto().toString(),
                         String.valueOf(venta.getPasajes().length),
@@ -313,9 +313,9 @@ public class SistemaVentaPasajes implements Serializable {
 
         return viajes.stream()
                 .map(viaje -> new String[]{
-                        fechaFormateada.format(viaje.getFecha()),
-                        horaFormateada.format(viaje.getHora()),
-                        horaFormateada.format(viaje.getFechaHoraTermino()),
+                        viaje.getFecha().format(DateTimeFormatter.ofPattern(fechaFormateada)),
+                        viaje.getHora().format(DateTimeFormatter.ofPattern(horaFormateada)),
+                        viaje.getFechaHoraTermino().format(DateTimeFormatter.ofPattern(horaFormateada)),
                         String.valueOf(viaje.getPrecio()),
                         String.valueOf(viaje.getNroAsientosDisponibles()),
                         viaje.getBus().getPatente(),

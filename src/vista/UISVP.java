@@ -100,9 +100,9 @@ public class UISVP {
 
         try{
             GUIContrataTripulante.display();
-        }catch(SistemaVentaPasajesException e){
+        }catch(SVPException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
-            UISVP.getInstancia().menu();
+            UISVP.getInstance().menu();
         }
 
         /*Nombre tripulante = new Nombre(); IdPersona id; Tratamiento tratamiento;
@@ -688,9 +688,9 @@ public class UISVP {
 
         try{
             GUIListaVentasEmpresas.display();
-        }catch(SistemaVentaPasajesException e){
+        }catch(SVPException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
-            UISVP.getInstancia().menu();
+            UISVP.getInstance().menu();
         }
 
         /*System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
@@ -711,7 +711,7 @@ public class UISVP {
                 System.out.printf("| %12s | %12s | %12s | %12s |\n", lista[0], lista[1], lista[2], lista[3]);
             }
             System.out.println("*--------------*--------------*--------------*--------------*\n\n");
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPException e) {
             imprimirErrores(e);
         }
 
@@ -776,6 +776,7 @@ public class UISVP {
         }while(verif);
     }
 
+    /*
     private void listVentasEmpresa() {
         Rut rut;
 
@@ -802,7 +803,7 @@ public class UISVP {
         } catch (SVPException e) {
             imprimirErrores(e);
         }
-    }
+    }*/
 
     private void generatePasajesVenta() {
         System.out.println("\n...:::: Generar pasajes de venta ::::...\n");
