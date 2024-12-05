@@ -5,6 +5,7 @@ import controlador.*;
 import excepciones.*;
 import utilidades.*;
 
+import javax.swing.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -94,12 +95,17 @@ public class UISVP {
     }
 
     private void contrataTripulante() {
-        Nombre tripulante = new Nombre();
-        IdPersona id;
-        Tratamiento tratamiento;
-        boolean verif = true;
-        Rut rut;
-        int opcion = 0;
+
+
+
+        try{
+            GUIContrataTripulante.display();
+        }catch(SistemaVentaPasajesException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            UISVP.getInstancia().menu();
+        }
+
+        /*Nombre tripulante = new Nombre(); IdPersona id; Tratamiento tratamiento;
 
         System.out.println("...:::: Creando un nuevo Tripulante ...::::\n");
         System.out.println(":::: Dato de la Empresa");
@@ -162,10 +168,8 @@ public class UISVP {
                 } finally {
                     verif = false;
                 }
-            } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                System.out.println(":::: El valor ingresado no es valido! ::::");
-            }
-        } while (verif);
+
+         */
     }
 
     private void createTerminal() {
@@ -680,7 +684,39 @@ public class UISVP {
         }
         System.out.println("*----------*------------------*--------------------------*--------------------------*----------------------*\n\n");
     }
+    private void listVentasEmpresa() {
 
+        try{
+            GUIListaVentasEmpresas.display();
+        }catch(SistemaVentaPasajesException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            UISVP.getInstancia().menu();
+        }
+
+        /*System.out.println("\n...:::: Listado de ventas de una empresa ::::...\n");
+        Rut rut = Rut.of(entradaDatos("R.U.T",2));
+
+        try {
+            String[][] listas = ControladorEmpresas.getInstance().listVentasEmpresa(rut);
+
+            if (listas.length == 0) {
+                System.out.println(":::: Error! No hay ventas para la empresa seleccionada!");
+                return;
+            }
+
+            System.out.println("*--------------*--------------*--------------*--------------*");
+            System.out.printf("| %12s | %12s | %12s | %12s |\n", "FECHA", "TIPO", "MONTO PAGADO", "TIPO PAGO");
+            for (String[] lista : listas) {
+                System.out.println("*--------------+--------------+--------------+--------------*");
+                System.out.printf("| %12s | %12s | %12s | %12s |\n", lista[0], lista[1], lista[2], lista[3]);
+            }
+            System.out.println("*--------------*--------------*--------------*--------------*\n\n");
+        } catch (SistemaVentaPasajesException e) {
+            imprimirErrores(e);
+        }
+
+         */
+    }
     private void listEmpresas() {
         System.out.println("\n...:::: Listado de empresas::::...\n");
         String[][] empresas_arreglo = ControladorEmpresas.getInstance().listEmpresas();
@@ -886,7 +922,9 @@ public class UISVP {
     }
 
     private void datosPrueba() {
-        ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
+       ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-1"), "mibus2", "mibus.pe");
+       ControladorEmpresas.getInstance().createEmpresa(Rut.of("77.777.777-7"), "mibus", "mibus.cl");
+       ControladorEmpresas.getInstance().createEmpresa(Rut.of("22.727.777-7"), "elpepe", "elpepe.cl");
         Nombre aux_test = new Nombre();
         aux_test.setTratamiento(Tratamiento.SR);
         aux_test.setNombre("Ery Flores");
@@ -904,6 +942,10 @@ public class UISVP {
         ControladorEmpresas.getInstance().createTerminal("Santo Milagro", new Direccion("Placido", 1, "Talquipen"));
         ControladorEmpresas.getInstance().createTerminal("Pecado Milenio", new Direccion("Milenio", 2, "Nuble"));
         ControladorEmpresas.getInstance().createBus("AABB12", "VOLVO", "GEN", 35, Rut.of("77.777.777-7"));
+        // Crear buses para las empresas que no tienen uno
+        ControladorEmpresas.getInstance().createBus("BBCC34", "Mercedes-Benz", "GEN", 50, Rut.of("77.777.777-1")); // Para "mibus2"
+        ControladorEmpresas.getInstance().createBus("CCDD56", "Scania", "PREMIUM", 45, Rut.of("22.727.777-7")); // Para "elpepe"
+
         Nombre cli_test = new Nombre();
         cli_test.setTratamiento(Tratamiento.SR);
         cli_test.setNombre("Juan Perez");
