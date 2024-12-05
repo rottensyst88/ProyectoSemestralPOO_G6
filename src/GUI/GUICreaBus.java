@@ -1,7 +1,7 @@
 package GUI;
 
 import controlador.*;
-import excepciones.SistemaVentaPasajesException;
+import excepciones.SVPException;
 import utilidades.Rut;
 
 import javax.swing.*;
@@ -28,7 +28,7 @@ public class GUICreaBus extends JDialog {
 
         try{
             cargarDatos();
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             System.exit(0);
         }
@@ -113,7 +113,7 @@ public class GUICreaBus extends JDialog {
                     dispose();
                 }
 
-            } catch (SistemaVentaPasajesException e) {
+            } catch (SVPException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 verif = false;
             } catch (NumberFormatException e) {
@@ -147,10 +147,10 @@ public class GUICreaBus extends JDialog {
             }
         }
     }
-    private void cargarDatos() throws  SistemaVentaPasajesException {
+    private void cargarDatos() throws  SVPException {
 
         if(empresas.length == 0){
-            throw new SistemaVentaPasajesException("No existen empresas en el registro");
+            throw new SVPException("No existen empresas en el registro");
         }
         for (String[] empresa : empresas) {
             NombreComboBox.addItem(empresa[1]);
