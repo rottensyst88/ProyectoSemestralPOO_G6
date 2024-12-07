@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ControladorEmpresas implements Serializable {
@@ -113,24 +112,6 @@ public class ControladorEmpresas implements Serializable {
     }
 
     public String[][] listEmpresas() {
-        /*String[][] out = new String[empresas.size()][6];
-
-        if (empresas.isEmpty()) {
-            return out;
-        }
-
-        for (int i = 0; i < empresas.size(); i++) {
-            Empresa empresa = empresas.get(i);
-            out[i][0] = empresa.getRut().toString();
-            out[i][1] = empresa.getNombre();
-            out[i][2] = empresa.getUrl();
-            out[i][3] = String.valueOf(empresa.getTripulantes().length); // Cantidad de tripulantes
-            out[i][4] = String.valueOf(empresa.getBuses().length);// Cantidad de buses
-            out[i][5] = String.valueOf(empresa.getVentas().length);
-        }
-        return out;
-
-         */
         return empresas.stream()
                 .map(e -> new String[]{
                         e.getRut().toString(),
@@ -151,46 +132,7 @@ public class ControladorEmpresas implements Serializable {
         }
 
         Terminal t = terminalNombre.get();
-        /*List<String[]> viajesFiltrados = new ArrayList<>();
 
-        for (Viaje viaje : t.getLlegadas()) {
-            if (viaje.getFecha().equals(fecha)) {
-                String[] datosViaje = new String[5];
-                datosViaje[0] = "Llegada";
-                datosViaje[1] = viaje.getFechaHoraTermino().toLocalTime().toString();
-                datosViaje[2] = viaje.getBus().getPatente();
-                datosViaje[3] = viaje.getBus().getEmp().getNombre();
-                datosViaje[4] = String.valueOf(viaje.getListaPasajeros().length);
-                viajesFiltrados.add(datosViaje);
-            }
-        }
-
-        for (Viaje viaje : t.getSalidas()) {
-            if (viaje.getFecha().equals(fecha)) {
-                String[] datosViaje = new String[5];
-                datosViaje[0] = "Salida";
-                datosViaje[1] = viaje.getHora().toString();
-                datosViaje[2] = viaje.getBus().getPatente();
-                datosViaje[3] = viaje.getBus().getEmp().getNombre();
-                datosViaje[4] = String.valueOf(viaje.getListaPasajeros().length);
-
-                viajesFiltrados.add(datosViaje);
-            }
-        }
-
-        String[][] out = new String[viajesFiltrados.size()][5];
-
-        if (viajesFiltrados.isEmpty()) {
-            return out;
-        }
-
-        for (int i = 0; i < viajesFiltrados.size(); i++) {
-            out[i] = viajesFiltrados.get(i);
-        }
-
-        return out;
-
-         */
         //UTILIZO Stream.concat para combinar los stream de Salidas y Llegadas
 
         //Stream de llegadas
@@ -204,7 +146,7 @@ public class ControladorEmpresas implements Serializable {
                         String.valueOf(viaje.getListaPasajeros().length),
                 });
 
-        //Stream de Salidas
+
         Stream<String[]> salidas = Arrays.stream(t.getSalidas())
                 .filter(viaje -> viaje.getFecha().equals(fecha))
                 .map(viaje -> new String[]{
@@ -237,37 +179,9 @@ public class ControladorEmpresas implements Serializable {
                         String.valueOf(v.getMonto()),
                         v.getTipoPago()
                 }).toArray(String[][]::new);
-                /*if (ventas.length == 0) {
-            return new String[0][4];
-        }
-
-        String[][] out = new String[ventas.length][4];
-
-
-        for (int i = 0; i < ventas.length; i++) {
-            Venta venta = ventas[i];
-
-            out[i][0] = fechaFormateada.format(venta.getFecha());
-            out[i][1] = venta.getTipo().toString();
-            out[i][2] = String.valueOf(venta.getMonto());
-            out[i][3] = venta.getTipoPago();
-        }
-        return out;
-
-         */
 
     }
 
-
-    /*public String[] listTripulantesEmpresa(Rut rut) {
-        return empresas.stream()
-                .filter(e -> e.getRut().equals(rut)) // Filtrar por el Rut de la empresa
-                .flatMap(e -> Arrays.stream(e.getTripulantes())) // Obtener el Stream de tripulantes
-                .map(Object::toString) // Convertir cada tripulante a String
-                .toArray(String[]::new); // Colectar en un arreglo de String
-    }
-
-     */
 
     protected void setInstanciaPersistente(ControladorEmpresas instanciaPersistente) {
         instance = instanciaPersistente;
