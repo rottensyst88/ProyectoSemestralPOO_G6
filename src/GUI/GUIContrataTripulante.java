@@ -35,6 +35,7 @@ public class GUIContrataTripulante extends JDialog {
     private String[][] empresas = ControladorEmpresas.getInstance().listEmpresas();
 
 
+
     public GUIContrataTripulante() throws SVPException {
 
         cargarDatos();
@@ -151,6 +152,8 @@ public class GUIContrataTripulante extends JDialog {
                 nacionalidadCBox.setEnabled(true);
                 pasaporteOrut.setText("");
                 pasaporteOrut.setForeground(Color.BLACK);
+
+
             }
         });
 
@@ -165,6 +168,10 @@ public class GUIContrataTripulante extends JDialog {
             }
         });
 
+
+
+
+
         //Cuando recibe atencion, se elimina el texto ejemplo y se deja el texto en color negro
 
 
@@ -172,27 +179,26 @@ public class GUIContrataTripulante extends JDialog {
             @Override
             public void focusLost(FocusEvent e) throws ArrayIndexOutOfBoundsException {
 
+
                 //Cuando el cuadro de texto pierde atencion, dependiendo de los requerimientos
                 //se deja el ejemplo de rut para el usuario
                 if (rUTRadioButton.isSelected()) {
                     String rut = pasaporteOrut.getText();
-
                     try {
                         if (Rut.of(rut) == null) {
                             JOptionPane.showMessageDialog(null, "Formato de RUT incorrecto", "Error", JOptionPane.ERROR_MESSAGE);
-                            pasaporteOrut.setText("");
+                            if(rUTRadioButton.isSelected()){
+                                pasaporteOrut.setForeground(Color.LIGHT_GRAY);
+                                pasaporteOrut.setText("00.000.000-0");
+                            }
                         }
-
                     } catch (ArrayIndexOutOfBoundsException exception) {
                         JOptionPane.showMessageDialog(null, "Formato de RUT incorrecto", "Error", JOptionPane.ERROR_MESSAGE);
-                        pasaporteOrut.setText("");
-                    }
+                        if(rUTRadioButton.isSelected()){
+                            pasaporteOrut.setForeground(Color.LIGHT_GRAY);
+                            pasaporteOrut.setText("00.000.000-0");
 
-
-                    if ((!pasaporteRadioButton.isSelected()))
-                    {
-                        pasaporteOrut.setText("00.000.000-0");
-                        pasaporteOrut.setForeground(Color.LIGHT_GRAY);
+                        }
                     }
                 }
             }
@@ -272,6 +278,9 @@ public class GUIContrataTripulante extends JDialog {
                     "Por favor, rellene todos los campos",
                     "Campos incompletos",
                     JOptionPane.WARNING_MESSAGE);
+        } else if(rUTRadioButton.isSelected() && Rut.of(pasaporteOrut.getText()) == null) {
+            pasaporteOrut.setForeground(Color.LIGHT_GRAY);
+            pasaporteOrut.setText("00.000.000-0");
         } else {
             guardarDatos();
         }
