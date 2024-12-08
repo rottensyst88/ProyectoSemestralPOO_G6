@@ -84,6 +84,7 @@ public class UISVP {
                 System.out.println(":::: El valor ingresado no es valido! ::::");
             }
         } while (verificador);
+        System.out.println("Hasta luego! Saliendo del programa...");
     }
 
     private void createEmpresas() {
@@ -185,13 +186,17 @@ public class UISVP {
 
                 Direccion direccion = new Direccion(calle, numero, comuna);
 
-                try {
-                    ControladorEmpresas.getInstance().createTerminal(nombre, direccion);
-                    System.out.println("....:::: Terminal guardado exitosamente ::::....");
-                } catch (SVPException e) {
-                    imprimirErrores(e);
-                } finally {
-                    verif = false;
+                if(nombre.isBlank() || calle.isBlank() || comuna.isBlank()){
+                    System.out.println(":::: Los datos no pueden estar vacios! ::::");
+                }else{
+                    try {
+                        ControladorEmpresas.getInstance().createTerminal(nombre, direccion);
+                        System.out.println("....:::: Terminal guardado exitosamente ::::....");
+                    } catch (SVPException e) {
+                        imprimirErrores(e);
+                    } finally {
+                        verif = false;
+                    }
                 }
             } catch (NumberFormatException e) {
                 System.out.println(":::: El valor ingresado no es valido! ::::");
@@ -215,19 +220,26 @@ public class UISVP {
                     tratamiento = SelectorTratamiento(1);
                 } while (tratamiento == null);
 
-                usuario.setNombre(entradaDatos("Nombres", 1));
-                usuario.setApellidoPaterno(entradaDatos("Apellido Paterno", 1));
-                usuario.setApellidoMaterno(entradaDatos("Apellido Materno", 1));
+                String nombre = entradaDatos("Nombres", 1);
+                String apPaterno = entradaDatos("Apellido Paterno", 1);
+                String apMaterno = entradaDatos("Apellido Materno", 1);
                 String telefono = entradaDatos("Telefono", 1);
                 String email = entradaDatos("Email", 1);
 
-                try {
-                    SistemaVentaPasajes.getInstancia().createCliente(id, usuario, telefono, email);
-                    System.out.println("\n...:::: Cliente guardado exitosamente ::::...");
-                } catch (SVPException e) {
-                    imprimirErrores(e);
-                } finally{
-                    verif = false;
+                if(nombre.isBlank() || apPaterno.isBlank() || apMaterno.isBlank() || telefono.isBlank() || email.isBlank()){
+                    System.out.println(":::: Los datos no pueden estar vacios! ::::");
+                }else{
+                    usuario.setNombre(nombre);
+                    usuario.setApellidoPaterno(apPaterno);
+                    usuario.setApellidoMaterno(apMaterno);
+                    try {
+                        SistemaVentaPasajes.getInstancia().createCliente(id, usuario, telefono, email);
+                        System.out.println("\n...:::: Cliente guardado exitosamente ::::...");
+                    } catch (SVPException e) {
+                        imprimirErrores(e);
+                    } finally{
+                        verif = false;
+                    }
                 }
             } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                 System.out.println(":::: El valor ingresado no es valido! ::::");
