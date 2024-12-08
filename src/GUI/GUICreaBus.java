@@ -21,72 +21,90 @@ public class GUICreaBus extends JDialog {
     private JComboBox NombreComboBox;
     private JComboBox RUTComboBox;
 
-
     Scanner sc = new Scanner(System.in);
+
 
     public GUICreaBus() {
 
-        try{
+        try {
             cargarDatos();
         } catch (SVPException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-            System.exit(0);
         }
-        setContentPane(panel1);
-        setModal(true);
-        getRootPane().setDefaultButton(OKButton);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-        OKButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
-
-        //Solución original de Diego
-        NombreComboBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cambiarRutAutomatico();
-            }
-        });
-
-        RUTComboBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cambiarNombreAutomatico();
-            }
-        });
-        // Fin solución original de Diego
-
-        PatenteTextField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (PatenteTextField.getText().equals("AA.BB-12")) {
-                    PatenteTextField.setText("");
-                    PatenteTextField.setForeground(Color.BLACK);
+        if (empresas != null && empresas.length > 0) {
+            setContentPane(panel1);
+            setModal(true);
+            getRootPane().setDefaultButton(OKButton);
+            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    onCancel();
                 }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (PatenteTextField.getText().isEmpty()) {
-                    PatenteTextField.setText("AA.BB-12");
-                    PatenteTextField.setForeground(Color.LIGHT_GRAY);
+            });
+            OKButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    onOK();
                 }
-            }
-        });
+            });
+
+
+            cancelButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    onCancel();
+                }
+            });
+
+            //Solución original de Diego
+            NombreComboBox.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    cambiarRutAutomatico();
+                }
+            });
+
+            RUTComboBox.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    cambiarNombreAutomatico();
+                }
+            });
+            // Fin solución original de Diego
+
+            PatenteTextField.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if (PatenteTextField.getText().equals("AA.BB-12")) {
+                        PatenteTextField.setText("");
+                        PatenteTextField.setForeground(Color.BLACK);
+                    }
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    if (PatenteTextField.getText().isEmpty()) {
+                        PatenteTextField.setText("AA.BB-12");
+                        PatenteTextField.setForeground(Color.LIGHT_GRAY);
+                    }
+                }
+            });
+
+        }
+
+
+    }
+
+    public static void display() {
+        String[][] empresas = ControladorEmpresas.getInstance().listEmpresas();
+
+        if (empresas.length > 0) {
+            GUICreaBus dialog = new GUICreaBus();
+            dialog.setLocationRelativeTo(null);
+            dialog.pack();
+            dialog.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "no hay empresas creadas", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+
     }
 
     public void onOK() {
@@ -124,6 +142,7 @@ public class GUICreaBus extends JDialog {
         } while (verif);
 
     }
+
     //Solución original de Diego
     private String[][] empresas = ControladorEmpresas.getInstance().listEmpresas();
 
@@ -137,6 +156,7 @@ public class GUICreaBus extends JDialog {
             }
         }
     }
+
     private void cambiarNombreAutomatico() {
         String rutSelec = (String) RUTComboBox.getSelectedItem();
 
@@ -147,21 +167,31 @@ public class GUICreaBus extends JDialog {
             }
         }
     }
-    private void cargarDatos() throws  SVPException {
 
-        if(empresas.length == 0){
-            throw new SVPException("No existen empresas en el registro");
-        }
+    private void cargarDatos() {
+
         for (String[] empresa : empresas) {
             NombreComboBox.addItem(empresa[1]);
             RUTComboBox.addItem(empresa[0]);
         }
     }
-
     //Fin solucion original de Diego
 
     public void onCancel() {
         dispose();
     }
+    /*
+    public static void display(){
+        ControladorEmpresas ce = ControladorEmpresas.getInstance();
+        String[][] lista = ce.listEmpresas();
+                if(lista.length>0) {
+                    GUICreaBus dialog = new GUICreaBus();
+                    dialog.setLocationRelativeTo(null);
+                    dialog.setVisible(true);
+                    dialog.pack();
 
+                }else{
+                    JOptionPane.showMessageDialog(null, "No hay empresas", "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
+    } */
 }

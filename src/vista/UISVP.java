@@ -248,10 +248,7 @@ public class UISVP {
     }
 
     private void createBus() {
-        GUICreaBus dialog = new GUICreaBus();
-        dialog.setLocationRelativeTo(null);
-        dialog.pack();
-        dialog.setVisible(true);
+        GUICreaBus.display();
     }
 
     private void createViaje() {
