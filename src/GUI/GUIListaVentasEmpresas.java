@@ -113,6 +113,7 @@ public class GUIListaVentasEmpresas extends JDialog{
 
 
         if (ventasEmpresa.length == 0) {
+            tablaVentas.setModel(new DefaultTableModel(new String[0][columnas.length], columnas));
             throw new SVPException("La empresa seleccionada no tiene ventas");
         }
 
