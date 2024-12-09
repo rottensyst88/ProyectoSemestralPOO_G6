@@ -1,0 +1,10 @@
+---------------------------------------- PASAJE ELECTRONICO ----------------------------------------
+Nombre Empresa                 Número de pasaje              
+EFE BUS                        411253247077                  
+Nombre Pasajero                                    RUT/Pasaporte                 
+SR Carlos Patricio Orellana Godoy                  44.444.444-4                  
+Patente bus               Asiento                   Valor Pagado             
+FF.FF-11                  21                        4000                     
+Terminal origen                Terminal destino               Fecha                          Hora                          
+EL NEVADO ALTO                 EL PINAR                       1212-12-12                     10:00                         
+---------------------------------------------------------------------------------------------------

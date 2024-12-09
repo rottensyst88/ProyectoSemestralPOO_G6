@@ -207,13 +207,13 @@ public class ControladorEmpresas implements Serializable {
 
     protected Optional<Terminal> findTerminal(String nombre) {
         return terminales.stream()
-                .filter(t -> t.getNombre().equals(nombre))
+                .filter(t -> t.getNombre().equalsIgnoreCase(nombre))
                 .findFirst();
     }
 
     protected Optional<Terminal> findTerminalPorComuna(String comuna) {
         return terminales.stream()
-                .filter(t -> t.getDireccion().getComuna().equals(comuna))
+                .filter(t -> t.getDireccion().getComuna().equalsIgnoreCase(comuna))
                 .findFirst();
     }
 

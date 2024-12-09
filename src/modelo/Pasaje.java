@@ -1,7 +1,9 @@
 package modelo;
 
+import java.io.Serializable;
+
 @SuppressWarnings({"CanBeFinal", "FieldMayBeFinal"})
-public class Pasaje {
+public class Pasaje implements Serializable {
     private long numero;
     private int asiento;
 
