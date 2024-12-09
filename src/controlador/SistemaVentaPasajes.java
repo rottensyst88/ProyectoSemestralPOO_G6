@@ -246,36 +246,44 @@ public class SistemaVentaPasajes implements Serializable {
 
     public String[][] listPasajerosViaje(LocalDate fecha, LocalTime hora, String patBus) throws SVPException {
 
-        Optional<Viaje> viajes = findViaje(fecha.toString(), hora.toString(), patBus);
+        Optional<Viaje> viajesF = findViaje(fecha.toString(), hora.toString(), patBus);
 
-        if (viajes.isEmpty()) {
+        if (viajesF.isEmpty()) {
             throw new SVPException("No existe viaje con la fecha, hora y patente de bus indicadas");
         }
 
-        String[][] arregloPasajeros = new String[pasajeros.size()][5];
+        String[][] arregloPasajeros;
 
-        if (arregloPasajeros.length == 0) {
-            return new String[0][0];
-        }
+        Viaje b = viajesF.get();
+        //b.getVentas()
 
-        for (int i = 0; i < pasajeros.size(); i++) {
-            Pasajero pasajero = pasajeros.get(i);
+            for (Venta venta : b.getVentas()) {
+                Pasaje[] pasajes = venta.getPasajes();
 
-            for (Venta venta : ventas) {
-                for (Pasaje pasaje : venta.getPasajes()) {
-                    if (pasaje.getPasajero().getIdPersona().equals(pasajero.getIdPersona())) {
-                        arregloPasajeros[i][0] = String.valueOf(pasaje.getAsiento());
-                        break;
-                    }
+                arregloPasajeros = new String[b.getListaPasajeros().length][5];
+
+                if (arregloPasajeros.length == 0) {
+                    return new String[0][0];
                 }
+
+                for (int i = 0; i < pasajes.length; i++) {
+
+                    Pasaje pasaje = pasajes[i];
+                    Pasajero p = pasaje.getPasajero();
+
+                    if (pasaje.getPasajero().getIdPersona().equals(p.getIdPersona())) {
+                        arregloPasajeros[i][0] = String.valueOf(pasaje.getAsiento());
+                    }
+
+                    arregloPasajeros[i][1] = p.getIdPersona().toString();
+                    arregloPasajeros[i][2] = p.getNombreCompleto().toString();
+                    arregloPasajeros[i][3] = p.getNomContacto().toString();
+                    arregloPasajeros[i][4] = p.getFonoContacto();
+                }
+                return arregloPasajeros;
             }
 
-            arregloPasajeros[i][1] = pasajero.getIdPersona().toString();
-            arregloPasajeros[i][2] = pasajero.getNombreCompleto().toString();
-            arregloPasajeros[i][3] = pasajero.getNomContacto().toString();
-            arregloPasajeros[i][4] = pasajero.getFonoContacto();
-        }
-        return arregloPasajeros;
+        return new String[0][0];
     }
 
     /* CLASES REFERENTES A MANEJO DE IO*/

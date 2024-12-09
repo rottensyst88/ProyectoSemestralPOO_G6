@@ -96,9 +96,6 @@ public class UISVP {
     }
 
     private void contrataTripulante() {
-
-
-
         try{
             GUIContrataTripulante.display();
         }catch(SVPException e){
