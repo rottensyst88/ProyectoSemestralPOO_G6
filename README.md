@@ -9,6 +9,8 @@ Programación Orientada a Objetos, correspondiente al segundo semestre del año 
 Este repositorio se mantiene con el propósito de servir como un archivo histórico 
 de los proyectos realizados en la asignatura.
 
+![]()
+
 ---
 ## Integrantes ##
 Los integrantes (Colaboradores) del proyecto son:
