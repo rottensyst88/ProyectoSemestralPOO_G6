@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 import controlador.ControladorEmpresas;
 import excepciones.SVPException;

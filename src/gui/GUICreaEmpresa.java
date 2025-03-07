@@ -1,9 +1,8 @@
-package GUI;
+package gui;
 
 import controlador.ControladorEmpresas;
 import excepciones.SVPException;
 import utilidades.Rut;
-import vista.*;
 
 import javax.swing.*;
 import java.awt.*;

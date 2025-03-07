@@ -1,6 +1,5 @@
 package vista;
-import GUI.GUICreaEmpresa.*;
-import GUI.*;
+import gui.*;
 import controlador.*;
 import excepciones.*;
 import utilidades.*;
